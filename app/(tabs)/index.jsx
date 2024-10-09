@@ -22,5 +22,52 @@ const HomeScreen = () => {
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#E6F3FF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imageContainer: {
+    width: 200,
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  welcomeText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  loginButton: {
+    backgroundColor: '#87CEFA',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+    marginBottom: 15,
+    borderWidth: 2,
+    borderColor: '#4682B4',
+  },
+  registerButton: {
+    backgroundColor: '#00FFFF',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: '#008B8B',
+  },
+  buttonText: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
 
 export default HomeScreen;
