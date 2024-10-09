@@ -17,6 +17,12 @@ const AdministradorAdd = ({ onAdd }) => {
   };
 
   return (
+    <div style={{ backgroundColor: 'lightblue', padding: 225,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+     }}>
     <form onSubmit={handleSubmit}>
       <div>
         <label>Nombre:</label>
@@ -27,6 +33,7 @@ const AdministradorAdd = ({ onAdd }) => {
           required
         />
       </div>
+      <br/>
       <div>
         <label>Apellido:</label>
         <input
@@ -36,6 +43,7 @@ const AdministradorAdd = ({ onAdd }) => {
           required
         />
       </div>
+      <br/>
       <div>
         <label>Email:</label>
         <input
@@ -45,6 +53,7 @@ const AdministradorAdd = ({ onAdd }) => {
           required
         />
       </div>
+      <br/>
       <div>
         <label>Teléfono:</label>
         <input
@@ -54,8 +63,10 @@ const AdministradorAdd = ({ onAdd }) => {
           required
         />
       </div>
+      <br/>
       <button type="submit">Agregar Administrador</button>
     </form>
+    </div>
   );
 };
 
