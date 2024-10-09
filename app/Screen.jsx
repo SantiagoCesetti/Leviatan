@@ -1,6 +1,5 @@
-import { Text as DefaultText, View as DefaultView } from 'react-native'; // Corrección: react-native, no active-native
-import Colors from '@/constants/colors'; // Asegúrate de que la ruta sea correcta
-import { useColorScheme } from './useColorScheme'; // Corrección: useColorScheme en vez de useColorschmee
+import { Text as DefaultText, View as DefaultView } from 'react-native'; 
+import Colors from '@/constants/Colors';
 
 // Función para obtener el color basado en el esquema de color
 export function useThemeColor(props, colorName) {
