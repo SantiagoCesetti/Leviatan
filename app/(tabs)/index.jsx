@@ -6,7 +6,7 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
-          source={{uri: 'https://i.imgur.com/XMUFXRX.jpeg'}}
+          source={{uri: 'https://i.imgur.com/rwln1yI.png'}}
           style={styles.image}
           resizeMode="contain"
         />
@@ -25,7 +25,9 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E6F3FF',
+    backgroundColor: '#D1E9FF',
+    borderWidth: 7,
+    borderColor: '#576068',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -34,16 +36,16 @@ const styles = StyleSheet.create({
     height: 200,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 25,
   },
   image: {
-    width: '90%',
-    height: '90%',
+    width: '89%',
+    height: '89%',
   },
   welcomeText: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 40,
     textAlign: 'center',
   },
   loginButton: {
@@ -51,7 +53,7 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
     paddingHorizontal: 30,
     borderRadius: 5,
-    marginBottom: 8,
+    marginBottom: 10,
     borderWidth: 2,
     borderColor: '#4682B4',
   },
