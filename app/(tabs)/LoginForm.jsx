@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
@@ -24,6 +24,10 @@ function LoginForm() {
 
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
+    };
+
+    const handleForgotPassword = () => {
+        Linking.openURL('https://www.youtube.com/watch?v=xvFZjo5PgG0');
     };
 
     return (
@@ -51,6 +55,9 @@ function LoginForm() {
                         <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="gray" />
                     </TouchableOpacity>
                 </View>
+                <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordContainer}>
+                    <Text style={styles.forgotPassword}>Olvidé contraseña...</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={handleLogin}>
                     <Text style={styles.buttonText}>Iniciar Sesión</Text>
                 </TouchableOpacity>
@@ -66,6 +73,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
+        backgroundColor: '#B6DEF9',
     },
     formContainer: {
         width: '100%',
@@ -79,7 +87,9 @@ const styles = StyleSheet.create({
     input: {
         width: '100%',
         height: 40,
+        backgroundColor: 'white',
         borderColor: 'gray',
+        borderRadius: 3,
         borderWidth: 1,
         marginBottom: 10,
         paddingHorizontal: 10,
@@ -93,7 +103,9 @@ const styles = StyleSheet.create({
     passwordInput: {
         flex: 1,
         height: 40,
+        backgroundColor: 'white',
         borderColor: 'gray',
+        borderRadius: 3,
         borderWidth: 1,
         paddingHorizontal: 10,
     },
@@ -101,8 +113,19 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 10,
     },
+    forgotPasswordContainer: {
+        width: '100%',
+        alignItems: 'flex-start',
+        marginBottom: 10,
+    },
+    forgotPassword: {
+        color: 'light-black',
+        textDecorationLine: 'underline',
+    },
     button: {
         backgroundColor: '#87CEFA',
+        borderWidth: 2,
+        borderColor: '#4682B4',
         padding: 10,
         borderRadius: 5,
         width: '100%',

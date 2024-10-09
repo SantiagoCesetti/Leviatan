@@ -25,8 +25,8 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#D1E9FF',
-    backgroundImage: 'linear-gradient(to bottom right, #87CEFA, #D1E9FF)',
+    backgroundColor: '#B6DEF9',
+    backgroundImage: 'linear-gradient(to bottom right, #87CEFA, #B6DEF9)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
