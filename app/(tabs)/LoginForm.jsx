@@ -1,101 +1,92 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import appFirebase from '../credenciales';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
-const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const auth = getAuth(appFirebase);
 
-  const handleLogin = () => {
-    console.log('Email:', email);
-    console.log('Password:', password);
-  };
+function LoginForm() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>Iniciar Sesión</Text>
-        <Text style={styles.inputLabel}>Correo electrónico</Text>
-        <TextInput
-          style={[styles.input, styles.emailInput]}
-          placeholder="Email"
-          placeholderTextColor="#999"
-          value={email}
-          onChangeText={setEmail}
-          maxLength={50}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <Text style={styles.inputLabel}>Contraseña</Text>
-        <TextInput
-          style={[styles.input, styles.passwordInput]}
-          placeholder="Contraseña"
-          placeholderTextColor="#999"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          maxLength={20}
-        />
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Iniciar Sesión</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
+    const handleLogin = async () => {
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            // Inicio de sesión exitoso
+            setError('');
+        } catch (error) {
+            setError('Error al iniciar sesión: ' + error.message);
+        }
+    };
 
-const windowWidth = Dimensions.get('window').width;
+    return (
+        <View style={styles.container}>
+            <View style={styles.formContainer}>
+                <Text style={styles.title}>Iniciar Sesión</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Correo electrónico"
+                    value={email}
+                    onChangeText={(text) => setEmail(text.slice(0, 50))}
+                    keyboardType="email-address"
+                    maxLength={50}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Contraseña"
+                    value={password}
+                    onChangeText={(text) => setPassword(text.slice(0, 20))}
+                    secureTextEntry
+                    maxLength={20}
+                />
+                <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                    <Text style={styles.buttonText}>Iniciar Sesión</Text>
+                </TouchableOpacity>
+                {error ? <Text style={styles.errorText}>{error}</Text> : null}
+            </View>
+        </View>
+    );
+}
 
-const styles = StyleSheet.create({      
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#f5f5f5',
-  },
-  formContainer: {
-    width: '100%',
-    maxWidth: 300,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#333',
-  },
-  inputLabel: {
-    fontSize: 16,
-    marginBottom: 5,
-    color: '#333',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: Platform.OS === 'android' ? 8 : 10,
-    marginBottom: 15,
-    borderRadius: 5,
-    width: '100%',
-    backgroundColor: '#fff',
-    fontSize: 16,
-  },
-  emailInput: {
-    color: '#666',
-  },
-  passwordInput: {
-    color: '#666',
-  },
-  button: {
-    backgroundColor: '#4CAF50',
-    padding: 12,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    formContainer: {
+        width: '100%',
+        maxWidth: 300,
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 24,
+        marginBottom: 20,
+    },
+    input: {
+        width: '100%',
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginBottom: 10,
+        paddingHorizontal: 10,
+    },
+    button: {
+        backgroundColor: 'blue',
+        padding: 10,
+        borderRadius: 5,
+        width: '100%',
+    },
+    buttonText: {
+        color: 'white',
+        textAlign: 'center',
+    },
+    errorText: {
+        color: 'red',
+        marginTop: 10,
+    },
 });
 
 export default LoginForm;
