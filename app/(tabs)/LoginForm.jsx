@@ -14,18 +14,22 @@ const LoginForm = () => {
     <View style={styles.container}>
       <View style={styles.formContainer}>
         <Text style={styles.title}>Iniciar Sesión</Text>
+        <Text style={styles.inputLabel}>Correo electrónico</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, styles.emailInput]}
           placeholder="Email"
+          placeholderTextColor="#999"
           value={email}
           onChangeText={setEmail}
           maxLength={50}
           keyboardType="email-address"
           autoCapitalize="none"
         />
+        <Text style={styles.inputLabel}>Contraseña</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, styles.passwordInput]}
           placeholder="Contraseña"
+          placeholderTextColor="#999"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -60,6 +64,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333',
   },
+  inputLabel: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: '#333',
+  },
   input: {
     borderWidth: 1,
     borderColor: '#ddd',
@@ -69,6 +78,12 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#fff',
     fontSize: 16,
+  },
+  emailInput: {
+    color: '#666',
+  },
+  passwordInput: {
+    color: '#666',
   },
   button: {
     backgroundColor: '#4CAF50',
