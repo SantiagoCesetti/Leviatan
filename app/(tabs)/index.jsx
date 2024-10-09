@@ -16,7 +16,7 @@ const HomeScreen = () => {
         <Text style={styles.buttonText}>Iniciar sesión</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.registerButton}>
-        <Text style={styles.buttonText}>Crear cuenta nueva</Text>
+        <Text style={styles.buttonText}>Crear cuenta </Text>
       </TouchableOpacity>
     </View>
   );
@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: '90%',
+    height: '90%',
   },
   welcomeText: {
     fontSize: 24,
@@ -48,16 +48,16 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     backgroundColor: '#87CEFA',
-    paddingVertical: 12,
+    paddingVertical: 11,
     paddingHorizontal: 30,
     borderRadius: 5,
-    marginBottom: 15,
+    marginBottom: 8,
     borderWidth: 2,
     borderColor: '#4682B4',
   },
   registerButton: {
-    backgroundColor: '#00FFFF',
-    paddingVertical: 12,
+    backgroundColor: '#8CD2D8',
+    paddingVertical: 11,
     paddingHorizontal: 30,
     borderRadius: 5,
     borderWidth: 2,
