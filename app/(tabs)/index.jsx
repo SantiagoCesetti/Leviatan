@@ -26,6 +26,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#D1E9FF',
+    backgroundImage: 'linear-gradient(to bottom right, #87CEFA, #D1E9FF)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
     borderWidth: 7,
     borderColor: '#576068',
     alignItems: 'center',
