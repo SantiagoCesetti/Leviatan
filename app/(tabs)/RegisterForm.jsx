@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
+import appFirebase from '../credenciales';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+
+const auth = getAuth(appFirebase);
 
 const AdministradorAdd = ({ onAdd }) => {
   const [nombre, setNombre] = useState("");
