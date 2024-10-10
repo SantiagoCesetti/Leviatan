@@ -9,6 +9,10 @@ const HomeScreen = () => {
     navigation.navigate('LoginForm');
   };
 
+  const handleRegister = () => {
+    navigation.navigate('RegisterForm');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -22,7 +26,7 @@ const HomeScreen = () => {
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
         <Text style={styles.buttonText}>Iniciar sesión</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.registerButton}>
+      <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
         <Text style={styles.buttonText}>Crear cuenta </Text>
       </TouchableOpacity>
     </View>
