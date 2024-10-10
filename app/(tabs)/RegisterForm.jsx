@@ -33,7 +33,7 @@ const AdministradorAdd = ({ onAdd }) => {
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>Registrar usuario</Text>
+        <Text style={styles.title}>Registro de usuario</Text>
         <View style={styles.gridContainer}>
           <View style={styles.inputContainer}>
             <Text>Nombre:</Text>

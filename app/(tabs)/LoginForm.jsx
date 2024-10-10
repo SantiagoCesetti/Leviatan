@@ -33,7 +33,7 @@ function LoginForm() {
     return (
         <View style={styles.container}>
             <View style={styles.formContainer}>
-                <Text style={styles.title}>Iniciar Sesión</Text>
+                <Text style={styles.title}>Inicio de sesión</Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Correo electrónico"
