@@ -60,7 +60,7 @@ const SupervisorForm = ({ onAdd }) => {
 const styles = StyleSheet.create({  
   container: {  
     flex: 1,
-    backgroundColor: '#FFFFFF',  
+    backgroundColor: '#E6F3FF',  
   },  
   inputRow: {  
     flexDirection: 'row',  
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',  
   },  
   container1: {  
-    backgroundColor: '#FFFFFF',  
+    backgroundColor: '#E6F3FF',  
     flex: 1,  
     
   },  
@@ -123,12 +123,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,  
     alignSelf: 'center',
     justifyContent: 'center',  
-    marginTop: 20,  
+    marginTop: 20,
+
   },  
   buttontext: {  
     color: '#fff',  
     textAlign: 'center',  
-    
+
   },  
   textinput:{
     fontSize:12,
