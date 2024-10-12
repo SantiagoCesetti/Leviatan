@@ -61,6 +61,22 @@ const RegisterForm = () => {
     navigation.navigate('index');
   };
 
+  const handlePhoneChange = (text) => {
+    // Eliminar cualquier carácter que no sea número
+    const numericValue = text.replace(/[^0-9]/g, '');
+    
+    // Formatear el número con espacios
+    let formattedValue = '';
+    for (let i = 0; i < numericValue.length && i < 10; i++) {
+      if (i === 3 || i === 6) {
+        formattedValue += ' ';
+      }
+      formattedValue += numericValue[i];
+    }
+    
+    setTelefono(formattedValue);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <View style={styles.container}>
@@ -127,15 +143,18 @@ const RegisterForm = () => {
               </View>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Número de teléfono</Text>
-                <TextInput
-                  style={[styles.input, telefono ? styles.inputTextBlack : null]}
-                  value={telefono}
-                  onChangeText={(text) => setTelefono(text.slice(0, 15))}
-                  placeholder="Teléfono"
-                  keyboardType="phone-pad"
-                  maxLength={15}
-                  placeholderTextColor="gray"
-                />
+                <View style={styles.phoneInputContainer}>
+                  <Text style={styles.phonePrefix}>+54</Text>
+                  <TextInput
+                    style={[styles.phoneInput, telefono ? styles.inputTextBlack : null]}
+                    value={telefono}
+                    onChangeText={handlePhoneChange}
+                    placeholder="299 777 5555"
+                    keyboardType="numeric"
+                    maxLength={12}
+                    placeholderTextColor="gray"
+                  />
+                </View>
               </View>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Dirección</Text>
@@ -248,6 +267,28 @@ const styles = StyleSheet.create({
   },
   eyeIcon: {
     padding: 10,
+  },
+  phoneInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    height: 40,
+    backgroundColor: 'white',
+    borderColor: 'gray',
+    borderRadius: 3,
+    borderWidth: 1,
+  },
+  phonePrefix: {
+    paddingLeft: 10,
+    color: 'black',
+    fontSize: 16,
+  },
+  phoneInput: {
+    flex: 1,
+    height: '100%',
+    width: '100%',
+    paddingHorizontal: 10,
+    color: 'gray',
   },
   button: {
     height: 40,  
