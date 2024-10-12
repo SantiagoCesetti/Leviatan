@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#B6DEF9',
+    backgroundColor: '#E6F3FF',
   },
   contentContainer: {
     width: '100%',
@@ -167,19 +167,17 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   button: {
-    backgroundColor: '#87CEFA',
-    borderWidth: 2,
-    borderColor: '#4682B4',
-    padding: 10,
-    borderRadius: 5,
-    width: '100%',
-    marginTop: 7,
+    height: 40,  
+    width: '100%',  
+    backgroundColor: '#000',  
+    borderRadius: 10,  
+    alignSelf: 'center',
+    justifyContent: 'center',  
+    marginTop: 5,
   },
   buttonText: {
-    color: 'black',
-    fontSize: 15,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: '#fff',  
+    textAlign: 'center',  
   },
 });
 
