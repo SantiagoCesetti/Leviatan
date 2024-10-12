@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { CheckBox } from 'react-native-elements'
 
 const PersonalForm = ({ onAdd }) => {
@@ -16,7 +16,10 @@ const PersonalForm = ({ onAdd }) => {
     setEmail("");
     setTelefono("");
   };
-  const [isChecked, setIsChecked] = useState(false);
+  const [isOrdenado, setIsOrdenado] = useState(false);
+  const [isBarrido, setIsBarrido] = useState(false);
+  const [isTrapeado, setIsTrapeado] = useState(false);
+  const [isDesinfectado, setIsDesinfectado] = useState(false);
   return (
     <ScrollView>
     <View style={styles.container}>
@@ -35,29 +38,29 @@ const PersonalForm = ({ onAdd }) => {
               <CheckBox
               
                 title="Ordenado"
-                checked={isChecked}
-                onPress={() => setIsChecked(!isChecked)}
+                checked={isOrdenado}
+                onPress={() => setIsOrdenado(!isOrdenado)}
               />
 
               <CheckBox
                
                 title="Barrido"
-                checked={isChecked}
-                onPress={() => setIsChecked(!isChecked)}
+                checked={isBarrido}
+                onPress={() => setIsBarrido(!isBarrido)}
               />
 
               <CheckBox
                
                 title="Trapeado"
-                checked={isChecked}
-                onPress={() => setIsChecked(!isChecked)}
+                checked={isTrapeado}
+                onPress={() => setIsTrapeado(!isTrapeado)}
               />
               
               <CheckBox
                 
                 title="Desinfectado"
-                checked={isChecked}
-                onPress={() => setIsChecked(!isChecked)}
+                checked={isDesinfectado}
+                onPress={() => setIsDesinfectado(!isDesinfectado)}
               />
               <View style={styles.inputContainer}>
               <Text>Observacion</Text>
