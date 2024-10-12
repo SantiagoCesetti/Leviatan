@@ -45,7 +45,9 @@ const PersonalForm = ({ onAdd }) => {
   };
 
   const handleRedirect = () => {
-    navigation.navigate('redirect');
+    setTimeout(() => {
+      navigation.navigate('redirect');
+    }, 500);
   };
 
   return (

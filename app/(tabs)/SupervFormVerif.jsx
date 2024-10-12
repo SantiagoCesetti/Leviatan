@@ -38,12 +38,20 @@ const SupervFormVerif = ({ onAdd }) => {
 
   const handleSubmit = () => {
     const nuevoAdministrador = { nombre, apellido, email, telefono };
-    onAdd(nuevoAdministrador);
     resetForm();
+    setTimeout(() => {
+      navigation.navigate('redirect');
+    }, 500);
   };
 
   const handleHomeNavigation = () => {
     navigation.navigate('index');
+  };
+
+  const handleDenegar = () => {
+    setTimeout(() => {
+      navigation.navigate('redirect');
+    }, 500);
   };
 
   return (
@@ -99,7 +107,7 @@ const SupervFormVerif = ({ onAdd }) => {
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>
               <Text style={styles.buttontext}>Aceptar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonC}>
+            <TouchableOpacity style={styles.buttonC} onPress={handleDenegar}>
               <Text>Denegar</Text>
             </TouchableOpacity>
           </View>
