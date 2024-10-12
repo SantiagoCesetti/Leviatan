@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const auth = getAuth(appFirebase);
 const googleProvider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
 
 function LoginForm() {
     const [email, setEmail] = useState('');
@@ -47,6 +48,17 @@ function LoginForm() {
             resetForm();
         } catch (error) {
             setError('Error al iniciar sesión con Google: ' + error.message);
+        }
+    };
+
+    const handleFacebookLogin = async () => {
+        try {
+            await signInWithPopup(auth, facebookProvider);
+            // Inicio de sesión con Facebook exitoso
+            setError('');
+            resetForm();
+        } catch (error) {
+            setError('Error al iniciar sesión con Facebook: ' + error.message);
         }
     };
 
@@ -102,8 +114,12 @@ function LoginForm() {
                             <Text style={styles.buttonText}>Iniciar Sesión</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
-                            <Ionicons name="logo-google" size={24} color="white" style={styles.googleIcon} />
+                            <Ionicons name="logo-google" size={24} color="white" style={styles.socialIcon} />
                             <Text style={styles.buttonText}>Iniciar Sesión con Google</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.facebookButton} onPress={handleFacebookLogin}>
+                            <Ionicons name="logo-facebook" size={24} color="white" style={styles.socialIcon} />
+                            <Text style={styles.buttonText}>Iniciar Sesión con Facebook</Text>
                         </TouchableOpacity>
                         {error ? <Text style={styles.errorText}>{error}</Text> : null}
                     </View>
@@ -214,7 +230,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    googleIcon: {
+    facebookButton: {
+        height: 40,
+        width: '100%',
+        backgroundColor: '#3b5998',
+        borderRadius: 10,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        marginTop: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    socialIcon: {
         marginRight: 10,
     },
     buttonText: {
