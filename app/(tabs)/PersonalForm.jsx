@@ -28,6 +28,10 @@ const PersonalForm = ({ onAdd }) => {
     navigation.navigate('index');
   };
 
+  const handleRedirect = () => {
+    navigation.navigate('redirect');
+  };
+
   return (
     <ScrollView>
     <View style={styles.container}>
@@ -82,7 +86,7 @@ const PersonalForm = ({ onAdd }) => {
               </View>
               </View>
               
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleRedirect}>
               <Text style={styles.buttontext}>Enviar</Text>
             </TouchableOpacity>
           </View>
