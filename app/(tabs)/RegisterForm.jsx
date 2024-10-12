@@ -36,13 +36,20 @@ const RegisterForm = () => {
   );
 
   const handleRegister = async () => {
+    // Validación básica
+    if (!email || !contraseña) {
+        setError('Por favor, completa todos los campos.');
+        return;
+    }
+
     try {
-      await createUserWithEmailAndPassword(auth, email, contraseña);
-      // Registro exitoso
-      setError('');
-      resetForm();
+        await createUserWithEmailAndPassword(auth, email, contraseña);
+        // Registro exitoso
+        setError(''); // Limpiar errores
+        resetForm(); // Reiniciar el formulario
     } catch (error) {
-      setError('Error al registrar: ' + error.message);
+        // Manejo de errores
+        setError('Error al registrar: ' + error.message);
     }
   };
 
