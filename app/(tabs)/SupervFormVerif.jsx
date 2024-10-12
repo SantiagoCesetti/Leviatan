@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput } from "react-native";
 import { CheckBox } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -14,6 +14,7 @@ const SupervFormVerif = ({ onAdd }) => {
   const [isCheckedBarrido, setIsCheckedBarrido] = useState(false);
   const [isCheckedTrapeado, setIsCheckedTrapeado] = useState(false);
   const [isCheckedDesinfectado, setIsCheckedDesinfectado] = useState(false);
+  const [observacion, setObservacion] = useState("");
 
   const navigation = useNavigation();
 
@@ -26,6 +27,7 @@ const SupervFormVerif = ({ onAdd }) => {
     setIsCheckedBarrido(false);
     setIsCheckedTrapeado(false);
     setIsCheckedDesinfectado(false);
+    setObservacion("");
   };
 
   useFocusEffect(
@@ -80,6 +82,17 @@ const SupervFormVerif = ({ onAdd }) => {
               title="Desinfectado"
               checked={isCheckedDesinfectado}
               onPress={() => setIsCheckedDesinfectado(!isCheckedDesinfectado)}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.observacionText}>Observación</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Escribir Observación"
+              value={observacion}
+              onChangeText={(text) => setObservacion(text.slice(0, 512))}
+              maxLength={512}
+              multiline={true}
             />
           </View>
           <View style={styles.contButton}>
@@ -144,6 +157,21 @@ const styles = StyleSheet.create({
   conTitle: {
     fontWeight: 'bold',
     fontSize: 21,
+  },
+  inputContainer: {
+    marginTop: 20,
+  },
+  observacionText: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 2,
+    borderColor: '#ddd',
+    borderRadius: 5,
+    padding: 10,
+    height: 100,
+    textAlignVertical: 'top',
   },
   contButton: {
     height: 50,

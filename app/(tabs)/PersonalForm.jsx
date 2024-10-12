@@ -90,7 +90,9 @@ const PersonalForm = ({ onAdd }) => {
                 style={styles.input}
                 placeholder="Escribir Observacion"
                 value={observacion}
-                onChangeText={setObservacion}
+                onChangeText={(text) => setObservacion(text.slice(0, 512))}
+                maxLength={512}
+                multiline={true}
               />
               </View>
               </View>
@@ -116,12 +118,14 @@ const styles = StyleSheet.create({
     marginLeft:10,
   },
   input: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: '#ddd',
     padding: 10,
     fontSize: 14,
-    color: 'gray',
+    color: '#000000',
     borderRadius: 6,
+    height: 100,
+    textAlignVertical: 'top',
   },
   header: {
     backgroundColor: "#00B8BA",
