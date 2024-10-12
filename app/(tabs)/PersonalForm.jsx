@@ -63,7 +63,7 @@ const PersonalForm = ({ onAdd }) => {
                 onPress={() => setIsDesinfectado(!isDesinfectado)}
               />
               <View style={styles.inputContainer}>
-              <Text>Observacion</Text>
+              <Text style={styles.observacionText}>Observacion</Text>
               <TextInput
               style={styles.input}
               placeholder="Escribir Observacion"
@@ -95,7 +95,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     padding: 10,
-    fontSize: 18,
+    fontSize: 14,
+    color: 'gray',
     borderRadius: 6,
   },
   header: {
@@ -153,7 +154,10 @@ const styles = StyleSheet.create({
     marginTop:30,
    marginBottom:20, 
   },
-  
+  observacionText: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
 });
 
 export default PersonalForm;

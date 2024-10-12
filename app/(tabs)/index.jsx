@@ -22,7 +22,7 @@ const HomeScreen = () => {
           resizeMode="contain"
         />
       </View>
-      <Text style={styles.welcomeText}>Bienvenido a Leviatan</Text>
+      <Text style={styles.welcomeText}>Bienvenido a CleanClass</Text>
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
         <Text style={styles.buttonText}>Iniciar sesión</Text>
       </TouchableOpacity>
