@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { CheckBox } from 'react-native-elements';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const SupervFormVerif = ({ onAdd }) => {
   const [nombre, setNombre] = useState("");
@@ -13,6 +15,8 @@ const SupervFormVerif = ({ onAdd }) => {
   const [isCheckedTrapeado, setIsCheckedTrapeado] = useState(false);
   const [isCheckedDesinfectado, setIsCheckedDesinfectado] = useState(false);
 
+  const navigation = useNavigation();
+
   const handleSubmit = () => {
     const nuevoAdministrador = { nombre, apellido, email, telefono };
     onAdd(nuevoAdministrador);
@@ -22,10 +26,17 @@ const SupervFormVerif = ({ onAdd }) => {
     setTelefono("");
   };
 
+  const handleHomeNavigation = () => {
+    navigation.navigate('index');
+  };
+
   return (
     <ScrollView>
     <View style={styles.container}>
       <View style={styles.head}>
+        <TouchableOpacity onPress={handleHomeNavigation} style={styles.homeIcon}>
+          <Ionicons name="home-outline" size={24} color="black" />
+        </TouchableOpacity>
         <Text style={styles.title}>Clean Class</Text>
       </View>
       <View style={styles.body}>
@@ -82,16 +93,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#00B8BA',
     height: 50,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  homeIcon: {
+    padding: 5,
   },
   title: {
     fontSize: 21,
     fontWeight: 'bold',
     color: '#000000',
-    textAlign: 'end',
-    width: 300,
-    padding: 5,
+    textAlign: 'right',
+    flex: 1,
     marginRight: 10,
   },
   body: {

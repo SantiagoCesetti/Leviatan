@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { CheckBox } from 'react-native-elements'
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const PersonalForm = ({ onAdd }) => {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
   const [telefono, setTelefono] = useState("");
+  const navigation = useNavigation();
 
   const handleSubmit = () => {
     const nuevoAdministrador = { nombre, apellido, email, telefono };
@@ -20,10 +23,18 @@ const PersonalForm = ({ onAdd }) => {
   const [isBarrido, setIsBarrido] = useState(false);
   const [isTrapeado, setIsTrapeado] = useState(false);
   const [isDesinfectado, setIsDesinfectado] = useState(false);
+
+  const handleHomeNavigation = () => {
+    navigation.navigate('index');
+  };
+
   return (
     <ScrollView>
     <View style={styles.container}>
       <View style={styles.header}>
+        <TouchableOpacity onPress={handleHomeNavigation} style={styles.homeIcon}>
+          <Ionicons name="home-outline" size={24} color="black" />
+        </TouchableOpacity>
         <Text style={styles.headertext}>Clean Class</Text>
       </View>
       <View style={styles.container1}>
@@ -104,14 +115,18 @@ const styles = StyleSheet.create({
     height: 80,
     width: 'auto',
     padding: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  homeIcon: {
+    marginLeft: 20,
   },
   headertext: {
-    paddingTop: 20,
-    textAlign:'right',
     fontSize: 25,
     color: '#0000000',
     marginRight:20,
-     fontWeight: 'bold'
+    fontWeight: 'bold'
   },
   container1: {
     backgroundColor: '#E6F3FF',

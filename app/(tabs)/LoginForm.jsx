@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, ScrollVie
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
 
 const auth = getAuth(appFirebase);
 
@@ -11,6 +12,7 @@ function LoginForm() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const navigation = useNavigation();
 
     const handleLogin = async () => {
         try {
@@ -30,10 +32,17 @@ function LoginForm() {
         Linking.openURL('https://www.youtube.com/watch?v=xvFZjo5PgG0');
     };
 
+    const handleHomeNavigation = () => {
+        navigation.navigate('index');
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
             <View style={styles.container}>
                 <View style={styles.header}>
+                    <TouchableOpacity onPress={handleHomeNavigation} style={styles.homeIcon}>
+                        <Ionicons name="home-outline" size={24} color="black" />
+                    </TouchableOpacity>
                     <Text style={styles.headertext}>Clean Class</Text>
                 </View>
                 <View style={styles.body}>
@@ -87,13 +96,18 @@ const styles = StyleSheet.create({
         height: 80,
         width: 'auto',
         padding: 0,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    homeIcon: {
+        marginLeft: 20,
     },
     headertext: {
         paddingTop: 20,
-        textAlign:'right',
         fontSize: 25,
         color: '#000000',
-        marginRight:20,
+        marginRight: 20,
         fontWeight: 'bold'
     },
     body: {

@@ -1,9 +1,12 @@
 import React, { useState } from "react";  
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";  
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const SupervisorForm = ({ onAdd }) => {  
   const [nombre, setNombre] = useState("");  
   const [aula, setAula] = useState("");  
+  const navigation = useNavigation();
 
   const handleSubmit = () => {  
     const nuevoAdministrador = { nombre, aula };  
@@ -12,10 +15,17 @@ const SupervisorForm = ({ onAdd }) => {
     setAula("");  
   };  
 
+  const handleHomeNavigation = () => {
+    navigation.navigate('index');
+  };
+
   return (  
     <ScrollView style={styles.container}>
   
       <View style={styles.header}>  
+        <TouchableOpacity onPress={handleHomeNavigation} style={styles.homeIcon}>
+          <Ionicons name="home-outline" size={24} color="black" />
+        </TouchableOpacity>
         <Text style={styles.headertext}>Clean Class</Text>  
       </View>  
       <View style={styles.container1}>  
@@ -84,10 +94,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#00B8BA",  
     height: 80,  
     padding: 0,  
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },  
+  homeIcon: {
+    marginLeft: 20,
+  },
   headertext: {  
-    paddingTop: 20,  
-    textAlign: 'right',  
     fontSize: 25,  
     color: '#000',  
     marginRight: 20,  
