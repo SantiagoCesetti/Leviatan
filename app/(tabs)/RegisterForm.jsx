@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 const auth = getAuth(appFirebase);
 
-const AdministradorAdd = ({ onAdd }) => {
+const RegisterForm = () => {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
@@ -14,16 +14,17 @@ const AdministradorAdd = ({ onAdd }) => {
   const [contraseña, setContraseña] = useState("");
   const [direccion, setDireccion] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = () => {
-    const nuevoAdministrador = { nombre, apellido, email, telefono, contraseña, direccion };
-    onAdd(nuevoAdministrador);
-    setNombre("");
-    setApellido("");
-    setEmail("");
-    setTelefono("");
-    setContraseña("");
-    setDireccion("");
+  const handleRegister = async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, contraseña);
+      // Registro exitoso
+      setError('');
+      // Aquí puedes agregar lógica adicional después del registro exitoso
+    } catch (error) {
+      setError('Error al registrar: ' + error.message);
+    }
   };
 
   const toggleShowPassword = () => {
@@ -31,103 +32,138 @@ const AdministradorAdd = ({ onAdd }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.contentContainer}>
-        <Text style={styles.title}>Registro de usuario</Text>
-        <View style={styles.gridContainer}>
-          <View style={styles.inputContainer}>
-            <Text>Nombre:</Text>
-            <TextInput
-              style={styles.input}
-              value={nombre}
-              onChangeText={setNombre}
-              placeholder="Nombre"
-              placeholderTextColor="rgba(0, 0, 0, 0.3)"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text>Apellido:</Text>
-            <TextInput
-              style={styles.input}
-              value={apellido}
-              onChangeText={setApellido}
-              placeholder="Apellido"
-              placeholderTextColor="rgba(0, 0, 0, 0.3)"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text>Email:</Text>
-            <TextInput
-              style={styles.input}
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Email"
-              placeholderTextColor="rgba(0, 0, 0, 0.3)"
-              keyboardType="email-address"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text>Teléfono:</Text>
-            <TextInput
-              style={styles.input}
-              value={telefono}
-              onChangeText={setTelefono}
-              placeholder="Teléfono"
-              placeholderTextColor="rgba(0, 0, 0, 0.3)"
-              keyboardType="phone-pad"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text>Contraseña:</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.passwordInput}
-                value={contraseña}
-                onChangeText={setContraseña}
-                placeholder="Contraseña"
-                placeholderTextColor="rgba(0, 0, 0, 0.3)"
-                secureTextEntry={!showPassword}
-              />
-              <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
-                <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="gray" />
-              </TouchableOpacity>
+    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headertext}>Clean Class</Text>
+        </View>
+        <View style={styles.body}>
+          <View style={styles.formContainer}>
+            <Text style={styles.formTitle}>Registro de usuario</Text>
+            <View style={styles.gridContainer}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Nombre</Text>
+                <TextInput
+                  style={[styles.input, nombre ? styles.inputTextBlack : null]}
+                  value={nombre}
+                  onChangeText={(text) => setNombre(text.slice(0, 50))}
+                  placeholder="Nombre"
+                  maxLength={50}
+                  placeholderTextColor="gray"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Apellido</Text>
+                <TextInput
+                  style={[styles.input, apellido ? styles.inputTextBlack : null]}
+                  value={apellido}
+                  onChangeText={(text) => setApellido(text.slice(0, 50))}
+                  placeholder="Apellido"
+                  maxLength={50}
+                  placeholderTextColor="gray"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Correo electrónico</Text>
+                <TextInput
+                  style={[styles.input, email ? styles.inputTextBlack : null]}
+                  value={email}
+                  onChangeText={(text) => setEmail(text.slice(0, 50))}
+                  placeholder="Correo electrónico"
+                  keyboardType="email-address"
+                  maxLength={50}
+                  placeholderTextColor="gray"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Contraseña</Text>
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    style={[styles.passwordInput, contraseña ? styles.inputTextBlack : null]}
+                    value={contraseña}
+                    onChangeText={(text) => setContraseña(text.slice(0, 20))}
+                    placeholder="Contraseña"
+                    secureTextEntry={!showPassword}
+                    maxLength={20}
+                    placeholderTextColor="gray"
+                  />
+                  <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
+                    <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="gray" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Número de teléfono</Text>
+                <TextInput
+                  style={[styles.input, telefono ? styles.inputTextBlack : null]}
+                  value={telefono}
+                  onChangeText={(text) => setTelefono(text.slice(0, 15))}
+                  placeholder="Teléfono"
+                  keyboardType="phone-pad"
+                  maxLength={15}
+                  placeholderTextColor="gray"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Dirección</Text>
+                <TextInput
+                  style={[styles.input, direccion ? styles.inputTextBlack : null]}
+                  value={direccion}
+                  onChangeText={(text) => setDireccion(text.slice(0, 100))}
+                  placeholder="Dirección"
+                  maxLength={100}
+                  placeholderTextColor="gray"
+                />
+              </View>
             </View>
-          </View>
-          <View style={styles.inputContainer}>
-            <Text>Dirección:</Text>
-            <TextInput
-              style={styles.input}
-              value={direccion}
-              onChangeText={setDireccion}
-              placeholder="Dirección"
-              placeholderTextColor="rgba(0, 0, 0, 0.3)"
-            />
+            <TouchableOpacity style={styles.button} onPress={handleRegister}>
+              <Text style={styles.buttonText}>Crear cuenta</Text>
+            </TouchableOpacity>
+            {error ? <Text style={styles.errorText}>{error}</Text> : null}
           </View>
         </View>
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Crear cuenta</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollViewContent: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
     backgroundColor: '#E6F3FF',
   },
-  contentContainer: {
+  header: {
+    backgroundColor: "#00B8BA",
+    height: 80,
+    width: 'auto',
+    padding: 0,
+  },
+  headertext: {
+    paddingTop: 20,
+    textAlign:'right',
+    fontSize: 25,
+    color: '#000000',
+    marginRight:20,
+    fontWeight: 'bold'
+  },
+  body: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 30,
+  },
+  formContainer: {
     width: '100%',
     maxWidth: 500,
     alignItems: 'center',
+    alignSelf: 'center',
   },
-  title: {
+  formTitle: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 30,
+    color: '#000000',
   },
   gridContainer: {
     flexDirection: 'row',
@@ -139,29 +175,39 @@ const styles = StyleSheet.create({
     width: '48%',
     marginBottom: 15,
   },
+  inputLabel: {
+    fontSize: 12,
+    marginBottom: 5,
+    color: '#333',
+  },
   input: {
-    backgroundColor: 'white',
     width: '100%',
+    height: 40,
+    backgroundColor: 'white',
+    borderColor: 'gray',
+    borderRadius: 3,
     borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 10,
-    fontSize: 12.5,
-    borderRadius: 5,
+    paddingHorizontal: 10,
+    color: 'gray',
+  },
+  inputTextBlack: {
+    color: 'black',
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    height: '57%',
+    height: 40,
     backgroundColor: 'white',
+    borderColor: 'gray',
+    borderRadius: 3,
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
   },
   passwordInput: {
     flex: 1,
-    padding: 10,
-    fontSize: 12.5,
+    height: '100%',
+    paddingHorizontal: 10,
+    color: 'gray',
   },
   eyeIcon: {
     padding: 10,
@@ -173,12 +219,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,  
     alignSelf: 'center',
     justifyContent: 'center',  
-    marginTop: 5,
+    marginTop: 20,
   },
   buttonText: {
     color: '#fff',  
     textAlign: 'center',  
   },
+  errorText: {
+    color: 'red',
+    marginTop: 10,
+  },
 });
 
-export default AdministradorAdd;
+export default RegisterForm;

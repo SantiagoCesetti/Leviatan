@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
@@ -31,58 +31,86 @@ function LoginForm() {
     };
 
     return (
-        <View style={styles.container}>
-            <View style={styles.formContainer}>
-                <Text style={styles.title}>Inicio de sesión</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Correo electrónico"
-                    value={email}
-                    onChangeText={(text) => setEmail(text.slice(0, 50))}
-                    keyboardType="email-address"
-                    maxLength={50}
-                />
-                <View style={styles.passwordContainer}>
-                    <TextInput
-                        style={styles.passwordInput}
-                        placeholder="Contraseña"
-                        value={password}
-                        onChangeText={(text) => setPassword(text.slice(0, 20))}
-                        secureTextEntry={!showPassword}
-                        maxLength={20}
-                    />
-                    <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
-                        <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="gray" />
-                    </TouchableOpacity>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.headertext}>Clean Class</Text>
                 </View>
-                <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordContainer}>
-                    <Text style={styles.forgotPassword}>Olvidé contraseña...</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                    <Text style={styles.buttonText}>Iniciar Sesión</Text>
-                </TouchableOpacity>
-                {error ? <Text style={styles.errorText}>{error}</Text> : null}
+                <View style={styles.body}>
+                    <View style={styles.formContainer}>
+                        <Text style={styles.formTitle}>Inicio de sesión</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Correo electrónico"
+                            value={email}
+                            onChangeText={(text) => setEmail(text.slice(0, 50))}
+                            keyboardType="email-address"
+                            maxLength={50}
+                        />
+                        <View style={styles.passwordContainer}>
+                            <TextInput
+                                style={styles.passwordInput}
+                                placeholder="Contraseña"
+                                value={password}
+                                onChangeText={(text) => setPassword(text.slice(0, 20))}
+                                secureTextEntry={!showPassword}
+                                maxLength={20}
+                            />
+                            <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
+                                <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="gray" />
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordContainer}>
+                            <Text style={styles.forgotPassword}>Olvidé contraseña...</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                            <Text style={styles.buttonText}>Iniciar Sesión</Text>
+                        </TouchableOpacity>
+                        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+                    </View>
+                </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
+    scrollViewContent: {
+        flexGrow: 1,
+    },
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
         backgroundColor: '#E6F3FF',
+    },
+    header: {
+        backgroundColor: "#00B8BA",
+        height: 80,
+        width: 'auto',
+        padding: 0,
+    },
+    headertext: {
+        paddingTop: 20,
+        textAlign:'right',
+        fontSize: 25,
+        color: '#000000',
+        marginRight:20,
+        fontWeight: 'bold'
+    },
+    body: {
+        flex: 1,
+        justifyContent: 'center',
+        padding: 30,
     },
     formContainer: {
         width: '100%',
         maxWidth: 300,
         alignItems: 'center',
+        alignSelf: 'center',
     },
-    title: {
+    formTitle: {
         fontSize: 24,
-        marginBottom: 20,
+        marginBottom: 30,
+        color: '#000000',
     },
     input: {
         width: '100%',
