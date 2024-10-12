@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const auth = getAuth(appFirebase);
 
@@ -14,11 +14,25 @@ function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const navigation = useNavigation();
 
+    const resetForm = () => {
+        setEmail('');
+        setPassword('');
+        setError('');
+        setShowPassword(false);
+    };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            resetForm();
+        }, [])
+    );
+
     const handleLogin = async () => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
             // Inicio de sesión exitoso
             setError('');
+            resetForm();
         } catch (error) {
             setError('Error al iniciar sesión: ' + error.message);
         }

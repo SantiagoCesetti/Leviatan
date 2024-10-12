@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const auth = getAuth(appFirebase);
 
@@ -18,12 +18,29 @@ const RegisterForm = () => {
   const [error, setError] = useState('');
   const navigation = useNavigation();
 
+  const resetForm = () => {
+    setNombre("");
+    setApellido("");
+    setEmail("");
+    setTelefono("");
+    setContraseña("");
+    setDireccion("");
+    setShowPassword(false);
+    setError('');
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      resetForm();
+    }, [])
+  );
+
   const handleRegister = async () => {
     try {
       await createUserWithEmailAndPassword(auth, email, contraseña);
       // Registro exitoso
       setError('');
-      // Aquí puedes agregar lógica adicional después del registro exitoso
+      resetForm();
     } catch (error) {
       setError('Error al registrar: ' + error.message);
     }

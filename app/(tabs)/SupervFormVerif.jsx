@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { CheckBox } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const SupervFormVerif = ({ onAdd }) => {
   const [nombre, setNombre] = useState("");
@@ -17,13 +17,27 @@ const SupervFormVerif = ({ onAdd }) => {
 
   const navigation = useNavigation();
 
-  const handleSubmit = () => {
-    const nuevoAdministrador = { nombre, apellido, email, telefono };
-    onAdd(nuevoAdministrador);
+  const resetForm = () => {
     setNombre("");
     setApellido("");
     setEmail("");
     setTelefono("");
+    setIsCheckedOrdenado(false);
+    setIsCheckedBarrido(false);
+    setIsCheckedTrapeado(false);
+    setIsCheckedDesinfectado(false);
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      resetForm();
+    }, [])
+  );
+
+  const handleSubmit = () => {
+    const nuevoAdministrador = { nombre, apellido, email, telefono };
+    onAdd(nuevoAdministrador);
+    resetForm();
   };
 
   const handleHomeNavigation = () => {

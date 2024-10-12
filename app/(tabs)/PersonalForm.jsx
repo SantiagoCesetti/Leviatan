@@ -1,28 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { CheckBox } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const PersonalForm = ({ onAdd }) => {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
   const [telefono, setTelefono] = useState("");
-  const navigation = useNavigation();
-
-  const handleSubmit = () => {
-    const nuevoAdministrador = { nombre, apellido, email, telefono };
-    onAdd(nuevoAdministrador);
-    setNombre("");
-    setApellido("");
-    setEmail("");
-    setTelefono("");
-  };
   const [isOrdenado, setIsOrdenado] = useState(false);
   const [isBarrido, setIsBarrido] = useState(false);
   const [isTrapeado, setIsTrapeado] = useState(false);
   const [isDesinfectado, setIsDesinfectado] = useState(false);
+  const [observacion, setObservacion] = useState("");
+  const navigation = useNavigation();
+
+  const resetForm = () => {
+    setNombre("");
+    setApellido("");
+    setEmail("");
+    setTelefono("");
+    setIsOrdenado(false);
+    setIsBarrido(false);
+    setIsTrapeado(false);
+    setIsDesinfectado(false);
+    setObservacion("");
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      resetForm();
+    }, [])
+  );
+
+  const handleSubmit = () => {
+    const nuevoAdministrador = { nombre, apellido, email, telefono };
+    onAdd(nuevoAdministrador);
+    resetForm();
+  };
 
   const handleHomeNavigation = () => {
     navigation.navigate('index');
@@ -42,8 +58,6 @@ const PersonalForm = ({ onAdd }) => {
         <Text style={styles.headertext}>Clean Class</Text>
       </View>
       <View style={styles.container1}>
-
-
         <View style={styles.body}>
           <View style={styles.container2}>
             <View>
@@ -51,28 +65,21 @@ const PersonalForm = ({ onAdd }) => {
               </View>
               <View style={styles.checks}>
               <CheckBox
-              
                 title="Ordenado"
                 checked={isOrdenado}
                 onPress={() => setIsOrdenado(!isOrdenado)}
               />
-
               <CheckBox
-               
                 title="Barrido"
                 checked={isBarrido}
                 onPress={() => setIsBarrido(!isBarrido)}
               />
-
               <CheckBox
-               
                 title="Trapeado"
                 checked={isTrapeado}
                 onPress={() => setIsTrapeado(!isTrapeado)}
               />
-              
               <CheckBox
-                
                 title="Desinfectado"
                 checked={isDesinfectado}
                 onPress={() => setIsDesinfectado(!isDesinfectado)}
@@ -80,8 +87,10 @@ const PersonalForm = ({ onAdd }) => {
               <View style={styles.inputContainer}>
               <Text style={styles.observacionText}>Observacion</Text>
               <TextInput
-              style={styles.input}
-              placeholder="Escribir Observacion"
+                style={styles.input}
+                placeholder="Escribir Observacion"
+                value={observacion}
+                onChangeText={setObservacion}
               />
               </View>
               </View>

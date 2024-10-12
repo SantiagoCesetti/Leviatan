@@ -1,18 +1,28 @@
-import React, { useState } from "react";  
+import React, { useState, useEffect } from "react";  
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";  
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const SupervisorForm = ({ onAdd }) => {  
   const [nombre, setNombre] = useState("");  
   const [aula, setAula] = useState("");  
   const navigation = useNavigation();
 
+  const resetForm = () => {
+    setNombre("");
+    setAula("");
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      resetForm();
+    }, [])
+  );
+
   const handleSubmit = () => {  
     const nuevoAdministrador = { nombre, aula };  
     onAdd(nuevoAdministrador);  
-    setNombre("");  
-    setAula("");  
+    resetForm();
   };  
 
   const handleHomeNavigation = () => {
