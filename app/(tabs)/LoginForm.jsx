@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const auth = getAuth(appFirebase);
+const googleProvider = new GoogleAuthProvider();
 
 function LoginForm() {
     const [email, setEmail] = useState('');
@@ -35,6 +36,17 @@ function LoginForm() {
             resetForm();
         } catch (error) {
             setError('Error al iniciar sesión: ' + error.message);
+        }
+    };
+
+    const handleGoogleLogin = async () => {
+        try {
+            await signInWithPopup(auth, googleProvider);
+            // Inicio de sesión con Google exitoso
+            setError('');
+            resetForm();
+        } catch (error) {
+            setError('Error al iniciar sesión con Google: ' + error.message);
         }
     };
 
@@ -88,6 +100,10 @@ function LoginForm() {
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button} onPress={handleLogin}>
                             <Text style={styles.buttonText}>Iniciar Sesión</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
+                            <Ionicons name="logo-google" size={24} color="white" style={styles.googleIcon} />
+                            <Text style={styles.buttonText}>Iniciar Sesión con Google</Text>
                         </TouchableOpacity>
                         {error ? <Text style={styles.errorText}>{error}</Text> : null}
                     </View>
@@ -186,6 +202,20 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',  
         marginTop: 8,
+    },
+    googleButton: {
+        height: 40,
+        width: '100%',
+        backgroundColor: '#4285F4',
+        borderRadius: 10,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        marginTop: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    googleIcon: {
+        marginRight: 10,
     },
     buttonText: {
         color: '#fff',  
