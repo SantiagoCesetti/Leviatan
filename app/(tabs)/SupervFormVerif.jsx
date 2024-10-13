@@ -3,13 +3,13 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Dimens
 import { CheckBox } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { getFirestore, collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
 
 const app = getApp();
 const db = getFirestore(app);
 
-const SupervFormVerif = ({ route }) => {
+const SupervFormVerif = () => {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
@@ -22,10 +22,12 @@ const SupervFormVerif = ({ route }) => {
   const [observacion, setObservacion] = useState("");
 
   const navigation = useNavigation();
-  const { formularioId } = route.params;
 
   useEffect(() => {
     const fetchFormulario = async () => {
+      // Aquí deberías obtener el ID del formulario de otra manera,
+      // ya que route.params no está definido
+      const formularioId = "ID_POR_DEFECTO"; // Reemplaza esto con la lógica adecuada
       const docRef = doc(db, "formularios", formularioId);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
@@ -42,7 +44,7 @@ const SupervFormVerif = ({ route }) => {
       }
     };
     fetchFormulario();
-  }, [formularioId]);
+  }, []);
 
   const resetForm = () => {
     setNombre("");
@@ -64,6 +66,8 @@ const SupervFormVerif = ({ route }) => {
 
   const handleSubmit = async () => {
     try {
+      // Aquí también necesitas obtener el ID del formulario de otra manera
+      const formularioId = "ID_POR_DEFECTO"; // Reemplaza esto con la lógica adecuada
       const docRef = doc(db, "formularios", formularioId);
       await updateDoc(docRef, {
         isCheckedOrdenado,
@@ -89,6 +93,8 @@ const SupervFormVerif = ({ route }) => {
 
   const handleDenegar = async () => {
     try {
+      // Aquí también necesitas obtener el ID del formulario de otra manera
+      const formularioId = "ID_POR_DEFECTO"; // Reemplaza esto con la lógica adecuada
       const docRef = doc(db, "formularios", formularioId);
       await updateDoc(docRef, {
         verificado: false,

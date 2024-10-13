@@ -1,17 +1,19 @@
-import React, { useState } from "react";  
+import React, { useState, useEffect } from "react";  
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";  
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
 
 const app = getApp();
 const db = getFirestore(app);
 
-const SupervisorForm = ({ onAdd }) => {  
+const SupervisorForm = () => {  
   const [nombre, setNombre] = useState("");  
   const [aula, setAula] = useState("");  
+  const [ordenes, setOrdenes] = useState([]);
   const navigation = useNavigation();
+  const route = useRoute();
 
   const resetForm = () => {
     setNombre("");
@@ -21,20 +23,51 @@ const SupervisorForm = ({ onAdd }) => {
   useFocusEffect(
     React.useCallback(() => {
       resetForm();
+      fetchOrdenes();
     }, [])
   );
 
-  const handleSubmit = async () => {  
-    const nuevoAdministrador = { nombre, aula };  
+  const fetchOrdenes = async () => {
     try {
-      const docRef = await addDoc(collection(db, "ordenes_limpieza"), nuevoAdministrador);
-      console.log("Documento añadido con ID: ", docRef.id);
-      onAdd(nuevoAdministrador);  
+      const querySnapshot = await getDocs(collection(db, "ordenes"));
+      const ordenesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setOrdenes(ordenesData);
+    } catch (error) {
+      console.error("Error al obtener las órdenes:", error);
+    }
+  };
+
+  const handleSubmit = async () => {  
+    try {
+      const docRef = await addDoc(collection(db, "ordenes"), { nombre, aula });
+      console.log("Orden añadida con ID: ", docRef.id);
       resetForm();
-    } catch (e) {
-      console.error("Error al añadir documento: ", e);
+      fetchOrdenes();
+    } catch (error) {
+      console.error("Error al añadir la orden:", error);
     }
   };  
+
+  const handleUpdate = async (id) => {
+    try {
+      await updateDoc(doc(db, "ordenes", id), { nombre, aula });
+      console.log("Orden actualizada con ID: ", id);
+      resetForm();
+      fetchOrdenes();
+    } catch (error) {
+      console.error("Error al actualizar la orden:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, "ordenes", id));
+      console.log("Orden eliminada con ID: ", id);
+      fetchOrdenes();
+    } catch (error) {
+      console.error("Error al eliminar la orden:", error);
+    }
+  };
 
   const handleHomeNavigation = () => {
     navigation.navigate('index');
@@ -78,6 +111,18 @@ const SupervisorForm = ({ onAdd }) => {
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>  
               <Text style={styles.buttontext}>Guardar</Text>  
             </TouchableOpacity>  
+
+            {ordenes.map((orden) => (
+              <View key={orden.id} style={styles.ordenItem}>
+                <Text>{orden.nombre} - Aula: {orden.aula}</Text>
+                <TouchableOpacity onPress={() => handleUpdate(orden.id)}>
+                  <Text>Actualizar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleDelete(orden.id)}>
+                  <Text>Eliminar</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
           </View>  
         </View>  
       </View>  
@@ -161,6 +206,13 @@ const styles = StyleSheet.create({
   },  
   textinput:{
     fontSize:16,
+  },
+  ordenItem: {
+    marginTop: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 5,
   },
 });  
 
