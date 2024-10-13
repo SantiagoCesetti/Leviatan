@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { CheckBox } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getApp } from 'firebase/app';
 
-// Configuración de Firebase (asegúrate de reemplazar esto con tu propia configuración)
-const firebaseConfig = {
-  // Tu configuración de Firebase aquí
-};
-
-// Inicializa Firebase
-const app = initializeApp(firebaseConfig);
+// Obtener la instancia de Firebase existente
+const app = getApp();
 const db = getFirestore(app);
 
 const PersonalForm = ({ onAdd }) => {
