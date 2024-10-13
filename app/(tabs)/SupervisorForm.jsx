@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";  
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getApp } from 'firebase/app';
+
+// Obtener la instancia de Firebase existente
+const app = getApp();
+const db = getFirestore(app);
 
 const SupervisorForm = ({ onAdd }) => {  
   const [nombre, setNombre] = useState("");  
@@ -19,10 +25,18 @@ const SupervisorForm = ({ onAdd }) => {
     }, [])
   );
 
-  const handleSubmit = () => {  
+  const handleSubmit = async () => {  
     const nuevoAdministrador = { nombre, aula };  
-    onAdd(nuevoAdministrador);  
-    resetForm();
+    try {
+      const docRef = await addDoc(collection(db, "ordenes_limpieza"), nuevoAdministrador);
+      console.log("Documento añadido con ID: ", docRef.id);
+      onAdd(nuevoAdministrador);  
+      resetForm();
+      // Aquí puedes agregar una navegación o un mensaje de éxito
+    } catch (e) {
+      console.error("Error al añadir documento: ", e);
+      // Aquí puedes manejar el error, tal vez mostrando un mensaje al usuario
+    }
   };  
 
   const handleHomeNavigation = () => {
@@ -44,26 +58,24 @@ const SupervisorForm = ({ onAdd }) => {
             <Text style={styles.tittle}>Orden de Limpieza</Text>  
             <Text>Ingresa los Datos del trabajador y el número del aula</Text>  
 
-            <View style={styles.inputRow}>  
-              <View style={styles.inputContainer}>  
-                <Text style={styles.textinput}>Nombre Trabajador</Text>  
-                <TextInput  
-                  style={styles.input}  
-                  placeholder="Ingresa el nombre del trabajador"  
-                  value={nombre}  
-                  onChangeText={setNombre}  
-                />  
-              </View>  
+            <View style={styles.inputContainer}>  
+              <Text style={styles.textinput}>Nombre Trabajador</Text>  
+              <TextInput  
+                style={styles.input}  
+                placeholder="Ingresa el nombre del trabajador"  
+                value={nombre}  
+                onChangeText={setNombre}  
+              />  
+            </View>  
 
-              <View style={styles.inputContainer}>  
-                <Text style={styles.textinput}>Número del aula</Text>  
-                <TextInput  
-                  style={styles.input}  
-                  placeholder="Ingresa el número del aula"  
-                  value={aula}  
-                  onChangeText={setAula}  
-                />  
-              </View>  
+            <View style={styles.inputContainer}>  
+              <Text style={styles.textinput}>Número del aula</Text>  
+              <TextInput  
+                style={styles.input}  
+                placeholder="Ingresa el número del aula"  
+                value={aula}  
+                onChangeText={setAula}  
+              />  
             </View>  
 
             <TouchableOpacity style={styles.button} onPress={handleSubmit}>  
@@ -82,14 +94,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#E6F3FF',  
   },  
-  inputRow: {  
-    flexDirection: 'row',  
-    justifyContent: 'space-between',  
-    marginTop:30,
-  },  
   inputContainer: {  
-    flex: 1,  
-    marginHorizontal: 5,  
+    marginTop: 20,  
   },  
   input: {  
     borderWidth: 1,  
