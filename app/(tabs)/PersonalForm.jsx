@@ -3,6 +3,17 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 
 import { CheckBox } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+
+// Configuración de Firebase (asegúrate de reemplazar esto con tu propia configuración)
+const firebaseConfig = {
+  // Tu configuración de Firebase aquí
+};
+
+// Inicializa Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 const PersonalForm = ({ onAdd }) => {
   const [nombre, setNombre] = useState("");
@@ -34,10 +45,28 @@ const PersonalForm = ({ onAdd }) => {
     }, [])
   );
 
-  const handleSubmit = () => {
-    const nuevoAdministrador = { nombre, apellido, email, telefono };
-    onAdd(nuevoAdministrador);
-    resetForm();
+  const handleSubmit = async () => {
+    const nuevoAdministrador = { 
+      nombre, 
+      apellido, 
+      email, 
+      telefono,
+      isOrdenado,
+      isBarrido,
+      isTrapeado,
+      isDesinfectado,
+      observacion
+    };
+    
+    try {
+      const docRef = await addDoc(collection(db, "formularios"), nuevoAdministrador);
+      console.log("Documento añadido con ID: ", docRef.id);
+      onAdd(nuevoAdministrador);
+      resetForm();
+      handleRedirect();
+    } catch (e) {
+      console.error("Error al añadir documento: ", e);
+    }
   };
 
   const handleHomeNavigation = () => {
@@ -99,7 +128,7 @@ const PersonalForm = ({ onAdd }) => {
               </View>
               </View>
               
-            <TouchableOpacity style={styles.button} onPress={handleRedirect}>
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
               <Text style={styles.buttontext}>Enviar</Text>
             </TouchableOpacity>
           </View>
