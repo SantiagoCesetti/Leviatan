@@ -57,7 +57,7 @@ const PersonalForm = ({ onAdd }) => {
       console.log("Documento añadido con ID: ", docRef.id);
       onAdd(nuevoAdministrador);
       resetForm();
-      handleRedirect();
+      navigation.navigate('Redirect'); // Corregido para que coincida con el nombre del archivo
     } catch (e) {
       console.error("Error al añadir documento: ", e);
     }
@@ -65,12 +65,6 @@ const PersonalForm = ({ onAdd }) => {
 
   const handleHomeNavigation = () => {
     navigation.navigate('index');
-  };
-
-  const handleRedirect = () => {
-    setTimeout(() => {
-      navigation.navigate('redirect');
-    }, 500);
   };
 
   return (
