@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";  
+import React, { useState } from "react";  
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";  
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
 
-// Obtener la instancia de Firebase existente
 const app = getApp();
 const db = getFirestore(app);
 
