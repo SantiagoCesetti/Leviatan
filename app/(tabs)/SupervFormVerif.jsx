@@ -3,8 +3,13 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Dimens
 import { CheckBox } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { getFirestore, collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { getApp } from 'firebase/app';
 
-const SupervFormVerif = ({ onAdd }) => {
+const app = getApp();
+const db = getFirestore(app);
+
+const SupervFormVerif = ({ route }) => {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
@@ -17,6 +22,27 @@ const SupervFormVerif = ({ onAdd }) => {
   const [observacion, setObservacion] = useState("");
 
   const navigation = useNavigation();
+  const { formularioId } = route.params;
+
+  useEffect(() => {
+    const fetchFormulario = async () => {
+      const docRef = doc(db, "formularios", formularioId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setNombre(data.nombre);
+        setApellido(data.apellido);
+        setEmail(data.email);
+        setTelefono(data.telefono);
+        setIsCheckedOrdenado(data.isOrdenado);
+        setIsCheckedBarrido(data.isBarrido);
+        setIsCheckedTrapeado(data.isTrapeado);
+        setIsCheckedDesinfectado(data.isDesinfectado);
+        setObservacion(data.observacion);
+      }
+    };
+    fetchFormulario();
+  }, [formularioId]);
 
   const resetForm = () => {
     setNombre("");
@@ -36,22 +62,45 @@ const SupervFormVerif = ({ onAdd }) => {
     }, [])
   );
 
-  const handleSubmit = () => {
-    const nuevoAdministrador = { nombre, apellido, email, telefono };
-    resetForm();
-    setTimeout(() => {
-      navigation.navigate('redirect');
-    }, 500);
+  const handleSubmit = async () => {
+    try {
+      const docRef = doc(db, "formularios", formularioId);
+      await updateDoc(docRef, {
+        isCheckedOrdenado,
+        isCheckedBarrido,
+        isCheckedTrapeado,
+        isCheckedDesinfectado,
+        observacion,
+        verificado: true
+      });
+      console.log("Documento actualizado con éxito");
+      resetForm();
+      setTimeout(() => {
+        navigation.navigate('redirect');
+      }, 500);
+    } catch (e) {
+      console.error("Error al actualizar documento: ", e);
+    }
   };
 
   const handleHomeNavigation = () => {
     navigation.navigate('index');
   };
 
-  const handleDenegar = () => {
-    setTimeout(() => {
-      navigation.navigate('redirect');
-    }, 500);
+  const handleDenegar = async () => {
+    try {
+      const docRef = doc(db, "formularios", formularioId);
+      await updateDoc(docRef, {
+        verificado: false,
+        observacion
+      });
+      console.log("Documento denegado con éxito");
+      setTimeout(() => {
+        navigation.navigate('redirect');
+      }, 500);
+    } catch (e) {
+      console.error("Error al denegar documento: ", e);
+    }
   };
 
   return (
@@ -68,7 +117,7 @@ const SupervFormVerif = ({ onAdd }) => {
             <View style={styles.conText}>
               <Text style={styles.conTitle}>Verificación del aula</Text>
               <Text style={styles.conTitle}>Limpieza del aula número: 1</Text>
-              <Text>Limpieza hecha por: Jaime Caseti</Text>
+              <Text>Limpieza hecha por: {nombre} {apellido}</Text>
             </View>
             <View>
               <CheckBox

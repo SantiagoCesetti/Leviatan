@@ -32,10 +32,8 @@ const SupervisorForm = ({ onAdd }) => {
       console.log("Documento añadido con ID: ", docRef.id);
       onAdd(nuevoAdministrador);  
       resetForm();
-      // Aquí puedes agregar una navegación o un mensaje de éxito
     } catch (e) {
       console.error("Error al añadir documento: ", e);
-      // Aquí puedes manejar el error, tal vez mostrando un mensaje al usuario
     }
   };  
 

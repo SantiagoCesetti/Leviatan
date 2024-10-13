@@ -6,7 +6,6 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
 
-// Obtener la instancia de Firebase existente
 const app = getApp();
 const db = getFirestore(app);
 

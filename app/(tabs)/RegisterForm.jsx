@@ -45,10 +45,9 @@ const RegisterForm = () => {
     try {
         await createUserWithEmailAndPassword(auth, email, contraseña);
         // Registro exitoso
-        setError(''); // Limpiar errores
-        resetForm(); // Reiniciar el formulario
+        setError(''); 
+        resetForm(); 
     } catch (error) {
-        // Manejo de errores
         setError('Error al registrar: ' + error.message);
     }
   };
