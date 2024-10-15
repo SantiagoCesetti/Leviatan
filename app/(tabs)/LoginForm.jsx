@@ -147,7 +147,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     homeIcon: {
-        marginLeft: 20,
+        marginLeft: 25,
+        marginTop: 10, 
     },
     headertext: {
         paddingTop: 20,
