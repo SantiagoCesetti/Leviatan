@@ -16,7 +16,7 @@ import "firebase/firestore";
         const [habilitar, setHabilitar] = useState(1);
     
         const handlesubmit = async (e) => {
-            e.preventDeFault();
+            e.preventDefault();
 
         const nuevoPersonal = {
             nombre,
