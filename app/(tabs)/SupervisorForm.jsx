@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";  
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";  
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";  
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
@@ -74,60 +74,59 @@ const SupervisorForm = () => {
   };
 
   return (  
-    <ScrollView style={styles.container}>
-  
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <View style={styles.header}>  
         <TouchableOpacity onPress={handleHomeNavigation} style={styles.homeIcon}>
           <Ionicons name="home-outline" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.headertext}>Clean Class</Text>  
       </View>  
-      <View style={styles.container1}>  
-        <View style={styles.body}>  
-          <View style={styles.container2}>  
-            <Text style={styles.tittle}>Orden de Limpieza</Text>  
-            <Text>Ingresa los Datos del trabajador y el número del aula</Text>  
+      <View style={styles.body}>  
+        <View style={styles.formContainer}>  
+          <Text style={styles.title}>Orden de Limpieza</Text>  
+          <Text style={styles.subtitle}>Ingresa los Datos del trabajador y el número del aula</Text>  
 
-            <View style={styles.inputContainer}>  
-              <Text style={styles.textinput}>Nombre Trabajador</Text>  
-              <TextInput  
-                style={styles.input}  
-                placeholder="Ingresa el nombre del trabajador"  
-                value={nombre}  
-                onChangeText={setNombre}  
-              />  
-            </View>  
-
-            <View style={styles.inputContainer}>  
-              <Text style={styles.textinput}>Número del aula</Text>  
-              <TextInput  
-                style={styles.input}  
-                placeholder="Ingresa el número del aula"  
-                value={aula}  
-                onChangeText={setAula}  
-              />  
-            </View>  
-
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>  
-              <Text style={styles.buttontext}>Guardar</Text>  
-            </TouchableOpacity>  
-
-            {ordenes.map((orden) => (
-              <View key={orden.id} style={styles.ordenItem}>
-                <Text>{orden.nombre} - Aula: {orden.aula}</Text>
-                <TouchableOpacity onPress={() => handleUpdate(orden.id)}>
-                  <Text>Actualizar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDelete(orden.id)}>
-                  <Text>Eliminar</Text>
-                </TouchableOpacity>
-              </View>
-            ))}
+          <View style={styles.inputContainer}>  
+            <Text style={styles.textinput}>Nombre Trabajador</Text>  
+            <TextInput  
+              style={styles.input}  
+              placeholder="Ingresa el nombre del trabajador"  
+              value={nombre}  
+              onChangeText={setNombre}  
+            />  
           </View>  
+
+          <View style={styles.inputContainer}>  
+            <Text style={styles.textinput}>Número del aula</Text>  
+            <TextInput  
+              style={styles.input}  
+              placeholder="Ingresa el número del aula"  
+              value={aula}  
+              onChangeText={setAula}  
+            />  
+          </View>  
+
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>  
+            <Text style={styles.buttontext}>Guardar</Text>  
+          </TouchableOpacity>  
+
+          {ordenes.slice(0, 3).map((orden) => (
+            <View key={orden.id} style={styles.ordenItem}>
+              <Text>{orden.nombre} - Aula: {orden.aula}</Text>
+              <TouchableOpacity onPress={() => handleUpdate(orden.id)}>
+                <Text>Actualizar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleDelete(orden.id)}>
+                <Text>Eliminar</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
         </View>  
       </View>  
-   
-    </ScrollView>
+    </KeyboardAvoidingView>
   );  
 };  
 
@@ -165,30 +164,28 @@ const styles = StyleSheet.create({
     marginRight: 20,  
     fontWeight: 'bold',  
   },  
-  container1: {  
-    backgroundColor: '#E6F3FF',  
-    flex: 1,  
-    
+  body: {  
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },  
-  container2: {  
-    flex: 1,  
-    borderWidth: 0.5,  
+  formContainer: {  
+    width: '100%',
     padding: 20,  
     borderRadius: 25,  
     backgroundColor: '#fff',  
-    marginBottom:500
   },  
-  body: {  
-    paddingTop: 100,  
-    padding: 30, 
-    height:1000, 
-  },  
-  tittle: {  
+  title: {  
     fontSize: 30,  
-    marginTop: 30,  
+    marginBottom: 10,
     color: '#000',  
     fontWeight: 'bold',  
   },  
+  subtitle: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
   button: {  
     height: 40,  
     width: '80%',  
@@ -197,12 +194,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',  
     marginTop: 20,
-
   },  
   buttontext: {  
     color: '#fff',  
     textAlign: 'center',  
-
   },  
   textinput:{
     fontSize:16,

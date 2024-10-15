@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import { CheckBox } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -57,7 +57,7 @@ const PersonalForm = ({ onAdd }) => {
       console.log("Documento añadido con ID: ", docRef.id);
       onAdd(nuevoAdministrador);
       resetForm();
-      navigation.navigate('Redirect'); // Corregido para que coincida con el nombre del archivo
+      navigation.navigate('Redirect');
     } catch (e) {
       console.error("Error al añadir documento: ", e);
     }
@@ -68,73 +68,118 @@ const PersonalForm = ({ onAdd }) => {
   };
 
   return (
-    <ScrollView>
-    <View style={styles.container}>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <View style={styles.header}>
         <TouchableOpacity onPress={handleHomeNavigation} style={styles.homeIcon}>
           <Ionicons name="home-outline" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.headertext}>Clean Class</Text>
       </View>
-      <View style={styles.container1}>
-        <View style={styles.body}>
-          <View style={styles.container2}>
-            <View>
-              <Text style={styles.tittle}>Limpieza del aula numero: 1</Text>
-              </View>
-              <View style={styles.checks}>
-              <CheckBox
-                title="Ordenado"
-                checked={isOrdenado}
-                onPress={() => setIsOrdenado(!isOrdenado)}
-              />
-              <CheckBox
-                title="Barrido"
-                checked={isBarrido}
-                onPress={() => setIsBarrido(!isBarrido)}
-              />
-              <CheckBox
-                title="Trapeado"
-                checked={isTrapeado}
-                onPress={() => setIsTrapeado(!isTrapeado)}
-              />
-              <CheckBox
-                title="Desinfectado"
-                checked={isDesinfectado}
-                onPress={() => setIsDesinfectado(!isDesinfectado)}
-              />
-              <View style={styles.inputContainer}>
-              <Text style={styles.observacionText}>Observacion</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Escribir Observacion"
-                value={observacion}
-                onChangeText={(text) => setObservacion(text.slice(0, 512))}
-                maxLength={512}
-                multiline={true}
-              />
-              </View>
-              </View>
-              
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttontext}>Enviar</Text>
-            </TouchableOpacity>
+      <View style={styles.body}>
+        <View style={styles.formContainer}>
+          <Text style={styles.title}>Limpieza del aula numero: 1</Text>
+          <View style={styles.checks}>
+            <CheckBox
+              title="Ordenado"
+              checked={isOrdenado}
+              onPress={() => setIsOrdenado(!isOrdenado)}
+            />
+            <CheckBox
+              title="Barrido"
+              checked={isBarrido}
+              onPress={() => setIsBarrido(!isBarrido)}
+            />
+            <CheckBox
+              title="Trapeado"
+              checked={isTrapeado}
+              onPress={() => setIsTrapeado(!isTrapeado)}
+            />
+            <CheckBox
+              title="Desinfectado"
+              checked={isDesinfectado}
+              onPress={() => setIsDesinfectado(!isDesinfectado)}
+            />
           </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.observacionText}>Observacion</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Escribir Observacion"
+              value={observacion}
+              onChangeText={(text) => setObservacion(text.slice(0, 512))}
+              maxLength={512}
+              multiline={true}
+            />
+          </View>
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <Text style={styles.buttontext}>Enviar</Text>
+          </TouchableOpacity>
         </View>
       </View>
-    </View>
-    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
+    backgroundColor: '#E6F3FF',
+  },
+  header: {
+    backgroundColor: "#00B8BA",
+    height: 80,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+  },
+  homeIcon: {
+    padding: 10,
+  },
+  headertext: {
+    fontSize: 25,
+    color: '#000000',
+    fontWeight: 'bold'
+  },
+  body: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  formContainer: {
+    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 25,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  title: {
+    fontSize: 22,
+    marginBottom: 20,
+    color: '#000000',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  checks: {
+    marginBottom: 15,
   },
   inputContainer: {
-    marginTop:15,
-    marginLeft:10,
+    marginBottom: 20,
+  },
+  observacionText: {
+    fontSize: 16,
+    marginBottom: 5,
   },
   input: {
     borderWidth: 2,
@@ -146,69 +191,16 @@ const styles = StyleSheet.create({
     height: 100,
     textAlignVertical: 'top',
   },
-  header: {
-    backgroundColor: "#00B8BA",
-    height: 80,
-    width: 'auto',
-    padding: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  homeIcon: {
-    marginLeft: 20,
-  },
-  headertext: {
-    fontSize: 25,
-    color: '#0000000',
-    marginRight:20,
-    fontWeight: 'bold'
-  },
-  container1: {
-    backgroundColor: '#E6F3FF',
-    height: 1000,
-  },
-  container2: {
-    height: 520,
-    borderWidth: 0.5,
-    padding: 20,
-    borderRadius: 25,
-    backgroundColor: '#fff',
-   
-  },
-  body: {
-    paddingTop: 90,
-    padding: 30,
-  },
-  tittle: {
-    fontSize: 22,
-    marginBottom: 30,
-    color:'#000000',
-    fontWeight: 'bold'
-    
-  },
   button: {  
     height: 40,  
-    width: '80%',  
     backgroundColor: '#000',  
     borderRadius: 10,  
-    alignSelf: 'center',
     justifyContent: 'center',  
-    
   },  
   buttontext: {  
     color: '#fff',  
     textAlign: 'center',  
-    
   },  
-  checks:{
-    marginTop:30,
-   marginBottom:20, 
-  },
-  observacionText: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
 });
 
 export default PersonalForm;
