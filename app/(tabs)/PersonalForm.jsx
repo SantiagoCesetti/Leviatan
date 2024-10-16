@@ -3,9 +3,10 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingVi
 import { CheckBox } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, doc, setDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import Header from "../../components/Header";
 
 const app = getApp();
 const db = getFirestore(app);
@@ -79,8 +80,10 @@ const PersonalForm = ({ onAdd }) => {
     };
     
     try {
-      const docRef = await addDoc(collection(db, "formularios"), nuevoFormulario);
-      console.log("Formulario añadido con ID: ", docRef.id);
+      const formularioId = "fYA738nPz7Ubrz7whabd";
+      const docRef = doc(db, "formularios", formularioId);
+      await setDoc(docRef, nuevoFormulario);
+      console.log("Formulario añadido con ID: ", formularioId);
       onAdd(nuevoFormulario);
       resetForm();
       navigation.navigate('redirect');
@@ -96,14 +99,8 @@ const PersonalForm = ({ onAdd }) => {
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-      <View style={styles.header}>
-        <TouchableOpacity onPress={handleHomeNavigation} style={styles.homeIcon}>
-          <Ionicons name="home-outline" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.headertext}>Clean Class</Text>
-      </View>
+      style={styles.container}>
+      <Header handleHomeNavigation={handleHomeNavigation} />
       <View style={styles.body}>
         <View style={styles.formContainer}>
           <Text style={styles.title}>Limpieza del aula numero: 1</Text>
@@ -153,22 +150,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#E6F3FF',
-  },
-  header: {
-    backgroundColor: "#00B8BA",
-    height: 80,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-  },
-  homeIcon: {
-    padding: 10,
-  },
-  headertext: {
-    fontSize: 25,
-    color: '#000000',
-    fontWeight: 'bold'
   },
   body: {
     flex: 1,

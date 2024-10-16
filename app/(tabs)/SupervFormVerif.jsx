@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
+import Header from "../../components/Header";
 
 const app = getApp();
 const db = getFirestore(app);
@@ -110,12 +111,7 @@ const SupervFormVerif = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <View style={styles.head}>
-        <TouchableOpacity onPress={handleHomeNavigation} style={styles.homeIcon}>
-          <Ionicons name="home-outline" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.title}>Clean Class</Text>
-      </View>
+            <Header handleHomeNavigation={handleHomeNavigation} />
       <View style={styles.body}>
         <View style={styles.contenedor}>
           <View style={styles.conText}>
@@ -176,25 +172,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#E6F3FF',
-  },
-  head: {
-    backgroundColor: '#00B8BA',
-    height: 80,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-  },
-  homeIcon: {
-    padding: 5,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000000',
-    textAlign: 'right',
-    flex: 1,
-    marginRight: 10,
   },
   body: {
     flex: 1,

@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import Header from "../../components/Header";
 
 const auth = getAuth(appFirebase);
 
@@ -78,13 +79,9 @@ const RegisterForm = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleHomeNavigation} style={styles.homeIcon}>
-            <Ionicons name="home-outline" size={24} color="black" />
-          </TouchableOpacity>
-          <Text style={styles.headertext}>Clean Class</Text>
-        </View>
+      <View style={styles.container}
+      >
+      <Header handleHomeNavigation={handleHomeNavigation} />
         <View style={styles.body}>
           <View style={styles.formContainer}>
             <Text style={styles.formTitle}>Registro de usuario</Text>
@@ -185,24 +182,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#E6F3FF',
-  },
-  header: {
-    backgroundColor: "#00B8BA",
-    height: 80,
-    width: 'auto',
-    padding: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  homeIcon: {
-    marginLeft: 20,
-  },
-  headertext: {
-    fontSize: 25,
-    color: '#000000',
-    marginRight: 20,
-    fontWeight: 'bold'
   },
   body: {
     flex: 1,
