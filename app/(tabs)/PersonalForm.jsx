@@ -5,9 +5,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const app = getApp();
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 const PersonalForm = ({ onAdd }) => {
   const [nombre, setNombre] = useState("");
@@ -19,6 +21,7 @@ const PersonalForm = ({ onAdd }) => {
   const [isTrapeado, setIsTrapeado] = useState(false);
   const [isDesinfectado, setIsDesinfectado] = useState(false);
   const [observacion, setObservacion] = useState("");
+  const [imagen, setImagen] = useState(null);
   const navigation = useNavigation();
 
   const resetForm = () => {
@@ -31,6 +34,7 @@ const PersonalForm = ({ onAdd }) => {
     setIsTrapeado(false);
     setIsDesinfectado(false);
     setObservacion("");
+    setImagen(null);
   };
 
   useFocusEffect(
@@ -39,8 +43,28 @@ const PersonalForm = ({ onAdd }) => {
     }, [])
   );
 
+  const handleImageUpload = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const storageRef = ref(storage, `imagenes/${Date.now()}`);
+    
+    try {
+      await uploadBytes(storageRef, blob);
+      const downloadURL = await getDownloadURL(storageRef);
+      return downloadURL;
+    } catch (error) {
+      console.error("Error al subir la imagen: ", error);
+      return null;
+    }
+  };
+
   const handleSubmit = async () => {
-    const nuevoAdministrador = { 
+    let imageUrl = null;
+    if (imagen) {
+      imageUrl = await handleImageUpload(imagen);
+    }
+
+    const nuevoFormulario = { 
       nombre, 
       apellido, 
       email, 
@@ -49,17 +73,19 @@ const PersonalForm = ({ onAdd }) => {
       isBarrido,
       isTrapeado,
       isDesinfectado,
-      observacion
+      observacion,
+      imagen: imageUrl,
+      fechaCreacion: new Date()
     };
     
     try {
-      const docRef = await addDoc(collection(db, "formularios"), nuevoAdministrador);
-      console.log("Documento añadido con ID: ", docRef.id);
-      onAdd(nuevoAdministrador);
+      const docRef = await addDoc(collection(db, "formularios"), nuevoFormulario);
+      console.log("Formulario añadido con ID: ", docRef.id);
+      onAdd(nuevoFormulario);
       resetForm();
-      navigation.navigate('Redirect');
+      navigation.navigate('redirect');
     } catch (e) {
-      console.error("Error al añadir documento: ", e);
+      console.error("Error al añadir formulario: ", e);
     }
   };
 
