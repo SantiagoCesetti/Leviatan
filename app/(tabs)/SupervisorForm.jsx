@@ -298,6 +298,9 @@ const styles = StyleSheet.create({
     color: '#444',
     marginBottom: 5,
   },
+  inputContainer: {
+    marginBottom: 20,
+  },
 });  
 
 export default SupervisorForm;

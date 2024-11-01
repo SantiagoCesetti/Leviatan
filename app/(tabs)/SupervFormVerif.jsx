@@ -111,53 +111,84 @@ const SupervFormVerif = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-            <Header handleHomeNavigation={handleHomeNavigation} />
+      <Header handleHomeNavigation={handleHomeNavigation} />
       <View style={styles.body}>
-        <View style={styles.contenedor}>
-          <View style={styles.conText}>
-            <Text style={styles.conTitle}>Verificación del aula</Text>
-            <Text style={styles.conTitle}>Limpieza del aula número: 1</Text>
-            <Text>Limpieza hecha por: {nombre} {apellido}</Text>
+        <View style={styles.formContainer}>
+          <View style={styles.titleContainer}>
+            <Ionicons name="shield-checkmark" size={35} color="#00B8BA" />
+            <Text style={styles.title}>Verificación del Aula</Text>
           </View>
-          <View>
-            <CheckBox
-              title="Ordenado"
-              checked={isCheckedOrdenado}
-              onPress={() => setIsCheckedOrdenado(!isCheckedOrdenado)}
-            />
-            <CheckBox
-              title="Barrido"
-              checked={isCheckedBarrido}
-              onPress={() => setIsCheckedBarrido(!isCheckedBarrido)}
-            />
-            <CheckBox
-              title="Trapeado"
-              checked={isCheckedTrapeado}
-              onPress={() => setIsCheckedTrapeado(!isCheckedTrapeado)}
-            />
-            <CheckBox
-              title="Desinfectado"
-              checked={isCheckedDesinfectado}
-              onPress={() => setIsCheckedDesinfectado(!isCheckedDesinfectado)}
-            />
+          <Text style={styles.subtitle}>✨ Aula número: 1</Text>
+          <Text style={styles.personInfo}>👤 Limpieza realizada por: {nombre} {apellido}</Text>
+
+          <View style={styles.sectionTitle}>
+            <Ionicons name="checkmark-circle" size={24} color="#00B8BA" />
+            <Text style={styles.sectionText}>Verificar tareas</Text>
           </View>
+
+          <View style={styles.checksContainer}>
+            <View style={styles.checkRow}>
+              <CheckBox
+                title="🏠 Ordenado"
+                checked={isCheckedOrdenado}
+                onPress={() => setIsCheckedOrdenado(!isCheckedOrdenado)}
+                containerStyle={styles.checkbox}
+                textStyle={styles.checkboxText}
+                checkedColor="#00B8BA"
+              />
+              <CheckBox
+                title="🧹 Barrido"
+                checked={isCheckedBarrido}
+                onPress={() => setIsCheckedBarrido(!isCheckedBarrido)}
+                containerStyle={styles.checkbox}
+                textStyle={styles.checkboxText}
+                checkedColor="#00B8BA"
+              />
+            </View>
+            <View style={styles.checkRow}>
+              <CheckBox
+                title="🧼 Trapeado"
+                checked={isCheckedTrapeado}
+                onPress={() => setIsCheckedTrapeado(!isCheckedTrapeado)}
+                containerStyle={styles.checkbox}
+                textStyle={styles.checkboxText}
+                checkedColor="#00B8BA"
+              />
+              <CheckBox
+                title="🧴 Desinfectado"
+                checked={isCheckedDesinfectado}
+                onPress={() => setIsCheckedDesinfectado(!isCheckedDesinfectado)}
+                containerStyle={styles.checkbox}
+                textStyle={styles.checkboxText}
+                checkedColor="#00B8BA"
+              />
+            </View>
+          </View>
+
           <View style={styles.inputContainer}>
-            <Text style={styles.observacionText}>Observación</Text>
+            <View style={styles.sectionTitle}>
+              <Ionicons name="chatbubble-ellipses" size={24} color="#00B8BA" />
+              <Text style={styles.sectionText}>Observaciones</Text>
+            </View>
             <TextInput
               style={styles.input}
-              placeholder="Escribir Observación"
+              placeholder="✍️ Escribe tus observaciones aquí..."
               value={observacion}
               onChangeText={(text) => setObservacion(text.slice(0, 512))}
               maxLength={512}
               multiline={true}
+              placeholderTextColor="#999"
             />
           </View>
-          <View style={styles.contButton}>
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-              <Text style={styles.buttontext}>Aceptar</Text>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.acceptButton} onPress={handleSubmit}>
+              <Ionicons name="checkmark-circle" size={22} color="white" />
+              <Text style={styles.buttonText}>Aprobar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonC} onPress={handleDenegar}>
-              <Text>Denegar</Text>
+            <TouchableOpacity style={styles.rejectButton} onPress={handleDenegar}>
+              <Ionicons name="close-circle" size={22} color="white" />
+              <Text style={styles.buttonText}>Denegar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -171,68 +202,148 @@ const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E6F3FF',
+    backgroundColor: '#F0F8FF',
   },
   body: {
     flex: 1,
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    justifyContent: 'center',
     paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
   },
-  contenedor: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#505050',
-    borderWidth: 1,
+  formContainer: {
     width: '100%',
-    borderRadius: 15,
+    maxWidth: 500,
+    backgroundColor: '#fff',
+    borderRadius: 20,
     padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
   },
-  conText: {
-    marginBottom: 10,
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 8,
   },
-  conTitle: {
+  title: {
+    fontSize: 24,
+    color: '#333',
     fontWeight: 'bold',
+  },
+  subtitle: {
     fontSize: 16,
+    color: '#666',
+    marginBottom: 8,
+    fontWeight: '500',
+  },
+  personInfo: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    gap: 6,
+  },
+  sectionText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#444',
+  },
+  checksContainer: {
+    marginBottom: 20,
+    backgroundColor: '#F8F9FA',
+    padding: 12,
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+  },
+  checkRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  checkbox: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    padding: 6,
+    margin: 0,
+    width: '48%',
+  },
+  checkboxText: {
+    fontWeight: '500',
+    fontSize: 14,
+    color: '#444',
   },
   inputContainer: {
-    marginTop: 10,
-  },
-  observacionText: {
-    fontSize: 14,
-    marginBottom: 5,
+    marginBottom: 20,
   },
   input: {
     borderWidth: 2,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    padding: 10,
-    height: 60,
+    borderColor: '#E0E0E0',
+    padding: 12,
+    fontSize: 14,
+    color: '#333',
+    borderRadius: 12,
+    height: 100,
     textAlignVertical: 'top',
+    backgroundColor: '#F8F9FA',
   },
-  contButton: {
-    marginTop: 20,
+  buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 10,
   },
-  button: {
-    borderRadius: 5,
-    backgroundColor: '#000000',
+  acceptButton: {
+    flex: 1,
+    height: 45,
+    backgroundColor: '#00B8BA',
+    borderRadius: 12,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '45%',
-    padding: 10,
+    gap: 8,
+    shadowColor: "#00B8BA",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  buttonC: {
-    borderRadius: 5,
-    width: '45%',
+  rejectButton: {
+    flex: 1,
+    height: 45,
+    backgroundColor: '#FF6B6B',
+    borderRadius: 12,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: '#C7C7C7',
-    borderWidth: 1,
-    padding: 10,
+    gap: 8,
+    shadowColor: "#FF6B6B",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  buttontext: {
-    color: '#FFFFFF',
+  buttonText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
   },
 });
 
