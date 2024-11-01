@@ -68,7 +68,7 @@ function LoginForm() {
     };
 
     const handleForgotPassword = () => {
-        Linking.openURL('https://www.youtube.com/watch?v=xvFZjo5PgG0');
+        Linking.openURL('https://only-fans.uk/pantu');
     };
 
     const handleHomeNavigation = () => {
@@ -78,30 +78,34 @@ function LoginForm() {
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
             <View style={styles.container}>
-            <Header handleHomeNavigation={handleHomeNavigation} />
+                <Header handleHomeNavigation={handleHomeNavigation} />
                 <View style={styles.body}>
                     <View style={styles.formContainer}>
                         <Text style={styles.formTitle}>Inicio de sesión</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Correo electrónico"
-                            value={email}
-                            onChangeText={(text) => setEmail(text.slice(0, 50))}
-                            keyboardType="email-address"
-                            maxLength={50}
-                        />
-                        <View style={styles.passwordContainer}>
+                        <View style={styles.inputWrapper}>
+                            <Text style={styles.inputLabel}>Correo electrónico</Text>
                             <TextInput
-                                style={styles.passwordInput}
-                                placeholder="Contraseña"
-                                value={password}
-                                onChangeText={(text) => setPassword(text.slice(0, 20))}
-                                secureTextEntry={!showPassword}
-                                maxLength={20}
+                                style={styles.input}
+                                value={email}
+                                onChangeText={(text) => setEmail(text.slice(0, 50))}
+                                keyboardType="email-address"
+                                maxLength={50}
                             />
-                            <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
-                                <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="gray" />
-                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.inputWrapper}>
+                            <Text style={styles.inputLabel}>Contraseña</Text>
+                            <View style={styles.passwordContainer}>
+                                <TextInput
+                                    style={styles.passwordInput}
+                                    value={password}
+                                    onChangeText={(text) => setPassword(text.slice(0, 20))}
+                                    secureTextEntry={!showPassword}
+                                    maxLength={20}
+                                />
+                                <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
+                                    <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#666" />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                         <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordContainer}>
                             <Text style={styles.forgotPassword}>Olvidé contraseña...</Text>
@@ -131,17 +135,25 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#E6F3FF',
+        backgroundColor: '#f0f8ff',
     },
     body: {
         flex: 1,
         justifyContent: 'center',
+        alignItems: 'center',
         padding: 30,
     },
     formContainer: {
         width: '100%',
         maxWidth: 300,
-        alignItems: 'center',
+        backgroundColor: 'white',
+        padding: 25,
+        borderRadius: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        elevation: 5,
         alignSelf: 'center',
     },
     formTitle: {
@@ -149,34 +161,42 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         color: '#000000',
     },
+    inputWrapper: {
+        marginBottom: 20,
+    },
+    inputLabel: {
+        fontSize: 14,
+        color: '#333',
+        marginBottom: 8,
+        fontWeight: '500',
+    },
     input: {
         width: '100%',
-        height: 40,
-        backgroundColor: 'white',
-        borderColor: 'gray',
-        borderRadius: 3,
+        height: 45,
+        backgroundColor: '#f8f9fa',
         borderWidth: 1,
-        marginBottom: 10,
-        paddingHorizontal: 10,
+        borderColor: '#e1e1e1',
+        borderRadius: 8,
+        paddingHorizontal: 12,
+        fontSize: 16,
     },
     passwordContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: '100%',
-        marginBottom: 10,
+        backgroundColor: '#f8f9fa',
+        borderWidth: 1,
+        borderColor: '#e1e1e1',
+        borderRadius: 8,
     },
     passwordInput: {
         flex: 1,
-        height: 40,
-        backgroundColor: 'white',
-        borderColor: 'gray',
-        borderRadius: 3,
-        borderWidth: 1,
-        paddingHorizontal: 10,
+        height: 45,
+        paddingHorizontal: 12,
+        fontSize: 16,
+        backgroundColor: 'transparent',
     },
     eyeIcon: {
-        position: 'absolute',
-        right: 10,
+        padding: 6,
     },
     forgotPasswordContainer: {
         width: '100%',
@@ -184,17 +204,19 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     forgotPassword: {
-        color: 'light-black',
+        color: '#2196F3',
+        fontSize: 14,
         textDecorationLine: 'underline',
+        marginTop: -10,
+        marginBottom: 20,
     },
     button: {
-        height: 40,  
-        width: '100%',  
-        backgroundColor: '#000',  
-        borderRadius: 10,  
-        alignSelf: 'center',
-        justifyContent: 'center',  
-        marginTop: 8,
+        backgroundColor: '#2196F3',
+        height: 48,
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
     },
     googleButton: {
         height: 40,
@@ -222,8 +244,9 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     buttonText: {
-        color: '#fff',  
-        textAlign: 'center',  
+        color: 'white',
+        fontSize: 16,
+        fontWeight: '600',
     },
     errorText: {
         color: 'red',

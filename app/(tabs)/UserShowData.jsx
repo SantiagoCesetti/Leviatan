@@ -10,7 +10,6 @@ const UserShowData = ({ route }) => {
         <Header />
       <View style={styles.formContainer}>
         <Text style={styles.title}>Detalles del Formulario Verificado</Text>
-        
         {Object.keys(formData).length > 0 ? (
           Object.entries(formData).map(([key, value]) => (
             <View key={key} style={styles.fieldContainer}>
@@ -33,6 +32,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     padding: 16,
+    paddingTop: 144,
   },
   title: {
     fontSize: 20,

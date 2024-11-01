@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
+import Header from "../../components/Header";
 
 const app = getApp();
 const db = getFirestore(app);
@@ -78,12 +79,7 @@ const SupervisorForm = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <View style={styles.header}>  
-        <TouchableOpacity onPress={handleHomeNavigation} style={styles.homeIcon}>
-          <Ionicons name="home" size={30} color="white" />
-        </TouchableOpacity>
-        <Text style={styles.headertext}>✨ Clean Class ✨</Text>  
-      </View>  
+      <Header /> 
       <View style={styles.body}>  
         <View style={styles.formContainer}>  
           <View style={styles.titleContainer}>

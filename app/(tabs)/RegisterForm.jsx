@@ -79,66 +79,89 @@ const RegisterForm = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
-      <View style={styles.container}
-      >
-      <Header handleHomeNavigation={handleHomeNavigation} />
+      <View style={styles.container}>
+        <Header handleHomeNavigation={handleHomeNavigation} />
         <View style={styles.body}>
           <View style={styles.formContainer}>
-            <Text style={styles.formTitle}>Registro de usuario</Text>
+            <View style={styles.titleContainer}>
+              <Ionicons name="person-add" size={35} color="#00B8BA" />
+              <Text style={styles.title}>Registro de usuario</Text>
+            </View>
+            <Text style={styles.subtitle}>✨ ¡Únete a nuestra comunidad!</Text>
+
             <View style={styles.gridContainer}>
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Nombre</Text>
+                <View style={styles.labelContainer}>
+                  <Ionicons name="person" size={20} color="#00B8BA" />
+                  <Text style={styles.inputLabel}>Nombre</Text>
+                </View>
                 <TextInput
                   style={[styles.input, nombre ? styles.inputTextBlack : null]}
                   value={nombre}
                   onChangeText={(text) => setNombre(text.slice(0, 50))}
-                  placeholder="Nombre"
+                  placeholder="Tu nombre"
                   maxLength={50}
-                  placeholderTextColor="gray"
+                  placeholderTextColor="#999"
                 />
               </View>
+
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Apellido</Text>
+                <View style={styles.labelContainer}>
+                  <Ionicons name="people" size={20} color="#00B8BA" />
+                  <Text style={styles.inputLabel}>Apellido</Text>
+                </View>
                 <TextInput
                   style={[styles.input, apellido ? styles.inputTextBlack : null]}
                   value={apellido}
                   onChangeText={(text) => setApellido(text.slice(0, 50))}
-                  placeholder="Apellido"
+                  placeholder="Tu apellido"
                   maxLength={50}
-                  placeholderTextColor="gray"
+                  placeholderTextColor="#999"
                 />
               </View>
+
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Correo electrónico</Text>
+                <View style={styles.labelContainer}>
+                  <Ionicons name="mail" size={20} color="#00B8BA" />
+                  <Text style={styles.inputLabel}>Correo electrónico</Text>
+                </View>
                 <TextInput
                   style={[styles.input, email ? styles.inputTextBlack : null]}
                   value={email}
                   onChangeText={(text) => setEmail(text.slice(0, 50))}
-                  placeholder="Correo electrónico"
+                  placeholder="ejemplo@correo.com"
                   keyboardType="email-address"
                   maxLength={50}
-                  placeholderTextColor="gray"
+                  placeholderTextColor="#999"
                 />
               </View>
+
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Contraseña</Text>
+                <View style={styles.labelContainer}>
+                  <Ionicons name="lock-closed" size={20} color="#00B8BA" />
+                  <Text style={styles.inputLabel}>Contraseña</Text>
+                </View>
                 <View style={styles.passwordContainer}>
                   <TextInput
                     style={[styles.passwordInput, contraseña ? styles.inputTextBlack : null]}
                     value={contraseña}
                     onChangeText={(text) => setContraseña(text.slice(0, 20))}
-                    placeholder="Contraseña"
+                    placeholder="Tu contraseña"
                     secureTextEntry={!showPassword}
                     maxLength={20}
-                    placeholderTextColor="gray"
+                    placeholderTextColor="#999"
                   />
                   <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
-                    <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="gray" />
+                    <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#666" />
                   </TouchableOpacity>
                 </View>
               </View>
+
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Número de teléfono</Text>
+                <View style={styles.labelContainer}>
+                  <Ionicons name="call" size={20} color="#00B8BA" />
+                  <Text style={styles.inputLabel}>Teléfono</Text>
+                </View>
                 <View style={styles.phoneInputContainer}>
                   <Text style={styles.phonePrefix}>+54</Text>
                   <TextInput
@@ -148,26 +171,38 @@ const RegisterForm = () => {
                     placeholder="299 777 5555"
                     keyboardType="numeric"
                     maxLength={12}
-                    placeholderTextColor="gray"
+                    placeholderTextColor="#999"
                   />
                 </View>
               </View>
+
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Dirección</Text>
+                <View style={styles.labelContainer}>
+                  <Ionicons name="location" size={20} color="#00B8BA" />
+                  <Text style={styles.inputLabel}>Dirección</Text>
+                </View>
                 <TextInput
                   style={[styles.input, direccion ? styles.inputTextBlack : null]}
                   value={direccion}
                   onChangeText={(text) => setDireccion(text.slice(0, 100))}
-                  placeholder="Dirección"
+                  placeholder="Tu dirección"
                   maxLength={100}
-                  placeholderTextColor="gray"
+                  placeholderTextColor="#999"
                 />
               </View>
             </View>
+
             <TouchableOpacity style={styles.button} onPress={handleRegister}>
-              <Text style={styles.buttonText}>Crear cuenta</Text>
+              <Ionicons name="checkmark-circle" size={22} color="white" />
+              <Text style={styles.buttonText}>¡Crear cuenta!</Text>
             </TouchableOpacity>
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+            {error ? (
+              <View style={styles.errorContainer}>
+                <Ionicons name="alert-circle" size={20} color="#FF6B6B" />
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : null}
           </View>
         </View>
       </View>
@@ -181,23 +216,45 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#E6F3FF',
+    backgroundColor: '#F0F8FF',
   },
   body: {
     flex: 1,
     justifyContent: 'center',
-    padding: 30,
+    padding: 20,
   },
   formContainer: {
     width: '100%',
     maxWidth: 500,
-    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 25,
     alignSelf: 'center',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
   },
-  formTitle: {
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 10,
+  },
+  title: {
     fontSize: 24,
-    marginBottom: 30,
-    color: '#000000',
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 25,
+    fontStyle: 'italic',
   },
   gridContainer: {
     flexDirection: 'row',
@@ -207,83 +264,109 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '48%',
-    marginBottom: 15,
+    marginBottom: 20,
+  },
+  labelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 6,
   },
   inputLabel: {
-    fontSize: 12,
-    marginBottom: 5,
-    color: '#333',
+    fontSize: 14,
+    color: '#444',
+    fontWeight: '600',
   },
   input: {
     width: '100%',
-    height: 40,
-    backgroundColor: 'white',
-    borderColor: 'gray',
-    borderRadius: 3,
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    color: 'gray',
+    height: 45,
+    backgroundColor: '#F8F9FA',
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+    borderRadius: 12,
+    paddingHorizontal: 15,
+    fontSize: 14,
+    color: '#333',
   },
   inputTextBlack: {
-    color: 'black',
+    color: '#333',
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
-    height: 40,
-    backgroundColor: 'white',
-    borderColor: 'gray',
-    borderRadius: 3,
-    borderWidth: 1,
+    height: 45,
+    backgroundColor: '#F8F9FA',
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+    borderRadius: 12,
   },
   passwordInput: {
     flex: 1,
     height: '100%',
-    paddingHorizontal: 10,
-    color: 'gray',
+    paddingHorizontal: 15,
+    paddingRight: 40,
+    fontSize: 14,
+    color: '#333',
   },
   eyeIcon: {
-    padding: 10,
+    position: 'absolute',
+    right: 0,
+    padding: 5,
   },
   phoneInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
-    height: 40,
-    backgroundColor: 'white',
-    borderColor: 'gray',
-    borderRadius: 3,
-    borderWidth: 1,
+    height: 45,
+    backgroundColor: '#F8F9FA',
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+    borderRadius: 12,
   },
   phonePrefix: {
-    paddingLeft: 10,
-    color: 'black',
-    fontSize: 16,
+    paddingLeft: 15,
+    color: '#333',
+    fontSize: 14,
+    fontWeight: '500',
   },
   phoneInput: {
     flex: 1,
     height: '100%',
-    width: '100%',
     paddingHorizontal: 10,
-    color: 'gray',
+    fontSize: 14,
+    color: '#333',
   },
   button: {
-    height: 40,  
-    width: '100%',  
-    backgroundColor: '#000',  
-    borderRadius: 10,  
-    alignSelf: 'center',
-    justifyContent: 'center',  
-    marginTop: 20,
+    height: 50,
+    backgroundColor: '#00B8BA',
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    gap: 8,
+    shadowColor: "#00B8BA",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   buttonText: {
-    color: '#fff',  
-    textAlign: 'center',  
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 15,
+    gap: 6,
   },
   errorText: {
-    color: 'red',
-    marginTop: 10,
+    color: '#FF6B6B',
+    fontSize: 14,
   },
 });
 

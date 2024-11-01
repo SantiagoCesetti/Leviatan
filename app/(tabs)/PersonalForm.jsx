@@ -103,42 +103,75 @@ const PersonalForm = ({ onAdd }) => {
       <Header handleHomeNavigation={handleHomeNavigation} />
       <View style={styles.body}>
         <View style={styles.formContainer}>
-          <Text style={styles.title}>Limpieza del aula numero: 1</Text>
-          <View style={styles.checks}>
-            <CheckBox
-              title="Ordenado"
-              checked={isOrdenado}
-              onPress={() => setIsOrdenado(!isOrdenado)}
-            />
-            <CheckBox
-              title="Barrido"
-              checked={isBarrido}
-              onPress={() => setIsBarrido(!isBarrido)}
-            />
-            <CheckBox
-              title="Trapeado"
-              checked={isTrapeado}
-              onPress={() => setIsTrapeado(!isTrapeado)}
-            />
-            <CheckBox
-              title="Desinfectado"
-              checked={isDesinfectado}
-              onPress={() => setIsDesinfectado(!isDesinfectado)}
-            />
+          <View style={styles.titleContainer}>
+            <Ionicons name="school" size={35} color="#00B8BA" />
+            <Text style={styles.title}>Aula 1</Text>
           </View>
+          <Text style={styles.subtitle}>✨ Registro de limpieza</Text>
+
+          <View style={styles.sectionTitle}>
+            <Ionicons name="checkmark-circle" size={24} color="#00B8BA" />
+            <Text style={styles.sectionText}>Tareas realizadas</Text>
+          </View>
+
+          <View style={styles.checksContainer}>
+            <View style={styles.checkRow}>
+              <CheckBox
+                title="🏠 Ordenado"
+                checked={isOrdenado}
+                onPress={() => setIsOrdenado(!isOrdenado)}
+                containerStyle={styles.checkbox}
+                textStyle={styles.checkboxText}
+                checkedColor="#00B8BA"
+              />
+              <CheckBox
+                title="🧹 Barrido"
+                checked={isBarrido}
+                onPress={() => setIsBarrido(!isBarrido)}
+                containerStyle={styles.checkbox}
+                textStyle={styles.checkboxText}
+                checkedColor="#00B8BA"
+              />
+            </View>
+            <View style={styles.checkRow}>
+              <CheckBox
+                title="🧼 Trapeado"
+                checked={isTrapeado}
+                onPress={() => setIsTrapeado(!isTrapeado)}
+                containerStyle={styles.checkbox}
+                textStyle={styles.checkboxText}
+                checkedColor="#00B8BA"
+              />
+              <CheckBox
+                title="🧴 Desinfectado"
+                checked={isDesinfectado}
+                onPress={() => setIsDesinfectado(!isDesinfectado)}
+                containerStyle={styles.checkbox}
+                textStyle={styles.checkboxText}
+                checkedColor="#00B8BA"
+              />
+            </View>
+          </View>
+
           <View style={styles.inputContainer}>
-            <Text style={styles.observacionText}>Observacion</Text>
+            <View style={styles.sectionTitle}>
+              <Ionicons name="chatbubble-ellipses" size={24} color="#00B8BA" />
+              <Text style={styles.sectionText}>Observaciones</Text>
+            </View>
             <TextInput
               style={styles.input}
-              placeholder="Escribir Observacion"
+              placeholder="✍️ Describe el estado del aula..."
               value={observacion}
               onChangeText={(text) => setObservacion(text.slice(0, 512))}
               maxLength={512}
               multiline={true}
+              placeholderTextColor="#999"
             />
           </View>
+
           <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttontext}>Enviar</Text>
+            <Ionicons name="save" size={22} color="white" style={styles.buttonIcon} />
+            <Text style={styles.buttonText}>¡Guardar registro!</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -149,20 +182,112 @@ const PersonalForm = ({ onAdd }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E6F3FF',
+    backgroundColor: '#F0F8FF',
   },
   body: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
   },
   formContainer: {
     width: '100%',
+    maxWidth: 500,
     backgroundColor: '#fff',
-    borderRadius: 25,
+    borderRadius: 20,
     padding: 20,
     shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 8,
+  },
+  title: {
+    fontSize: 24,
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 20,
+    fontStyle: 'italic',
+  },
+  sectionTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    gap: 6,
+  },
+  sectionText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#444',
+  },
+  checksContainer: {
+    marginBottom: 20,
+    backgroundColor: '#F8F9FA',
+    padding: 12,
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+  },
+  checkRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  checkbox: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    padding: 6,
+    margin: 0,
+    width: '48%',
+  },
+  checkboxText: {
+    fontWeight: '500',
+    fontSize: 14,
+    color: '#444',
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  observacionText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 10,
+  },
+  input: {
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+    padding: 12,
+    fontSize: 14,
+    color: '#333',
+    borderRadius: 12,
+    height: 100,
+    textAlignVertical: 'top',
+    backgroundColor: '#F8F9FA',
+  },
+  button: {
+    height: 45,
+    backgroundColor: '#00B8BA',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    shadowColor: "#00B8BA",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -171,43 +296,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  title: {
-    fontSize: 22,
-    marginBottom: 20,
-    color: '#000000',
-    fontWeight: 'bold',
-    textAlign: 'center',
+  buttonText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
+    marginLeft: 8,
   },
-  checks: {
-    marginBottom: 15,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  observacionText: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  input: {
-    borderWidth: 2,
-    borderColor: '#ddd',
-    padding: 10,
-    fontSize: 14,
-    color: '#000000',
-    borderRadius: 6,
-    height: 100,
-    textAlignVertical: 'top',
-  },
-  button: {  
-    height: 40,  
-    backgroundColor: '#000',  
-    borderRadius: 10,  
-    justifyContent: 'center',  
-  },  
-  buttontext: {  
-    color: '#fff',  
-    textAlign: 'center',  
-  },  
 });
 
 export default PersonalForm;
