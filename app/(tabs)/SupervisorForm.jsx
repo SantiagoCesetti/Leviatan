@@ -80,48 +80,72 @@ const SupervisorForm = () => {
     >
       <View style={styles.header}>  
         <TouchableOpacity onPress={handleHomeNavigation} style={styles.homeIcon}>
-          <Ionicons name="home-outline" size={24} color="black" />
+          <Ionicons name="home" size={30} color="white" />
         </TouchableOpacity>
-        <Text style={styles.headertext}>Clean Class</Text>  
+        <Text style={styles.headertext}>✨ Clean Class ✨</Text>  
       </View>  
       <View style={styles.body}>  
         <View style={styles.formContainer}>  
-          <Text style={styles.title}>Orden de Limpieza</Text>  
-          <Text style={styles.subtitle}>Ingresa los Datos del trabajador y el número del aula</Text>  
+          <View style={styles.titleContainer}>
+            <Ionicons name="clipboard" size={35} color="#00B8BA" />
+            <Text style={styles.title}>Orden de Limpieza</Text>  
+          </View>
+          <Text style={styles.subtitle}>¡Registra una nueva orden!</Text>  
 
           <View style={styles.inputContainer}>  
-            <Text style={styles.textinput}>Nombre Trabajador</Text>  
+            <Text style={styles.textinput}>👤 Nombre Trabajador</Text>  
             <TextInput  
               style={styles.input}  
-              placeholder="Ingresa el nombre del trabajador"  
+              placeholder="¿Quién realizará la limpieza?"  
               value={nombre}  
-              onChangeText={setNombre}  
+              onChangeText={setNombre}
+              placeholderTextColor="#999"
             />  
           </View>  
 
           <View style={styles.inputContainer}>  
-            <Text style={styles.textinput}>Número del aula</Text>  
+            <Text style={styles.textinput}>🚪 Número del aula</Text>  
             <TextInput  
               style={styles.input}  
-              placeholder="Ingresa el número del aula"  
+              placeholder="¿Qué aula se limpiará?"  
               value={aula}  
-              onChangeText={setAula}  
+              onChangeText={setAula}
+              placeholderTextColor="#999"
             />  
           </View>  
 
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>  
-            <Text style={styles.buttontext}>Guardar</Text>  
+          <TouchableOpacity 
+            style={styles.button} 
+            onPress={handleSubmit}
+            activeOpacity={0.8}
+          >  
+            <Ionicons name="save" size={22} color="white" style={styles.buttonIcon} />
+            <Text style={styles.buttontext}>¡Guardar orden!</Text>  
           </TouchableOpacity>  
 
+          <Text style={styles.recentTitle}>Órdenes recientes ⭐</Text>
           {ordenes.slice(0, 3).map((orden) => (
             <View key={orden.id} style={styles.ordenItem}>
-              <Text>{orden.nombre} - Aula: {orden.aula}</Text>
-              <TouchableOpacity onPress={() => handleUpdate(orden.id)}>
-                <Text>Actualizar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDelete(orden.id)}>
-                <Text>Eliminar</Text>
-              </TouchableOpacity>
+              <View style={styles.ordenInfo}>
+                <View style={styles.ordenIconContainer}>
+                  <Ionicons name="person" size={20} color="white" />
+                </View>
+                <Text style={styles.ordenText}>{orden.nombre} - Aula: {orden.aula}</Text>
+              </View>
+              <View style={styles.ordenActions}>
+                <TouchableOpacity 
+                  style={[styles.actionButton, styles.editButton]} 
+                  onPress={() => handleUpdate(orden.id)}
+                >
+                  <Ionicons name="create" size={20} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={[styles.actionButton, styles.deleteButton]} 
+                  onPress={() => handleDelete(orden.id)}
+                >
+                  <Ionicons name="trash" size={20} color="white" />
+                </TouchableOpacity>
+              </View>
             </View>
           ))}
         </View>  
@@ -133,81 +157,145 @@ const SupervisorForm = () => {
 const styles = StyleSheet.create({  
   container: {  
     flex: 1,
-    backgroundColor: '#E6F3FF',  
+    backgroundColor: '#F0F8FF',  
   },  
-  inputContainer: {  
-    marginTop: 20,  
-  },  
-  input: {  
-    borderWidth: 1,  
-    borderColor: '#ddd',  
-    padding: 10,  
-    fontSize: 15,  
-    color: 'gray',
-    borderRadius: 6,  
-  },  
- 
   header: {  
     backgroundColor: "#00B8BA",  
-    height: 80,  
-    padding: 0,  
+    height: 90,  
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingTop: 20,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
   },  
-  homeIcon: {
-    marginLeft: 20,
-  },
   headertext: {  
-    fontSize: 25,  
-    color: '#000',  
+    fontSize: 28,  
+    color: '#fff',  
     marginRight: 20,  
-    fontWeight: 'bold',  
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },  
-  body: {  
-    flex: 1,
-    justifyContent: 'center',
+  titleContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
-  },  
+    marginBottom: 10,
+    gap: 10,
+  },
   formContainer: {  
     width: '100%',
-    padding: 20,  
-    borderRadius: 25,  
+    padding: 25,  
+    borderRadius: 20,  
     backgroundColor: '#fff',  
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },  
   title: {  
-    fontSize: 30,  
-    marginBottom: 10,
-    color: '#000',  
-    fontWeight: 'bold',  
+    fontSize: 32,  
+    color: '#333',  
+    fontWeight: 'bold',
   },  
   subtitle: {
-    fontSize: 16,
-    marginBottom: 20,
+    fontSize: 18,
+    color: '#666',
+    marginBottom: 25,
+    fontStyle: 'italic',
   },
+  input: {  
+    borderWidth: 2,  
+    borderColor: '#E0E0E0',  
+    padding: 15,  
+    fontSize: 16,  
+    color: '#333',
+    borderRadius: 15,  
+    backgroundColor: '#F8F9FA',
+    marginTop: 8,
+  },  
   button: {  
-    height: 40,  
-    width: '80%',  
-    backgroundColor: '#000',  
-    borderRadius: 10,  
+    height: 55,  
+    width: '90%',  
+    backgroundColor: '#00B8BA',  
+    borderRadius: 15,  
     alignSelf: 'center',
     justifyContent: 'center',  
-    marginTop: 20,
+    marginTop: 30,
+    marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },  
   buttontext: {  
     color: '#fff',  
-    textAlign: 'center',  
-  },  
-  textinput:{
-    fontSize:16,
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  recentTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 10,
+    marginBottom: 15,
   },
   ordenItem: {
-    marginTop: 10,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
+    marginVertical: 8,
+    padding: 15,
+    borderRadius: 15,
+    backgroundColor: '#F8F9FA',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+  },
+  ordenInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  ordenIconContainer: {
+    backgroundColor: '#00B8BA',
+    padding: 8,
+    borderRadius: 12,
+    marginRight: 12,
+  },
+  ordenText: {
+    fontSize: 16,
+    color: '#333',
+    fontWeight: '500',
+  },
+  ordenActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  actionButton: {
+    padding: 8,
+    borderRadius: 10,
+    elevation: 2,
+  },
+  editButton: {
+    backgroundColor: '#00B8BA',
+  },
+  deleteButton: {
+    backgroundColor: '#FF6B6B',
+  },
+  textinput: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#444',
+    marginBottom: 5,
   },
 });  
 
