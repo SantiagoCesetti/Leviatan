@@ -28,7 +28,7 @@ const UserShowData = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#E6F3FF',
   },
   formContainer: {
     padding: 16,
