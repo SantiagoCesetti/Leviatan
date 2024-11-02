@@ -62,7 +62,7 @@ const Header = ({ navigation }) => {
               style={styles.closeButton} 
               onPress={() => toggleMenu(false)}
             >
-              <Ionicons name="close" size={21} color="#333" />
+              <Ionicons name="close" size={20} color="#333" />
             </TouchableOpacity>
             
             <TouchableOpacity 
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
         top: 90,
         left: 0,
         backgroundColor: 'rgba(255, 255, 255, 0.98)',
-        width: Dimensions.get('window').width * 0.30,
+        width: Dimensions.get('window').width * 0.29,
         maxHeight: Dimensions.get('window').height - 90,
         paddingTop: 20,
         paddingBottom: 20,
@@ -258,8 +258,8 @@ const styles = StyleSheet.create({
     },
     menuItem: {
         padding: 15,
-        marginHorizontal: 15,
-        marginVertical: 6,
+        marginHorizontal: 25,
+        marginVertical: 5,
         borderRadius: 25,
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
         elevation: 8,
@@ -267,14 +267,14 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 4, height: 4 },
         shadowOpacity: 0.2,
         shadowRadius: 8,
-        borderWidth: 1.5,
+        borderWidth: 1,
         borderColor: 'rgba(0, 184, 186, 0.15)',
         transform: [{ scale: 1 }],
         transition: 'all 0.3s ease-in-out',
     },
     menuText: {
-        fontSize: 16,
-        letterSpacing: 0.8,
+        fontSize: 17,
+        letterSpacing: 0.75,
         color: '#2c3e50',
         fontWeight: '500',
         textAlign: 'center',
@@ -282,8 +282,8 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         position: 'absolute',
-        right: 17,
-        top: 26,
+        right: 20,
+        top: 25.5,
         padding: 12,
         backgroundColor: 'rgba(0, 184, 186, 0.9)',
         backdropFilter: 'blur(5px)',

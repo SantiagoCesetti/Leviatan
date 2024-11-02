@@ -68,7 +68,7 @@ function LoginForm() {
     };
 
     const handleForgotPassword = () => {
-        Linking.openURL('https://only-fans.uk/pantu');
+        Linking.openURL('https://only-fans.uk/pantup');
     };
 
     const handleMenuPress = () => {
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#f0f8ff',
+        backgroundColor: '#E6F3FF',
     },
     body: {
         flex: 1,
