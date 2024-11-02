@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Dimensions, KeyboardAvoidingView, Platform } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Dimensions, KeyboardAvoidingView, Platform, Alert } from "react-native";
 import { CheckBox } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -26,20 +26,25 @@ const SupervFormVerif = () => {
 
   useEffect(() => {
     const fetchFormulario = async () => {
-      const formularioId = "ID_POR_DEFECTO";
-      const docRef = doc(db, "formularios", formularioId);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        setNombre(data.nombre);
-        setApellido(data.apellido);
-        setEmail(data.email);
-        setTelefono(data.telefono);
-        setIsCheckedOrdenado(data.isOrdenado);
-        setIsCheckedBarrido(data.isBarrido);
-        setIsCheckedTrapeado(data.isTrapeado);
-        setIsCheckedDesinfectado(data.isDesinfectado);
-        setObservacion(data.observacion);
+      try {
+        const formularioId = "ID_POR_DEFECTO";
+        const docRef = doc(db, "formularios", formularioId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setNombre(data.nombre);
+          setApellido(data.apellido);
+          setEmail(data.email);
+          setTelefono(data.telefono);
+          setIsCheckedOrdenado(data.isOrdenado);
+          setIsCheckedBarrido(data.isBarrido);
+          setIsCheckedTrapeado(data.isTrapeado);
+          setIsCheckedDesinfectado(data.isDesinfectado);
+          setObservacion(data.observacion);
+        }
+      } catch (error) {
+        console.error("Error al obtener el formulario:", error);
+        Alert.alert("Error", "No tienes permisos para acceder a este formulario");
       }
     };
     fetchFormulario();
