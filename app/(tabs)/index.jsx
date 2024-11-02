@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../../components/Header';
+import Background from '../../components/Background';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -20,23 +21,28 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Header handleHomeNavigation={handleHomeNavigation} />
-      <View style={styles.contentContainer}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{uri: 'https://i.imgur.com/rwln1yI.png'}}
-            style={styles.image}
-            resizeMode="contain"
-          />
-        </View>
-        <Text style={styles.welcomeText}>¡Bienvenido a CleanClass!</Text>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Iniciar sesión</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
-            <Text style={styles.buttonText}>Crear cuenta</Text>
-          </TouchableOpacity>
+      <View style={styles.backgroundContainer}>
+        <Background />
+      </View>
+      <View style={styles.mainContent}>
+        <Header handleHomeNavigation={handleHomeNavigation} />
+        <View style={styles.contentContainer}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={{uri: 'https://i.imgur.com/rwln1yI.png'}}
+              style={styles.image}
+              resizeMode="contain"
+            />
+          </View>
+          <Text style={styles.welcomeText}>¡Bienvenido a CleanClass!</Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+              <Text style={styles.buttonText}>Iniciar sesión</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+              <Text style={styles.buttonText}>Crear cuenta</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
@@ -46,7 +52,18 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E6F3FF',
+  },
+  backgroundContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+  },
+  mainContent: {
+    flex: 1,
+    zIndex: 2,
   },
   contentContainer: {
     flex: 1,
