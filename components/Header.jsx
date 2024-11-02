@@ -38,12 +38,12 @@ const Header = ({ navigation }) => {
               <Text style={styles.menuText}>Login</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.menuItem} onPress={() => handleNavigation('/PersonalForm')}>
-              <Text style={styles.menuText}>Personal</Text>
-            </TouchableOpacity>
-
             <TouchableOpacity style={styles.menuItem} onPress={() => handleNavigation('/RegisterForm')}>
               <Text style={styles.menuText}>Registro</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => handleNavigation('/PersonalForm')}>
+              <Text style={styles.menuText}>Personal</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.menuItem} onPress={() => handleNavigation('/SupervFormVerif')}>
@@ -57,6 +57,11 @@ const Header = ({ navigation }) => {
             <TouchableOpacity style={styles.menuItem} onPress={() => handleNavigation('/UserShowData')}>
               <Text style={styles.menuText}>Datos Usuario</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem} onPress={() => handleNavigation('/redirect')}>
+              <Text style={styles.menuText}>Redirect</Text>
+            </TouchableOpacity>
+
           </View>
         </View>
       )}
@@ -111,7 +116,7 @@ const styles = StyleSheet.create({
         top: 90,
         left: 0,
         backgroundColor: 'white',
-        width: Dimensions.get('window').width * 0.75,
+        width: Dimensions.get('window').width * 0.25,
         maxHeight: Dimensions.get('window').height - 90,
         paddingTop: 10,
         elevation: 5,

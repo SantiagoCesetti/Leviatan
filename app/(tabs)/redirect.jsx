@@ -1,31 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { router } from 'expo-router';
 
 const Redirect = () => {
-  const navigation = useNavigation();
   const [contador, setContador] = useState(5);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setContador(5);
-      const timer = setInterval(() => {
-        setContador((prevContador) => {
-          if (prevContador <= 1) {
-            clearInterval(timer);
-            navigation.navigate('index');
-            return 0;
-          }
-          return prevContador - 1;
-        });
-      }, 1000);
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setContador((prevContador) => {
+        if (prevContador <= 1) {
+          clearInterval(timer);
+          router.replace('/');
+          return 0;
+        }
+        return prevContador - 1;
+      });
+    }, 1000);
 
-      return () => {
-        clearInterval(timer);
-      };
-    }, [navigation])
-  );
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -94,19 +87,5 @@ const styles = StyleSheet.create({
     color: '#95a5a6',
   },
 });
-
-const Stack = createStackNavigator();
-
-function MyStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen 
-        name="Redirect" 
-        component={Redirect} 
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
-  );
-}
 
 export default Redirect;
