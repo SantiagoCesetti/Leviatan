@@ -92,15 +92,11 @@ const PersonalForm = ({ onAdd }) => {
     }
   };
 
-  const handleHomeNavigation = () => {
-    navigation.navigate('index');
-  };
-
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}>
-      <Header handleHomeNavigation={handleHomeNavigation} />
+      <Header handleHomeNavigation={null} />
       <View style={styles.body}>
         <View style={styles.formContainer}>
           <View style={styles.titleContainer}>

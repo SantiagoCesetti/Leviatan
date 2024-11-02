@@ -57,10 +57,6 @@ const RegisterForm = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleHomeNavigation = () => {
-    navigation.navigate('index');
-  };
-
   const handlePhoneChange = (text) => {
     // Eliminar cualquier carácter que no sea número
     const numericValue = text.replace(/[^0-9]/g, '');
@@ -80,7 +76,7 @@ const RegisterForm = () => {
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <View style={styles.container}>
-        <Header handleHomeNavigation={handleHomeNavigation} />
+        <Header handleHomeNavigation={null} />
         <View style={styles.body}>
           <View style={styles.formContainer}>
             <View style={styles.titleContainer}>

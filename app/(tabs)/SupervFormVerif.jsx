@@ -90,10 +90,6 @@ const SupervFormVerif = () => {
     }
   };
 
-  const handleHomeNavigation = () => {
-    navigation.navigate('index');
-  };
-
   const handleDenegar = async () => {
     try {
       const formularioId = "ID_POR_DEFECTO"; 
@@ -116,7 +112,7 @@ const SupervFormVerif = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <Header handleHomeNavigation={handleHomeNavigation} />
+      <Header />
       <View style={styles.body}>
         <View style={styles.formContainer}>
           <View style={styles.titleContainer}>

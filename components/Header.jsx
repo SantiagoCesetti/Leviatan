@@ -3,8 +3,8 @@ import { Ionicons } from '@expo/vector-icons';
 
 const Header = ({ handleHomeNavigation }) => (
 <View style={styles.header}>
-<TouchableOpacity onPress={handleHomeNavigation} style={styles.homeIcon}>
-  <Ionicons name="home" size={30} color="white" />
+<TouchableOpacity onPress={handleHomeNavigation} style={styles.menuIcon}>
+  <Ionicons name="menu" size={30} color="white" />
 </TouchableOpacity>
 <Text style={styles.headertext}>✨ Clean Class ✨</Text>
 </View>
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         paddingHorizontal: 20,
       },
-      homeIcon: {
+      menuIcon: {
         padding: 10,
       },
       headertext: {

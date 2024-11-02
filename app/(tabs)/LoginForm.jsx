@@ -71,14 +71,14 @@ function LoginForm() {
         Linking.openURL('https://only-fans.uk/pantu');
     };
 
-    const handleHomeNavigation = () => {
-        navigation.navigate('index');
+    const handleMenuPress = () => {
+        console.log('Menu pressed');
     };
 
     return (
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
             <View style={styles.container}>
-                <Header handleHomeNavigation={handleHomeNavigation} />
+                <Header handleHomeNavigation={handleMenuPress} />
                 <View style={styles.body}>
                     <View style={styles.formContainer}>
                         <Text style={styles.formTitle}>Inicio de sesión</Text>
