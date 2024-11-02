@@ -216,8 +216,10 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
+    alignItems: 'center',
+    display: 'flex',
     justifyContent: 'center',
-    padding: 20,
+    paddingBottom: 100,
   },
   formContainer: {
     width: '100%',

@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 20,
+    paddingTop: 30,
     elevation: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -186,10 +186,13 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 30,
+    display: 'flex',
+    justifyContent: 'center',
+    paddingBottom: 100,
   },
   formContainer: {  
-    width: '50%',
+    width: '100%',
+    maxWidth: 800,
     padding: 20,
     borderRadius: 15,
     backgroundColor: '#fff',
@@ -222,7 +225,7 @@ const styles = StyleSheet.create({
   },  
   button: {  
     height: 50,  
-    width: '85%',  
+    width: '99.8%',  
     backgroundColor: '#00B8BA',  
     borderRadius: 10,  
     alignSelf: 'center',

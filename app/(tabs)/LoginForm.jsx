@@ -83,7 +83,10 @@ function LoginForm() {
                     <View style={styles.formContainer}>
                         <Text style={styles.formTitle}>Inicio de sesión</Text>
                         <View style={styles.inputWrapper}>
-                            <Text style={styles.inputLabel}>Correo electrónico</Text>
+                            <View style={styles.labelContainer}>
+                                <Ionicons name="mail" size={20} color="#00B8BA" style={styles.icon} />
+                                <Text style={styles.inputLabel}>Correo electrónico</Text>
+                            </View>
                             <TextInput
                                 style={styles.input}
                                 value={email}
@@ -93,7 +96,10 @@ function LoginForm() {
                             />
                         </View>
                         <View style={styles.inputWrapper}>
-                            <Text style={styles.inputLabel}>Contraseña</Text>
+                            <View style={styles.labelContainer}>
+                                <Ionicons name="lock-closed" size={20} color="#00B8BA" style={styles.icon} />
+                                <Text style={styles.inputLabel}>Contraseña</Text>
+                            </View>
                             <View style={styles.passwordContainer}>
                                 <TextInput
                                     style={styles.passwordInput}
@@ -139,13 +145,14 @@ const styles = StyleSheet.create({
     },
     body: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
-        padding: 30,
+        display: 'flex',
+        justifyContent: 'center',
+        paddingBottom: 100,
     },
     formContainer: {
         width: '100%',
-        maxWidth: 300,
+        maxWidth: 375,
         backgroundColor: 'white',
         padding: 25,
         borderRadius: 12,
@@ -204,14 +211,14 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     forgotPassword: {
-        color: '#2196F3',
+        color: '#5D9696',
         fontSize: 14,
         textDecorationLine: 'underline',
         marginTop: -10,
         marginBottom: 20,
     },
     button: {
-        backgroundColor: '#2196F3',
+        backgroundColor: '#00B8BA',
         height: 48,
         borderRadius: 8,
         justifyContent: 'center',
@@ -251,6 +258,14 @@ const styles = StyleSheet.create({
     errorText: {
         color: 'red',
         marginTop: 10,
+    },
+    labelContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    icon: {
+        marginRight: 5,
+        marginTop: -7,
     },
 });
 
