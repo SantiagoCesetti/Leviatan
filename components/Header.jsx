@@ -43,7 +43,7 @@ const Header = ({ navigation }) => {
         <TouchableOpacity onPress={() => toggleMenu(!showMenu)} style={styles.menuIcon}>
           <Ionicons name="menu" size={30} color="white" />
         </TouchableOpacity>
-        <Text style={styles.headertext}>💦 Clean Class 💦</Text>
+        <Text style={styles.headertext}>🫧  Clean Class  🫧</Text>
       </View>
       
       {showMenu && (

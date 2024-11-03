@@ -5,6 +5,7 @@ import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/nativ
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
 import Header from "../../components/Header";
+import Background from '../../components/Background';
 
 const app = getApp();
 const db = getFirestore(app);
@@ -79,73 +80,78 @@ const SupervisorForm = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <Header /> 
-      <View style={styles.body}>  
-        <View style={styles.formContainer}>  
-          <View style={styles.titleContainer}>
-            <Ionicons name="clipboard" size={35} color="#00B8BA" />
-            <Text style={styles.title}>Orden de Limpieza</Text>  
-          </View>
-          <Text style={styles.subtitle}>¡Registra una nueva orden!</Text>  
-
-          <View style={styles.inputContainer}>  
-            <Text style={styles.textinput}>👤 Nombre Trabajador</Text>  
-            <TextInput  
-              style={styles.input}  
-              placeholder="¿Quién realizará la limpieza?"  
-              value={nombre}  
-              onChangeText={setNombre}
-              placeholderTextColor="#999"
-            />  
-          </View>  
-
-          <View style={styles.inputContainer}>  
-            <Text style={styles.textinput}>🚪 Número del aula</Text>  
-            <TextInput  
-              style={styles.input}  
-              placeholder="¿Qué aula se limpiará?"  
-              value={aula}  
-              onChangeText={setAula}
-              placeholderTextColor="#999"
-            />  
-          </View>  
-
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={handleSubmit}
-            activeOpacity={0.8}
-          >  
-            <Ionicons name="save" size={22} color="white" style={styles.buttonIcon} />
-            <Text style={styles.buttontext}>¡Guardar orden!</Text>  
-          </TouchableOpacity>  
-
-          <Text style={styles.recentTitle}>Órdenes recientes ⭐</Text>
-          {ordenes.slice(0, 3).map((orden) => (
-            <View key={orden.id} style={styles.ordenItem}>
-              <View style={styles.ordenInfo}>
-                <View style={styles.ordenIconContainer}>
-                  <Ionicons name="person" size={20} color="white" />
-                </View>
-                <Text style={styles.ordenText}>{orden.nombre} - Aula: {orden.aula}</Text>
-              </View>
-              <View style={styles.ordenActions}>
-                <TouchableOpacity 
-                  style={[styles.actionButton, styles.editButton]} 
-                  onPress={() => handleUpdate(orden.id)}
-                >
-                  <Ionicons name="create" size={20} color="white" />
-                </TouchableOpacity>
-                <TouchableOpacity 
-                  style={[styles.actionButton, styles.deleteButton]} 
-                  onPress={() => handleDelete(orden.id)}
-                >
-                  <Ionicons name="trash" size={20} color="white" />
-                </TouchableOpacity>
-              </View>
+      <View style={styles.backgroundContainer}>
+        <Background />
+      </View>
+      <View style={styles.mainContent}>
+        <Header />
+        <View style={styles.body}>  
+          <View style={styles.formContainer}>  
+            <View style={styles.titleContainer}>
+              <Ionicons name="clipboard" size={35} color="#00B8BA" />
+              <Text style={styles.title}>Orden de Limpieza</Text>  
             </View>
-          ))}
+            <Text style={styles.subtitle}>¡Registra una nueva orden!</Text>  
+
+            <View style={styles.inputContainer}>  
+              <Text style={styles.textinput}>👤 Nombre Trabajador</Text>  
+              <TextInput  
+                style={styles.input}  
+                placeholder="¿Quién realizará la limpieza?"  
+                value={nombre}  
+                onChangeText={setNombre}
+                placeholderTextColor="#999"
+              />  
+            </View>  
+
+            <View style={styles.inputContainer}>  
+              <Text style={styles.textinput}>🚪 Número del aula</Text>  
+              <TextInput  
+                style={styles.input}  
+                placeholder="¿Qué aula se limpiará?"  
+                value={aula}  
+                onChangeText={setAula}
+                placeholderTextColor="#999"
+              />  
+            </View>  
+
+            <TouchableOpacity 
+              style={styles.button} 
+              onPress={handleSubmit}
+              activeOpacity={0.8}
+            >  
+              <Ionicons name="save" size={22} color="white" style={styles.buttonIcon} />
+              <Text style={styles.buttontext}>¡Guardar orden!</Text>  
+            </TouchableOpacity>  
+
+            <Text style={styles.recentTitle}>Órdenes recientes ⭐</Text>
+            {ordenes.slice(0, 3).map((orden) => (
+              <View key={orden.id} style={styles.ordenItem}>
+                <View style={styles.ordenInfo}>
+                  <View style={styles.ordenIconContainer}>
+                    <Ionicons name="person" size={20} color="white" />
+                  </View>
+                  <Text style={styles.ordenText}>{orden.nombre} - Aula: {orden.aula}</Text>
+                </View>
+                <View style={styles.ordenActions}>
+                  <TouchableOpacity 
+                    style={[styles.actionButton, styles.editButton]} 
+                    onPress={() => handleUpdate(orden.id)}
+                  >
+                    <Ionicons name="create" size={20} color="white" />
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    style={[styles.actionButton, styles.deleteButton]} 
+                    onPress={() => handleDelete(orden.id)}
+                  >
+                    <Ionicons name="trash" size={20} color="white" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+          </View>  
         </View>  
-      </View>  
+      </View>
     </KeyboardAvoidingView>
   );  
 };  
@@ -303,6 +309,18 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginBottom: 20,
+  },
+  backgroundContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+  },
+  mainContent: {
+    flex: 1,
+    zIndex: 2,
   },
 });  
 

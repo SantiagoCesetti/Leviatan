@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 30,
+    marginBottom: 40,
   },
   imageContainer: {
     width: 250,
@@ -86,8 +87,8 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   image: {
-    width: '85%',
-    height: '85%',
+    width: '83%',
+    height: '83%',
   },
   welcomeText: {
     fontSize: 28,

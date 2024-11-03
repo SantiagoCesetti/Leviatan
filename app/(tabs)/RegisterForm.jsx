@@ -5,6 +5,7 @@ import appFirebase from '../credenciales';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Header from "../../components/Header";
+import Background from '../../components/Background';
 
 const auth = getAuth(appFirebase);
 
@@ -76,129 +77,134 @@ const RegisterForm = () => {
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <View style={styles.container}>
-        <Header handleHomeNavigation={null} />
-        <View style={styles.body}>
-          <View style={styles.formContainer}>
-            <View style={styles.titleContainer}>
-              <Ionicons name="person-add" size={35} color="#00B8BA" />
-              <Text style={styles.title}>Registro de usuario</Text>
-            </View>
-            <Text style={styles.subtitle}>✨ ¡Únete a nuestra comunidad!</Text>
-
-            <View style={styles.gridContainer}>
-              <View style={styles.inputContainer}>
-                <View style={styles.labelContainer}>
-                  <Ionicons name="person" size={20} color="#00B8BA" />
-                  <Text style={styles.inputLabel}>Nombre</Text>
-                </View>
-                <TextInput
-                  style={[styles.input, nombre ? styles.inputTextBlack : null]}
-                  value={nombre}
-                  onChangeText={(text) => setNombre(text.slice(0, 50))}
-                  placeholder="Tu nombre"
-                  maxLength={50}
-                  placeholderTextColor="#999"
-                />
+        <View style={styles.backgroundContainer}>
+          <Background />
+        </View>
+        <View style={styles.mainContent}>
+          <Header handleHomeNavigation={null} />
+          <View style={styles.body}>
+            <View style={styles.formContainer}>
+              <View style={styles.titleContainer}>
+                <Ionicons name="person-add" size={35} color="#00B8BA" />
+                <Text style={styles.title}>Registro de usuario</Text>
               </View>
+              <Text style={styles.subtitle}>✨ ¡Únete a nuestra comunidad!</Text>
 
-              <View style={styles.inputContainer}>
-                <View style={styles.labelContainer}>
-                  <Ionicons name="people" size={20} color="#00B8BA" />
-                  <Text style={styles.inputLabel}>Apellido</Text>
-                </View>
-                <TextInput
-                  style={[styles.input, apellido ? styles.inputTextBlack : null]}
-                  value={apellido}
-                  onChangeText={(text) => setApellido(text.slice(0, 50))}
-                  placeholder="Tu apellido"
-                  maxLength={50}
-                  placeholderTextColor="#999"
-                />
-              </View>
-
-              <View style={styles.inputContainer}>
-                <View style={styles.labelContainer}>
-                  <Ionicons name="mail" size={20} color="#00B8BA" />
-                  <Text style={styles.inputLabel}>Correo electrónico</Text>
-                </View>
-                <TextInput
-                  style={[styles.input, email ? styles.inputTextBlack : null]}
-                  value={email}
-                  onChangeText={(text) => setEmail(text.slice(0, 50))}
-                  placeholder="ejemplo@correo.com"
-                  keyboardType="email-address"
-                  maxLength={50}
-                  placeholderTextColor="#999"
-                />
-              </View>
-
-              <View style={styles.inputContainer}>
-                <View style={styles.labelContainer}>
-                  <Ionicons name="lock-closed" size={20} color="#00B8BA" />
-                  <Text style={styles.inputLabel}>Contraseña</Text>
-                </View>
-                <View style={styles.passwordContainer}>
+              <View style={styles.gridContainer}>
+                <View style={styles.inputContainer}>
+                  <View style={styles.labelContainer}>
+                    <Ionicons name="person" size={20} color="#00B8BA" />
+                    <Text style={styles.inputLabel}>Nombre</Text>
+                  </View>
                   <TextInput
-                    style={[styles.passwordInput, contraseña ? styles.inputTextBlack : null]}
-                    value={contraseña}
-                    onChangeText={(text) => setContraseña(text.slice(0, 20))}
-                    placeholder="Tu contraseña"
-                    secureTextEntry={!showPassword}
-                    maxLength={20}
-                    placeholderTextColor="#999"
-                  />
-                  <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
-                    <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#666" />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={styles.inputContainer}>
-                <View style={styles.labelContainer}>
-                  <Ionicons name="call" size={20} color="#00B8BA" />
-                  <Text style={styles.inputLabel}>Teléfono</Text>
-                </View>
-                <View style={styles.phoneInputContainer}>
-                  <Text style={styles.phonePrefix}>+54</Text>
-                  <TextInput
-                    style={[styles.phoneInput, telefono ? styles.inputTextBlack : null]}
-                    value={telefono}
-                    onChangeText={handlePhoneChange}
-                    placeholder="299 777 5555"
-                    keyboardType="numeric"
-                    maxLength={12}
+                    style={[styles.input, nombre ? styles.inputTextBlack : null]}
+                    value={nombre}
+                    onChangeText={(text) => setNombre(text.slice(0, 50))}
+                    placeholder="Tu nombre"
+                    maxLength={50}
                     placeholderTextColor="#999"
                   />
                 </View>
-              </View>
 
-              <View style={styles.inputContainer}>
-                <View style={styles.labelContainer}>
-                  <Ionicons name="location" size={20} color="#00B8BA" />
-                  <Text style={styles.inputLabel}>Dirección</Text>
+                <View style={styles.inputContainer}>
+                  <View style={styles.labelContainer}>
+                    <Ionicons name="people" size={20} color="#00B8BA" />
+                    <Text style={styles.inputLabel}>Apellido</Text>
+                  </View>
+                  <TextInput
+                    style={[styles.input, apellido ? styles.inputTextBlack : null]}
+                    value={apellido}
+                    onChangeText={(text) => setApellido(text.slice(0, 50))}
+                    placeholder="Tu apellido"
+                    maxLength={50}
+                    placeholderTextColor="#999"
+                  />
                 </View>
-                <TextInput
-                  style={[styles.input, direccion ? styles.inputTextBlack : null]}
-                  value={direccion}
-                  onChangeText={(text) => setDireccion(text.slice(0, 100))}
-                  placeholder="Tu dirección"
-                  maxLength={100}
-                  placeholderTextColor="#999"
-                />
+
+                <View style={styles.inputContainer}>
+                  <View style={styles.labelContainer}>
+                    <Ionicons name="mail" size={20} color="#00B8BA" />
+                    <Text style={styles.inputLabel}>Correo electrónico</Text>
+                  </View>
+                  <TextInput
+                    style={[styles.input, email ? styles.inputTextBlack : null]}
+                    value={email}
+                    onChangeText={(text) => setEmail(text.slice(0, 50))}
+                    placeholder="ejemplo@correo.com"
+                    keyboardType="email-address"
+                    maxLength={50}
+                    placeholderTextColor="#999"
+                  />
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <View style={styles.labelContainer}>
+                    <Ionicons name="lock-closed" size={20} color="#00B8BA" />
+                    <Text style={styles.inputLabel}>Contraseña</Text>
+                  </View>
+                  <View style={styles.passwordContainer}>
+                    <TextInput
+                      style={[styles.passwordInput, contraseña ? styles.inputTextBlack : null]}
+                      value={contraseña}
+                      onChangeText={(text) => setContraseña(text.slice(0, 20))}
+                      placeholder="Tu contraseña"
+                      secureTextEntry={!showPassword}
+                      maxLength={20}
+                      placeholderTextColor="#999"
+                    />
+                    <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
+                      <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#666" />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <View style={styles.labelContainer}>
+                    <Ionicons name="call" size={20} color="#00B8BA" />
+                    <Text style={styles.inputLabel}>Teléfono</Text>
+                  </View>
+                  <View style={styles.phoneInputContainer}>
+                    <Text style={styles.phonePrefix}>+54</Text>
+                    <TextInput
+                      style={[styles.phoneInput, telefono ? styles.inputTextBlack : null]}
+                      value={telefono}
+                      onChangeText={handlePhoneChange}
+                      placeholder="299 777 5555"
+                      keyboardType="numeric"
+                      maxLength={12}
+                      placeholderTextColor="#999"
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <View style={styles.labelContainer}>
+                    <Ionicons name="location" size={20} color="#00B8BA" />
+                    <Text style={styles.inputLabel}>Dirección</Text>
+                  </View>
+                  <TextInput
+                    style={[styles.input, direccion ? styles.inputTextBlack : null]}
+                    value={direccion}
+                    onChangeText={(text) => setDireccion(text.slice(0, 100))}
+                    placeholder="Tu dirección"
+                    maxLength={100}
+                    placeholderTextColor="#999"
+                  />
+                </View>
               </View>
+
+              <TouchableOpacity style={styles.button} onPress={handleRegister}>
+                <Ionicons name="checkmark-circle" size={22} color="white" />
+                <Text style={styles.buttonText}>¡Crear cuenta!</Text>
+              </TouchableOpacity>
+
+              {error ? (
+                <View style={styles.errorContainer}>
+                  <Ionicons name="alert-circle" size={20} color="#FF6B6B" />
+                  <Text style={styles.errorText}>{error}</Text>
+                </View>
+              ) : null}
             </View>
-
-            <TouchableOpacity style={styles.button} onPress={handleRegister}>
-              <Ionicons name="checkmark-circle" size={22} color="white" />
-              <Text style={styles.buttonText}>¡Crear cuenta!</Text>
-            </TouchableOpacity>
-
-            {error ? (
-              <View style={styles.errorContainer}>
-                <Ionicons name="alert-circle" size={20} color="#FF6B6B" />
-                <Text style={styles.errorText}>{error}</Text>
-              </View>
-            ) : null}
           </View>
         </View>
       </View>
@@ -365,6 +371,18 @@ const styles = StyleSheet.create({
   errorText: {
     color: '#FF6B6B',
     fontSize: 14,
+  },
+  backgroundContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+  },
+  mainContent: {
+    flex: 1,
+    zIndex: 2,
   },
 });
 

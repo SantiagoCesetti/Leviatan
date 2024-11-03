@@ -7,6 +7,7 @@ import { getFirestore, collection, addDoc, doc, setDoc } from 'firebase/firestor
 import { getApp } from 'firebase/app';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Header from "../../components/Header";
+import Background from '../../components/Background';
 
 const app = getApp();
 const db = getFirestore(app);
@@ -96,79 +97,84 @@ const PersonalForm = ({ onAdd }) => {
     <KeyboardAvoidingView 
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}>
-      <Header handleHomeNavigation={null} />
-      <View style={styles.body}>
-        <View style={styles.formContainer}>
-          <View style={styles.titleContainer}>
-            <Ionicons name="school" size={35} color="#00B8BA" />
-            <Text style={styles.title}>Aula 1</Text>
-          </View>
-          <Text style={styles.subtitle}>✨ Registro de limpieza</Text>
-
-          <View style={styles.sectionTitle}>
-            <Ionicons name="checkmark-circle" size={24} color="#00B8BA" />
-            <Text style={styles.sectionText}>Tareas realizadas</Text>
-          </View>
-
-          <View style={styles.checksContainer}>
-            <View style={styles.checkRow}>
-              <CheckBox
-                title="🏠 Ordenado"
-                checked={isOrdenado}
-                onPress={() => setIsOrdenado(!isOrdenado)}
-                containerStyle={styles.checkbox}
-                textStyle={styles.checkboxText}
-                checkedColor="#00B8BA"
-              />
-              <CheckBox
-                title="🧹 Barrido"
-                checked={isBarrido}
-                onPress={() => setIsBarrido(!isBarrido)}
-                containerStyle={styles.checkbox}
-                textStyle={styles.checkboxText}
-                checkedColor="#00B8BA"
-              />
+      <View style={styles.backgroundContainer}>
+        <Background />
+      </View>
+      <View style={styles.mainContent}>
+        <Header handleHomeNavigation={null} />
+        <View style={styles.body}>
+          <View style={styles.formContainer}>
+            <View style={styles.titleContainer}>
+              <Ionicons name="school" size={35} color="#00B8BA" />
+              <Text style={styles.title}>Aula 1</Text>
             </View>
-            <View style={styles.checkRow}>
-              <CheckBox
-                title="🧼 Trapeado"
-                checked={isTrapeado}
-                onPress={() => setIsTrapeado(!isTrapeado)}
-                containerStyle={styles.checkbox}
-                textStyle={styles.checkboxText}
-                checkedColor="#00B8BA"
-              />
-              <CheckBox
-                title="🧴 Desinfectado"
-                checked={isDesinfectado}
-                onPress={() => setIsDesinfectado(!isDesinfectado)}
-                containerStyle={styles.checkbox}
-                textStyle={styles.checkboxText}
-                checkedColor="#00B8BA"
-              />
-            </View>
-          </View>
+            <Text style={styles.subtitle}>✨ Registro de limpieza</Text>
 
-          <View style={styles.inputContainer}>
             <View style={styles.sectionTitle}>
-              <Ionicons name="chatbubble-ellipses" size={24} color="#00B8BA" />
-              <Text style={styles.sectionText}>Observaciones</Text>
+              <Ionicons name="checkmark-circle" size={24} color="#00B8BA" />
+              <Text style={styles.sectionText}>Tareas realizadas</Text>
             </View>
-            <TextInput
-              style={styles.input}
-              placeholder="✍️ Describe el estado del aula..."
-              value={observacion}
-              onChangeText={(text) => setObservacion(text.slice(0, 512))}
-              maxLength={512}
-              multiline={true}
-              placeholderTextColor="#999"
-            />
-          </View>
 
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Ionicons name="save" size={22} color="white" style={styles.buttonIcon} />
-            <Text style={styles.buttonText}>¡Guardar registro!</Text>
-          </TouchableOpacity>
+            <View style={styles.checksContainer}>
+              <View style={styles.checkRow}>
+                <CheckBox
+                  title="🏠 Ordenado"
+                  checked={isOrdenado}
+                  onPress={() => setIsOrdenado(!isOrdenado)}
+                  containerStyle={styles.checkbox}
+                  textStyle={styles.checkboxText}
+                  checkedColor="#00B8BA"
+                />
+                <CheckBox
+                  title="🧹 Barrido"
+                  checked={isBarrido}
+                  onPress={() => setIsBarrido(!isBarrido)}
+                  containerStyle={styles.checkbox}
+                  textStyle={styles.checkboxText}
+                  checkedColor="#00B8BA"
+                />
+              </View>
+              <View style={styles.checkRow}>
+                <CheckBox
+                  title="🧼 Trapeado"
+                  checked={isTrapeado}
+                  onPress={() => setIsTrapeado(!isTrapeado)}
+                  containerStyle={styles.checkbox}
+                  textStyle={styles.checkboxText}
+                  checkedColor="#00B8BA"
+                />
+                <CheckBox
+                  title="🧴 Desinfectado"
+                  checked={isDesinfectado}
+                  onPress={() => setIsDesinfectado(!isDesinfectado)}
+                  containerStyle={styles.checkbox}
+                  textStyle={styles.checkboxText}
+                  checkedColor="#00B8BA"
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputContainer}>
+              <View style={styles.sectionTitle}>
+                <Ionicons name="chatbubble-ellipses" size={24} color="#00B8BA" />
+                <Text style={styles.sectionText}>Observaciones</Text>
+              </View>
+              <TextInput
+                style={styles.input}
+                placeholder="✍️ Describe el estado del aula..."
+                value={observacion}
+                onChangeText={(text) => setObservacion(text.slice(0, 512))}
+                maxLength={512}
+                multiline={true}
+                placeholderTextColor="#999"
+              />
+            </View>
+
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+              <Ionicons name="save" size={22} color="white" style={styles.buttonIcon} />
+              <Text style={styles.buttonText}>¡Guardar registro!</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -296,6 +302,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     marginLeft: 8,
+  },
+  backgroundContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+  },
+  mainContent: {
+    flex: 1,
+    zIndex: 2,
   },
 });
 

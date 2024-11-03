@@ -5,6 +5,7 @@ import appFirebase from '../credenciales';
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Header from '../../components/Header';
+import Background from '../../components/Background';
 
 const auth = getAuth(appFirebase);
 const googleProvider = new GoogleAuthProvider();
@@ -76,62 +77,67 @@ function LoginForm() {
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
-            <View style={styles.container}>
-                <Header handleHomeNavigation={handleMenuPress} />
-                <View style={styles.body}>
-                    <View style={styles.formContainer}>
-                        <Text style={styles.formTitle}>Inicio de sesión</Text>
-                        <View style={styles.inputWrapper}>
-                            <View style={styles.labelContainer}>
-                                <Ionicons name="mail" size={20} color="#00B8BA" style={styles.icon} />
-                                <Text style={styles.inputLabel}>Correo electrónico</Text>
-                            </View>
-                            <TextInput
-                                style={styles.input}
-                                value={email}
-                                onChangeText={(text) => setEmail(text.slice(0, 50))}
-                                keyboardType="email-address"
-                                maxLength={50}
-                            />
-                        </View>
-                        <View style={styles.inputWrapper}>
-                            <View style={styles.labelContainer}>
-                                <Ionicons name="lock-closed" size={20} color="#00B8BA" style={styles.icon} />
-                                <Text style={styles.inputLabel}>Contraseña</Text>
-                            </View>
-                            <View style={styles.passwordContainer}>
-                                <TextInput
-                                    style={styles.passwordInput}
-                                    value={password}
-                                    onChangeText={(text) => setPassword(text.slice(0, 20))}
-                                    secureTextEntry={!showPassword}
-                                    maxLength={20}
-                                />
-                                <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
-                                    <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#666" />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                        <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordContainer}>
-                            <Text style={styles.forgotPassword}>Olvidé contraseña...</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                            <Text style={styles.buttonText}>Iniciar Sesión</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
-                            <Ionicons name="logo-google" size={24} color="white" style={styles.socialIcon} />
-                            <Text style={styles.buttonText}>Iniciar Sesión con Google</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.facebookButton} onPress={handleFacebookLogin}>
-                            <Ionicons name="logo-facebook" size={24} color="white" style={styles.socialIcon} />
-                            <Text style={styles.buttonText}>Iniciar Sesión con Facebook</Text>
-                        </TouchableOpacity>
-                        {error ? <Text style={styles.errorText}>{error}</Text> : null}
-                    </View>
-                </View>
+        <View style={styles.container}>
+            <View style={styles.backgroundContainer}>
+                <Background />
             </View>
-        </ScrollView>
+            <View style={styles.mainContent}>
+                <Header handleHomeNavigation={handleMenuPress} />
+                <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                    <View style={styles.body}>
+                        <View style={styles.formContainer}>
+                            <Text style={styles.formTitle}>Inicio de sesión</Text>
+                            <View style={styles.inputWrapper}>
+                                <View style={styles.labelContainer}>
+                                    <Ionicons name="mail" size={20} color="#00B8BA" style={styles.icon} />
+                                    <Text style={styles.inputLabel}>Correo electrónico</Text>
+                                </View>
+                                <TextInput
+                                    style={styles.input}
+                                    value={email}
+                                    onChangeText={(text) => setEmail(text.slice(0, 50))}
+                                    keyboardType="email-address"
+                                    maxLength={50}
+                                />
+                            </View>
+                            <View style={styles.inputWrapper}>
+                                <View style={styles.labelContainer}>
+                                    <Ionicons name="lock-closed" size={20} color="#00B8BA" style={styles.icon} />
+                                    <Text style={styles.inputLabel}>Contraseña</Text>
+                                </View>
+                                <View style={styles.passwordContainer}>
+                                    <TextInput
+                                        style={styles.passwordInput}
+                                        value={password}
+                                        onChangeText={(text) => setPassword(text.slice(0, 20))}
+                                        secureTextEntry={!showPassword}
+                                        maxLength={20}
+                                    />
+                                    <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
+                                        <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#666" />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordContainer}>
+                                <Text style={styles.forgotPassword}>Olvidé contraseña...</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                                <Text style={styles.buttonText}>Iniciar Sesión</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
+                                <Ionicons name="logo-google" size={24} color="white" style={styles.socialIcon} />
+                                <Text style={styles.buttonText}>Iniciar Sesión con Google</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.facebookButton} onPress={handleFacebookLogin}>
+                                <Ionicons name="logo-facebook" size={24} color="white" style={styles.socialIcon} />
+                                <Text style={styles.buttonText}>Iniciar Sesión con Facebook</Text>
+                            </TouchableOpacity>
+                            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+                        </View>
+                    </View>
+                </ScrollView>
+            </View>
+        </View>
     );
 }
 
@@ -266,6 +272,18 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 5,
         marginTop: -7,
+    },
+    backgroundContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
+    },
+    mainContent: {
+        flex: 1,
+        zIndex: 2,
     },
 });
 
