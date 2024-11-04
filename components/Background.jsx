@@ -2,16 +2,14 @@ import React from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 
 const Background = () => {
-  // Animaciones para burbujas y gotas de agua
-  const bubbleAnim1 = new Animated.Value(0);
-  const bubbleAnim2 = new Animated.Value(0);
-  const dropAnim1 = new Animated.Value(0);
-  const dropAnim2 = new Animated.Value(0);
-
-  // Añadir nuevas animaciones para las olas
-  const waveAnim1 = new Animated.Value(0);
-  const waveAnim2 = new Animated.Value(0);
-  const waveAnim3 = new Animated.Value(0);
+  // Usar useRef para mantener las referencias de las animaciones
+  const bubbleAnim1 = React.useRef(new Animated.Value(0)).current;
+  const bubbleAnim2 = React.useRef(new Animated.Value(0)).current;
+  const dropAnim1 = React.useRef(new Animated.Value(0)).current;
+  const dropAnim2 = React.useRef(new Animated.Value(0)).current;
+  const waveAnim1 = React.useRef(new Animated.Value(0)).current;
+  const waveAnim2 = React.useRef(new Animated.Value(0)).current;
+  const waveAnim3 = React.useRef(new Animated.Value(0)).current;
 
   React.useEffect(() => {
     const animate = () => {
