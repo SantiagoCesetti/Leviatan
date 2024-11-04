@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Animated } from "
 import { Ionicons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import { router, usePathname } from 'expo-router';
+import ColorMode from './ColorMode';
 
 const Header = ({ navigation }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -54,6 +55,7 @@ const Header = ({ navigation }) => {
           <Ionicons name="menu" size={34} color="white" />
         </TouchableOpacity>
         <Text style={styles.headertext}>🫧  Clean Class  🫧</Text>
+        <ColorMode />
       </View>
       
       {showMenu && (
@@ -222,7 +224,7 @@ const styles = StyleSheet.create({
         zIndex: 100,
     },
     header: {
-        backgroundColor: "#00B8BA",
+        backgroundColor: "#674EA7",
         height: 90,
         flexDirection: 'row',
         alignItems: 'center',
@@ -266,13 +268,13 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 90,
         left: 0,
-        backgroundColor: 'rgba(255, 255, 255, 0.98)',
+        backgroundColor: 'rgba(26, 22, 37, 0.98)',
         width: Dimensions.get('window').width * 0.29,
         maxHeight: Dimensions.get('window').height - 90,
         paddingTop: 20,
         paddingBottom: 20,
         elevation: 15,
-        shadowColor: '#00B8BA',
+        shadowColor: '#9B6B9E',
         shadowOffset: { width: 12, height: 12 },
         shadowOpacity: 0.4,
         shadowRadius: 20,
@@ -281,28 +283,28 @@ const styles = StyleSheet.create({
         borderRightWidth: 2,
         borderTopWidth: 2,
         borderBottomWidth: 2,
-        borderColor: 'rgba(0, 184, 186, 0.3)',
+        borderColor: 'rgba(155, 107, 158, 0.3)',
     },
     menuItem: {
         padding: 15,
         marginHorizontal: 25,
         marginVertical: 5,
         borderRadius: 25,
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        backgroundColor: 'rgba(26, 22, 37, 0.9)',
         elevation: 8,
-        shadowColor: '#00B8BA',
+        shadowColor: '#9B6B9E',
         shadowOffset: { width: 4, height: 4 },
         shadowOpacity: 0.2,
         shadowRadius: 8,
         borderWidth: 1,
-        borderColor: 'rgba(0, 184, 186, 0.15)',
+        borderColor: 'rgba(155, 107, 158, 0.15)',
         transform: [{ scale: 1 }],
         transition: 'all 0.3s ease-in-out',
     },
     menuText: {
         fontSize: 17,
         letterSpacing: 0.75,
-        color: '#2c3e50',
+        color: '#B784A7',
         fontWeight: '500',
         textAlign: 'center',
         transition: 'all 0.3s ease-in-out',
@@ -312,7 +314,7 @@ const styles = StyleSheet.create({
         right: 20,
         top: 25.5,
         padding: 12,
-        backgroundColor: 'rgba(0, 184, 186, 0.9)',
+        backgroundColor: 'rgba(155, 107, 158, 0.9)',
         backdropFilter: 'blur(5px)',
         borderRadius: 35,
         zIndex: 101,
@@ -328,32 +330,32 @@ const styles = StyleSheet.create({
     },
     menuItemHover: {
         transform: [{ scale: 1.03 }, { translateX: 8 }],
-        backgroundColor: 'rgba(0, 184, 186, 0.1)',
-        borderColor: '#00B8BA',
-        shadowColor: '#00B8BA',
+        backgroundColor: 'rgba(155, 107, 158, 0.1)',
+        borderColor: '#9B6B9E',
+        shadowColor: '#9B6B9E',
         shadowOffset: { width: 6, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 12,
         borderWidth: 2,
     },
     menuTextHover: {
-        color: '#00B8BA',
+        color: '#B784A7',
         fontWeight: '600',
         letterSpacing: 1.2,
         transform: [{ translateX: 4 }],
     },
     activeMenuItem: {
         borderWidth: 2.5,
-        borderColor: '#00B8BA',
-        backgroundColor: 'rgba(0, 184, 186, 0.08)',
+        borderColor: '#9B6B9E',
+        backgroundColor: 'rgba(155, 107, 158, 0.08)',
         transform: [{ scale: 1.02 }],
-        shadowColor: '#00B8BA',
+        shadowColor: '#9B6B9E',
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.3,
         shadowRadius: 8,
     },
     activeMenuText: {
-        color: '#00B8BA',
+        color: '#B784A7',
         fontWeight: '600',
         letterSpacing: 0.8,
     },
