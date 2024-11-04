@@ -1,43 +1,49 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
+import Background from '../../components/Background';
+import Header from '../../components/Header';
 
 const Redirect = () => {
-  const [contador, setContador] = useState(5);
+  const [contador, setContador] = React.useState(5);
 
-  React.useEffect(() => {
-    let timer;
-    const timeout = setTimeout(() => {
-      timer = setInterval(() => {
-        setContador((prevContador) => {
-          if (prevContador <= 1) {
+  useFocusEffect(
+    React.useCallback(() => {
+      setContador(5);
+      
+      const timer = setInterval(() => {
+        setContador((prev) => {
+          if (prev <= 1) {
             clearInterval(timer);
-            setTimeout(() => {
-              router.replace('/');
-            }, 0);
+            router.replace('/');
             return 0;
           }
-          return prevContador - 1;
+          return prev - 1;
         });
       }, 1000);
-    }, 100);
 
-    return () => {
-      clearTimeout(timeout);
-      clearInterval(timer);
-    };
-  }, []);
+      return () => {
+        if (timer) clearInterval(timer);
+      };
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>¡Gracias por tu tiempo!</Text>
-        <Text style={styles.subtitle}>Tu formulario ha sido enviado con éxito</Text>
-        <View style={styles.counterContainer}>
-          <Text style={styles.counterText}>{contador}</Text>
-          <Text style={styles.redirectText}>
-            Volviendo a la página principal...
-          </Text>
+      <View style={styles.backgroundContainer}>
+        <Background />
+      </View>
+      <Header />
+      <View style={styles.mainContent}>
+        <View style={styles.card}>
+          <Text style={styles.title}>¡Gracias por tu tiempo!</Text>
+          <Text style={styles.subtitle}>Tu formulario ha sido enviado con éxito</Text>
+          <View style={styles.counterContainer}>
+            <Text style={styles.counterText}>{contador}</Text>
+            <Text style={styles.redirectText}>
+              Volviendo a la página principal...
+            </Text>
+          </View>
         </View>
       </View>
     </View>
@@ -47,52 +53,82 @@ const Redirect = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f8ff',
+  },
+  backgroundContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+  },
+  mainContent: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    zIndex: 2,
   },
   card: {
     backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 30,
+    borderRadius: 25,
+    padding: 40,
     width: '90%',
+    maxWidth: 450,
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: '#00bcd4',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 4,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
+    borderWidth: 2,
+    borderColor: '#3498db',
+    position: 'relative',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: '800',
     color: '#2c3e50',
-    marginBottom: 10,
+    marginBottom: 15,
     textAlign: 'center',
+    textShadowColor: '#3498db',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 2,
   },
   subtitle: {
-    fontSize: 16,
-    color: '#7f8c8d',
-    marginBottom: 20,
+    fontSize: 18,
+    color: '#34495e',
+    marginBottom: 25,
     textAlign: 'center',
+    lineHeight: 24,
   },
   counterContainer: {
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 20,
+    backgroundColor: '#f0f9ff',
+    padding: 20,
+    borderRadius: 15,
+    width: '100%',
+    borderWidth: 2,
+    borderColor: '#3498db',
+    borderStyle: 'dashed',
   },
   counterText: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: '#3498db',
-    marginBottom: 5,
+    fontSize: 56,
+    fontWeight: '800',
+    color: '#00bcd4',
+    marginBottom: 10,
+    textShadowColor: 'rgba(0, 188, 212, 0.3)',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 3,
   },
   redirectText: {
-    fontSize: 14,
-    color: '#95a5a6',
+    fontSize: 16,
+    color: '#2980b9',
+    fontWeight: '600',
   },
 });
 
