@@ -1,12 +1,17 @@
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Animated } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { router } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 
 const Header = ({ navigation }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
   const slideAnim = useState(new Animated.Value(-Dimensions.get('window').width * 0.35))[0];
+  const currentPath = usePathname();
+
+  const isCurrentRoute = (route) => {
+    return currentPath === route;
+  };
 
   const toggleMenu = (show) => {
     setShowMenu(show);
@@ -68,7 +73,8 @@ const Header = ({ navigation }) => {
             <TouchableOpacity 
               style={[
                 styles.menuItem,
-                hoveredItem === 'inicio' && styles.menuItemHover
+                hoveredItem === 'inicio' && styles.menuItemHover,
+                isCurrentRoute('/') && styles.activeMenuItem
               ]} 
               onPress={() => handleNavigation('')}
               onMouseEnter={() => handleMouseEnter('inicio')}
@@ -76,14 +82,16 @@ const Header = ({ navigation }) => {
             >
               <Text style={[
                 styles.menuText,
-                hoveredItem === 'inicio' && styles.menuTextHover
+                hoveredItem === 'inicio' && styles.menuTextHover,
+                isCurrentRoute('/') && styles.activeMenuText
               ]}>Inicio</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={[
                 styles.menuItem,
-                hoveredItem === 'login' && styles.menuItemHover
+                hoveredItem === 'login' && styles.menuItemHover,
+                isCurrentRoute('/LoginForm') && styles.activeMenuItem
               ]} 
               onPress={() => handleNavigation('/LoginForm')}
               onMouseEnter={() => handleMouseEnter('login')}
@@ -91,14 +99,16 @@ const Header = ({ navigation }) => {
             >
               <Text style={[
                 styles.menuText,
-                hoveredItem === 'login' && styles.menuTextHover
+                hoveredItem === 'login' && styles.menuTextHover,
+                isCurrentRoute('/LoginForm') && styles.activeMenuText
               ]}>Login</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={[
                 styles.menuItem,
-                hoveredItem === 'registro' && styles.menuItemHover
+                hoveredItem === 'registro' && styles.menuItemHover,
+                isCurrentRoute('/RegisterForm') && styles.activeMenuItem
               ]} 
               onPress={() => handleNavigation('/RegisterForm')}
               onMouseEnter={() => handleMouseEnter('registro')}
@@ -106,14 +116,16 @@ const Header = ({ navigation }) => {
             >
               <Text style={[
                 styles.menuText,
-                hoveredItem === 'registro' && styles.menuTextHover
+                hoveredItem === 'registro' && styles.menuTextHover,
+                isCurrentRoute('/RegisterForm') && styles.activeMenuText
               ]}>Registro</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={[
                 styles.menuItem,
-                hoveredItem === 'personal' && styles.menuItemHover
+                hoveredItem === 'personal' && styles.menuItemHover,
+                isCurrentRoute('/PersonalForm') && styles.activeMenuItem
               ]} 
               onPress={() => handleNavigation('/PersonalForm')}
               onMouseEnter={() => handleMouseEnter('personal')}
@@ -121,14 +133,16 @@ const Header = ({ navigation }) => {
             >
               <Text style={[
                 styles.menuText,
-                hoveredItem === 'personal' && styles.menuTextHover
+                hoveredItem === 'personal' && styles.menuTextHover,
+                isCurrentRoute('/PersonalForm') && styles.activeMenuText
               ]}>Personal</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={[
                 styles.menuItem,
-                hoveredItem === 'verificacion' && styles.menuItemHover
+                hoveredItem === 'verificacion' && styles.menuItemHover,
+                isCurrentRoute('/SupervFormVerif') && styles.activeMenuItem
               ]} 
               onPress={() => handleNavigation('/SupervFormVerif')}
               onMouseEnter={() => handleMouseEnter('verificacion')}
@@ -136,14 +150,16 @@ const Header = ({ navigation }) => {
             >
               <Text style={[
                 styles.menuText,
-                hoveredItem === 'verificacion' && styles.menuTextHover
+                hoveredItem === 'verificacion' && styles.menuTextHover,
+                isCurrentRoute('/SupervFormVerif') && styles.activeMenuText
               ]}>Verificación Aula</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={[
                 styles.menuItem,
-                hoveredItem === 'supervisor' && styles.menuItemHover
+                hoveredItem === 'supervisor' && styles.menuItemHover,
+                isCurrentRoute('/SupervisorForm') && styles.activeMenuItem
               ]} 
               onPress={() => handleNavigation('/SupervisorForm')}
               onMouseEnter={() => handleMouseEnter('supervisor')}
@@ -151,14 +167,16 @@ const Header = ({ navigation }) => {
             >
               <Text style={[
                 styles.menuText,
-                hoveredItem === 'supervisor' && styles.menuTextHover
+                hoveredItem === 'supervisor' && styles.menuTextHover,
+                isCurrentRoute('/SupervisorForm') && styles.activeMenuText
               ]}>Supervisor</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={[
                 styles.menuItem,
-                hoveredItem === 'datos' && styles.menuItemHover
+                hoveredItem === 'datos' && styles.menuItemHover,
+                isCurrentRoute('/UserShowData') && styles.activeMenuItem
               ]} 
               onPress={() => handleNavigation('/UserShowData')}
               onMouseEnter={() => handleMouseEnter('datos')}
@@ -166,7 +184,8 @@ const Header = ({ navigation }) => {
             >
               <Text style={[
                 styles.menuText,
-                hoveredItem === 'datos' && styles.menuTextHover
+                hoveredItem === 'datos' && styles.menuTextHover,
+                isCurrentRoute('/UserShowData') && styles.activeMenuText
               ]}>Datos Usuario</Text>
             </TouchableOpacity>
 
@@ -314,6 +333,21 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         letterSpacing: 1.2,
         transform: [{ translateX: 4 }],
+    },
+    activeMenuItem: {
+        borderWidth: 2.5,
+        borderColor: '#00B8BA',
+        backgroundColor: 'rgba(0, 184, 186, 0.08)',
+        transform: [{ scale: 1.02 }],
+        shadowColor: '#00B8BA',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+    },
+    activeMenuText: {
+        color: '#00B8BA',
+        fontWeight: '600',
+        letterSpacing: 0.8,
     },
 });
 

@@ -6,18 +6,26 @@ const Redirect = () => {
   const [contador, setContador] = useState(5);
 
   React.useEffect(() => {
-    const timer = setInterval(() => {
-      setContador((prevContador) => {
-        if (prevContador <= 1) {
-          clearInterval(timer);
-          router.replace('/');
-          return 0;
-        }
-        return prevContador - 1;
-      });
-    }, 1000);
+    let timer;
+    const timeout = setTimeout(() => {
+      timer = setInterval(() => {
+        setContador((prevContador) => {
+          if (prevContador <= 1) {
+            clearInterval(timer);
+            setTimeout(() => {
+              router.replace('/');
+            }, 0);
+            return 0;
+          }
+          return prevContador - 1;
+        });
+      }, 1000);
+    }, 100);
 
-    return () => clearInterval(timer);
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(timer);
+    };
   }, []);
 
   return (
