@@ -106,7 +106,7 @@ const PersonalForm = ({ onAdd }) => {
           <View style={styles.formContainer}>
             <View style={styles.titleContainer}>
               <Ionicons name="school" size={35} color="#00B8BA" />
-              <Text style={styles.title}>Aula 1</Text>
+              <Text style={styles.title}>Aula</Text>
             </View>
             <Text style={styles.subtitle}>✨ Registro de limpieza</Text>
 

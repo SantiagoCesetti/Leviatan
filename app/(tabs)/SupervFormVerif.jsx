@@ -124,7 +124,7 @@ const SupervFormVerif = () => {
               <Ionicons name="shield-checkmark" size={35} color="#00B8BA" />
               <Text style={styles.title}>Verificación del Aula</Text>
             </View>
-            <Text style={styles.subtitle}>✨ Aula número: 1</Text>
+            <Text style={styles.subtitle}>✨ Aula número:</Text>
             <Text style={styles.personInfo}>👤 Limpieza realizada por: {nombre} {apellido}</Text>
 
             <View style={styles.sectionTitle}>
