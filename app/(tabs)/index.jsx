@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Header from '../../components/Header';
+import Header2 from '../../components/Header2';
+import { ThemeProvider, ThemeContext } from '../../components/ThemeContext';
+import ColorMode from '../../components/ColorMode';
 import Background from '../../components/Background';
+import Background2 from '../../components/Background2';
 
-const HomeScreen = () => {
+const HomeScreenContent = () => {
   const navigation = useNavigation();
+  const { isDarkMode } = useContext(ThemeContext);
 
   const handleLogin = () => {
     navigation.navigate('LoginForm');
@@ -22,10 +27,11 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.backgroundContainer}>
-        <Background />
+        {isDarkMode ? <Background2 /> : <Background />}
       </View>
       <View style={styles.mainContent}>
-        <Header handleHomeNavigation={handleHomeNavigation} />
+        {isDarkMode ? <Header2 handleHomeNavigation={handleHomeNavigation} /> : <Header handleHomeNavigation={handleHomeNavigation} />}
+        <ColorMode />
         <View style={styles.contentContainer}>
           <View style={styles.imageContainer}>
             <Image
@@ -34,18 +40,38 @@ const HomeScreen = () => {
               resizeMode="contain"
             />
           </View>
-          <Text style={styles.welcomeText}>¡Bienvenido a CleanClass!</Text>
+          <Text style={[styles.welcomeText, isDarkMode && styles.welcomeTextDark]}>
+            ¡Bienvenido a CleanClass!
+          </Text>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <Text style={styles.buttonText}>Iniciar sesión</Text>
+            <TouchableOpacity 
+              style={[styles.loginButton, isDarkMode && styles.loginButtonDark]} 
+              onPress={handleLogin}
+            >
+              <Text style={[styles.buttonText, isDarkMode && styles.buttonTextDark]}>
+                Iniciar sesión
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
-              <Text style={styles.buttonText}>Crear cuenta</Text>
+            <TouchableOpacity 
+              style={[styles.registerButton, isDarkMode && styles.registerButtonDark]} 
+              onPress={handleRegister}
+            >
+              <Text style={[styles.buttonText, isDarkMode && styles.buttonTextDark]}>
+                Crear cuenta
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
     </View>
+  );
+};
+
+const HomeScreen = () => {
+  return (
+    <ThemeProvider>
+      <HomeScreenContent />
+    </ThemeProvider>
   );
 };
 
@@ -100,6 +126,10 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
+  welcomeTextDark: {
+    color: '#E6E6FA', // Lavender
+    textShadowColor: 'rgba(255, 255, 255, 0.1)',
+  },
   buttonContainer: {
     width: '100%',
     maxWidth: 300,
@@ -118,6 +148,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
+  loginButtonDark: {
+    backgroundColor: '#9370DB', // Medium Purple
+    borderColor: '#7B68EE', // Medium Slate Blue
+  },
   registerButton: {
     backgroundColor: '#8CD2D8',
     paddingVertical: 15,
@@ -131,11 +165,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
+  registerButtonDark: {
+    backgroundColor: '#8A2BE2', // Blue Violet
+    borderColor: '#9400D3', // Dark Violet
+  },
   buttonText: {
     color: '#2C3E50',
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  buttonTextDark: {
+    color: '#FFFFFF',
   },
 });
 

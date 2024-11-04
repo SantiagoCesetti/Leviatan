@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+
 import Header from '../../components/Header';
 import Background from '../../components/Background';
+import Background2 from '../../components/Background2';
+import Header2 from '../../components/Header2';
+import { ThemeProvider, ThemeContext } from '../../components/ThemeContext';
+import ColorMode from '../../components/ColorMode';
 
 const auth = getAuth(appFirebase);
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
-function LoginForm() {
+const LoginFormContent = () => {
+    const { isDarkMode } = useContext(ThemeContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -81,23 +87,25 @@ function LoginForm() {
     return (
         <View style={styles.container}>
             <View style={styles.backgroundContainer}>
-                <Background />
+                {isDarkMode ? <Background2 /> : <Background />}
             </View>
             <View style={styles.mainContent}>
-                <Header handleHomeNavigation={handleMenuPress} />
+                {isDarkMode ? <Header2 handleHomeNavigation={handleMenuPress} /> : <Header handleHomeNavigation={handleMenuPress} />}
+                <ColorMode />
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.body}>
-                        <View style={styles.formContainer}>
-                            <Text style={styles.formTitle}>Inicio de sesión</Text>
+                        <View style={[styles.formContainer, isDarkMode && styles.formContainerDark]}>
+                            <Text style={[styles.formTitle, isDarkMode && styles.formTitleDark]}>Inicio de sesión</Text>
                             <View style={styles.inputWrapper}>
                                 <View style={styles.labelContainer}>
-                                    <Ionicons name="mail" size={20} color="#00B8BA" style={styles.icon} />
-                                    <Text style={styles.inputLabel}>Correo electrónico</Text>
+                                    <Ionicons name="mail" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} style={styles.icon} />
+                                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Correo electrónico</Text>
                                 </View>
                                 <TextInput
                                     style={[
                                         styles.input,
-                                        emailFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                                        emailFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
+                                        isDarkMode && styles.inputDark
                                     ]}
                                     value={email}
                                     onChangeText={(text) => setEmail(text.slice(0, 50))}
@@ -109,15 +117,16 @@ function LoginForm() {
                             </View>
                             <View style={styles.inputWrapper}>
                                 <View style={styles.labelContainer}>
-                                    <Ionicons name="lock-closed" size={20} color="#00B8BA" style={styles.icon} />
-                                    <Text style={styles.inputLabel}>Contraseña</Text>
+                                    <Ionicons name="lock-closed" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} style={styles.icon} />
+                                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Contraseña</Text>
                                 </View>
                                 <View style={[
                                     styles.passwordContainer,
-                                    passwordFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                                    passwordFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
+                                    isDarkMode && styles.inputDark
                                 ]}>
                                     <TextInput
-                                        style={styles.passwordInput}
+                                        style={[styles.passwordInput, isDarkMode && styles.inputDark]}
                                         value={password}
                                         onChangeText={(text) => setPassword(text.slice(0, 20))}
                                         secureTextEntry={!showPassword}
@@ -126,21 +135,23 @@ function LoginForm() {
                                         onBlur={() => setPasswordFocused(false)}
                                     />
                                     <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
-                                        <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#666" />
+                                        <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color={isDarkMode ? '#A73DFF' : '#666'} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
                             <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordContainer}>
-                                <Text style={styles.forgotPassword}>Olvidé contraseña...</Text>
+                                <Text style={[styles.forgotPassword, isDarkMode && styles.forgotPasswordDark]}>
+                                    Olvidé contraseña...
+                                </Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                            <TouchableOpacity style={[styles.button, isDarkMode && styles.buttonDark]} onPress={handleLogin}>
                                 <Text style={styles.buttonText}>Iniciar Sesión</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
+                            <TouchableOpacity style={[styles.googleButton, isDarkMode && styles.googleButtonDark]} onPress={handleGoogleLogin}>
                                 <Ionicons name="logo-google" size={24} color="white" style={styles.socialIcon} />
                                 <Text style={styles.buttonText}>Iniciar Sesión con Google</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.facebookButton} onPress={handleFacebookLogin}>
+                            <TouchableOpacity style={[styles.facebookButton, isDarkMode && styles.facebookButtonDark]} onPress={handleFacebookLogin}>
                                 <Ionicons name="logo-facebook" size={24} color="white" style={styles.socialIcon} />
                                 <Text style={styles.buttonText}>Iniciar Sesión con Facebook</Text>
                             </TouchableOpacity>
@@ -151,7 +162,15 @@ function LoginForm() {
             </View>
         </View>
     );
-}
+};
+
+const LoginForm = () => {
+    return (
+        <ThemeProvider>
+            <LoginFormContent />
+        </ThemeProvider>
+    );
+};
 
 const styles = StyleSheet.create({
     scrollViewContent: {
@@ -205,6 +224,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         fontSize: 16,
         outlineStyle: 'none',
+    },
+    inputFocused: {
+        borderColor: '#00B8BA',
+        borderWidth: 2,
     },
     passwordContainer: {
         flexDirection: 'row',
@@ -299,6 +322,41 @@ const styles = StyleSheet.create({
     mainContent: {
         flex: 1,
         zIndex: 2,
+    },
+    formContainerDark: {
+        backgroundColor: '#1A1625',
+        borderColor: '#A73DFF',
+    },
+    formTitleDark: {
+        color: '#E6E6FA',
+    },
+    inputLabelDark: {
+        color: '#E6E6FA',
+    },
+    inputDark: {
+        backgroundColor: '#2D2640',
+        borderColor: '#A73DFF',
+        color: '#E6E6FA',
+        borderRadius: 8,
+    },
+    inputFocusedDark: {
+        borderColor: '#A73DFF',
+        borderWidth: 2,
+    },
+    forgotPasswordDark: {
+        color: '#A73DFF',
+    },
+    buttonDark: {
+        backgroundColor: '#9370DB',
+        borderColor: '#7B68EE',
+    },
+    googleButtonDark: {
+        backgroundColor: '#8A2BE2',
+        borderColor: '#9400D3',
+    },
+    facebookButtonDark: {
+        backgroundColor: '#7B68EE',
+        borderColor: '#6A5ACD',
     },
 });
 
