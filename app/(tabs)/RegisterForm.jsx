@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+
 import Header from "../../components/Header";
 import Background from '../../components/Background';
+import Background2 from '../../components/Background2';
+import Header2 from '../../components/Header2';
+import { ThemeProvider, ThemeContext } from '../../components/ThemeContext';
+import ColorMode from '../../components/ColorMode';
 
 const auth = getAuth(appFirebase);
 
-const RegisterForm = () => {
+const RegisterFormContent = () => {
+  const { isDarkMode } = useContext(ThemeContext);
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
@@ -84,35 +90,37 @@ const RegisterForm = () => {
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <View style={styles.container}>
         <View style={styles.backgroundContainer}>
-          <Background />
+          {isDarkMode ? <Background2 /> : <Background />}
         </View>
         <View style={styles.mainContent}>
-          <Header handleHomeNavigation={null} />
+          {isDarkMode ? <Header2 handleHomeNavigation={null} /> : <Header handleHomeNavigation={null} />}
+          <ColorMode />
           <View style={styles.body}>
-            <View style={styles.formContainer}>
+            <View style={[styles.formContainer, isDarkMode && styles.formContainerDark]}>
               <View style={styles.titleContainer}>
-                <Ionicons name="person-add" size={35} color="#00B8BA" />
-                <Text style={styles.title}>Registro de usuario</Text>
+                <Ionicons name="person-add" size={35} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                <Text style={[styles.title, isDarkMode && styles.titleDark]}>Registro de usuario</Text>
               </View>
-              <Text style={styles.subtitle}>✨ ¡Únete a nuestra comunidad!</Text>
+              <Text style={[styles.subtitle, isDarkMode && styles.subtitleDark]}>✨ ¡Únete a nuestra comunidad!</Text>
 
               <View style={styles.gridContainer}>
                 <View style={styles.inputContainer}>
                   <View style={styles.labelContainer}>
-                    <Ionicons name="person" size={20} color="#00B8BA" />
-                    <Text style={styles.inputLabel}>Nombre</Text>
+                    <Ionicons name="person" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Nombre</Text>
                   </View>
                   <TextInput
                     style={[
                       styles.input,
                       nombre ? styles.inputTextBlack : null,
-                      nombreFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                      nombreFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
+                      isDarkMode && styles.inputDark
                     ]}
                     value={nombre}
                     onChangeText={(text) => setNombre(text.slice(0, 50))}
                     placeholder="Tu nombre"
                     maxLength={50}
-                    placeholderTextColor="#999"
+                    placeholderTextColor={isDarkMode ? '#A0A0A0' : '#999'}
                     onFocus={() => setNombreFocused(true)}
                     onBlur={() => setNombreFocused(false)}
                   />
@@ -120,20 +128,21 @@ const RegisterForm = () => {
 
                 <View style={styles.inputContainer}>
                   <View style={styles.labelContainer}>
-                    <Ionicons name="people" size={20} color="#00B8BA" />
-                    <Text style={styles.inputLabel}>Apellido</Text>
+                    <Ionicons name="people" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Apellido</Text>
                   </View>
                   <TextInput
                     style={[
                       styles.input,
                       apellido ? styles.inputTextBlack : null,
-                      apellidoFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                      apellidoFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
+                      isDarkMode && styles.inputDark
                     ]}
                     value={apellido}
                     onChangeText={(text) => setApellido(text.slice(0, 50))}
                     placeholder="Tu apellido"
                     maxLength={50}
-                    placeholderTextColor="#999"
+                    placeholderTextColor={isDarkMode ? '#A0A0A0' : '#999'}
                     onFocus={() => setApellidoFocused(true)}
                     onBlur={() => setApellidoFocused(false)}
                   />
@@ -141,21 +150,22 @@ const RegisterForm = () => {
 
                 <View style={styles.inputContainer}>
                   <View style={styles.labelContainer}>
-                    <Ionicons name="mail" size={20} color="#00B8BA" />
-                    <Text style={styles.inputLabel}>Correo electrónico</Text>
+                    <Ionicons name="mail" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Correo electrónico</Text>
                   </View>
                   <TextInput
                     style={[
                       styles.input,
                       email ? styles.inputTextBlack : null,
-                      emailFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                      emailFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
+                      isDarkMode && styles.inputDark
                     ]}
                     value={email}
                     onChangeText={(text) => setEmail(text.slice(0, 50))}
                     placeholder="ejemplo@correo.com"
                     keyboardType="email-address"
                     maxLength={50}
-                    placeholderTextColor="#999"
+                    placeholderTextColor={isDarkMode ? '#A0A0A0' : '#999'}
                     onFocus={() => setEmailFocused(true)}
                     onBlur={() => setEmailFocused(false)}
                   />
@@ -163,54 +173,61 @@ const RegisterForm = () => {
 
                 <View style={styles.inputContainer}>
                   <View style={styles.labelContainer}>
-                    <Ionicons name="lock-closed" size={20} color="#00B8BA" />
-                    <Text style={styles.inputLabel}>Contraseña</Text>
+                    <Ionicons name="lock-closed" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Contraseña</Text>
                   </View>
                   <View style={[
                     styles.passwordContainer,
-                    passwordFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                    passwordFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
+                    isDarkMode && styles.inputDark
                   ]}>
                     <TextInput
                       style={[
                         styles.passwordInput,
                         contraseña ? styles.inputTextBlack : null,
+                        isDarkMode && styles.inputDark
                       ]}
                       value={contraseña}
                       onChangeText={(text) => setContraseña(text.slice(0, 20))}
                       placeholder="Tu contraseña"
                       secureTextEntry={!showPassword}
                       maxLength={20}
-                      placeholderTextColor="#999"
+                      placeholderTextColor={isDarkMode ? '#A0A0A0' : '#999'}
                       onFocus={() => setPasswordFocused(true)}
                       onBlur={() => setPasswordFocused(false)}
                     />
                     <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
-                      <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#666" />
+                      <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color={isDarkMode ? '#A73DFF' : '#666'} />
                     </TouchableOpacity>
                   </View>
                 </View>
 
                 <View style={styles.inputContainer}>
                   <View style={styles.labelContainer}>
-                    <Ionicons name="call" size={20} color="#00B8BA" />
-                    <Text style={styles.inputLabel}>Teléfono</Text>
+                    <Ionicons name="call" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Teléfono</Text>
                   </View>
                   <View style={[
                     styles.phoneInputContainer,
-                    telefonoFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                    telefonoFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
+                    isDarkMode && styles.phoneInputContainerDark
                   ]}>
-                    <Text style={styles.phonePrefix}>+54</Text>
+                    <Text style={[
+                      styles.phonePrefix, 
+                      isDarkMode && { color: '#A0A0A0' }
+                    ]}>+54</Text>
                     <TextInput
                       style={[
                         styles.phoneInput,
                         telefono ? styles.inputTextBlack : null,
+                        isDarkMode && styles.inputDark
                       ]}
                       value={telefono}
                       onChangeText={handlePhoneChange}
                       placeholder="299 777 5555"
                       keyboardType="numeric"
                       maxLength={12}
-                      placeholderTextColor="#999"
+                      placeholderTextColor={isDarkMode ? '#A0A0A0' : '#999'}
                       onFocus={() => setTelefonoFocused(true)}
                       onBlur={() => setTelefonoFocused(false)}
                     />
@@ -219,27 +236,31 @@ const RegisterForm = () => {
 
                 <View style={styles.inputContainer}>
                   <View style={styles.labelContainer}>
-                    <Ionicons name="location" size={20} color="#00B8BA" />
-                    <Text style={styles.inputLabel}>Dirección</Text>
+                    <Ionicons name="location" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Dirección</Text>
                   </View>
                   <TextInput
                     style={[
                       styles.input,
                       direccion ? styles.inputTextBlack : null,
-                      direccionFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                      direccionFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
+                      isDarkMode && styles.inputDark
                     ]}
                     value={direccion}
                     onChangeText={(text) => setDireccion(text.slice(0, 100))}
                     placeholder="Tu dirección"
                     maxLength={100}
-                    placeholderTextColor="#999"
+                    placeholderTextColor={isDarkMode ? '#A0A0A0' : '#999'}
                     onFocus={() => setDireccionFocused(true)}
                     onBlur={() => setDireccionFocused(false)}
                   />
                 </View>
               </View>
 
-              <TouchableOpacity style={styles.button} onPress={handleRegister}>
+              <TouchableOpacity 
+                style={[styles.button, isDarkMode && styles.buttonDark]} 
+                onPress={handleRegister}
+              >
                 <Ionicons name="checkmark-circle" size={22} color="white" />
                 <Text style={styles.buttonText}>¡Crear cuenta!</Text>
               </TouchableOpacity>
@@ -255,6 +276,14 @@ const RegisterForm = () => {
         </View>
       </View>
     </ScrollView>
+  );
+};
+
+const RegisterForm = () => {
+  return (
+    <ThemeProvider>
+      <RegisterFormContent />
+    </ThemeProvider>
   );
 };
 
@@ -340,7 +369,7 @@ const styles = StyleSheet.create({
     outlineStyle: 'none',
   },
   inputTextBlack: {
-    color: '#333',
+    color: isDarkMode => isDarkMode ? '#E6E6FA' : '#333',
   },
   passwordContainer: {
     flexDirection: 'row',
@@ -358,7 +387,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingRight: 45,
     fontSize: 14,
-    color: '#333',
     outlineStyle: 'none',
   },
   eyeIcon: {
@@ -376,12 +404,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E0E0E0',
     borderRadius: 12,
+    overflow: 'hidden',
   },
   phonePrefix: {
     paddingLeft: 15,
     color: '#333',
     fontSize: 14,
     fontWeight: '500',
+    height: '100%',
+    lineHeight: 45,
   },
   phoneInput: {
     flex: 1,
@@ -435,6 +466,49 @@ const styles = StyleSheet.create({
   mainContent: {
     flex: 1,
     zIndex: 2,
+  },
+  formContainerDark: {
+    backgroundColor: '#1A1625',
+    borderColor: '#A73DFF',
+  },
+  titleDark: {
+    color: '#E6E6FA',
+  },
+  subtitleDark: {
+    color: '#B8B8D1',
+  },
+  inputLabelDark: {
+    color: '#E6E6FA',
+  },
+  inputDark: {
+    backgroundColor: '#2D2640',
+    borderColor: '#4A4460',
+    color: '#E6E6FA',
+    borderRadius: 12,
+  },
+  inputFocusedDark: {
+    borderColor: '#A73DFF',
+    borderWidth: 2,
+  },
+  passwordContainerDark: {
+    backgroundColor: '#2D2640',
+    borderColor: '#4A4460',
+  },
+  phoneInputContainerDark: {
+    backgroundColor: '#2D2640',
+    borderColor: '#4A4460',
+    borderWidth: 1,
+  },
+  buttonDark: {
+    backgroundColor: '#9370DB',
+    borderColor: '#7B68EE',
+    shadowColor: "#A73DFF",
+  },
+  phonePrefix: {
+    color: isDarkMode => isDarkMode ? '#E6E6FA' : '#333',
+  },
+  inputTextDark: {
+    color: '#E6E6FA',
   },
 });
 

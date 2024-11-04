@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import { CheckBox } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
@@ -6,14 +6,20 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getFirestore, collection, addDoc, doc, setDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 import Header from "../../components/Header";
 import Background from '../../components/Background';
+import Background2 from '../../components/Background2';
+import Header2 from '../../components/Header2';
+import { ThemeProvider, ThemeContext } from '../../components/ThemeContext';
+import ColorMode from '../../components/ColorMode';
 
 const app = getApp();
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-const PersonalForm = ({ onAdd }) => {
+const PersonalFormContent = ({ onAdd }) => {
+  const { isDarkMode } = useContext(ThemeContext);
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
@@ -98,40 +104,41 @@ const PersonalForm = ({ onAdd }) => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}>
       <View style={styles.backgroundContainer}>
-        <Background />
+        {isDarkMode ? <Background2 /> : <Background />}
       </View>
       <View style={styles.mainContent}>
-        <Header handleHomeNavigation={null} />
+        {isDarkMode ? <Header2 handleHomeNavigation={null} /> : <Header handleHomeNavigation={null} />}
+        <ColorMode />
         <View style={styles.body}>
-          <View style={styles.formContainer}>
+          <View style={[styles.formContainer, isDarkMode && styles.formContainerDark]}>
             <View style={styles.titleContainer}>
-              <Ionicons name="school" size={35} color="#00B8BA" />
-              <Text style={styles.title}>Aula</Text>
+              <Ionicons name="school" size={35} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+              <Text style={[styles.title, isDarkMode && styles.titleDark]}>Aula</Text>
             </View>
-            <Text style={styles.subtitle}>✨ Registro de limpieza</Text>
+            <Text style={[styles.subtitle, isDarkMode && styles.subtitleDark]}>✨ Registro de limpieza</Text>
 
             <View style={styles.sectionTitle}>
-              <Ionicons name="checkmark-circle" size={24} color="#00B8BA" />
-              <Text style={styles.sectionText}>Tareas realizadas</Text>
+              <Ionicons name="checkmark-circle" size={24} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+              <Text style={[styles.sectionText, isDarkMode && styles.sectionTextDark]}>Tareas realizadas</Text>
             </View>
 
-            <View style={styles.checksContainer}>
+            <View style={[styles.checksContainer, isDarkMode && styles.checksContainerDark]}>
               <View style={styles.checkRow}>
                 <CheckBox
                   title="🏠 Ordenado"
                   checked={isOrdenado}
                   onPress={() => setIsOrdenado(!isOrdenado)}
-                  containerStyle={styles.checkbox}
-                  textStyle={styles.checkboxText}
-                  checkedColor="#00B8BA"
+                  containerStyle={[styles.checkbox, isDarkMode && styles.checkboxDark]}
+                  textStyle={[styles.checkboxText, isDarkMode && styles.checkboxTextDark]}
+                  checkedColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
                 />
                 <CheckBox
                   title="🧹 Barrido"
                   checked={isBarrido}
                   onPress={() => setIsBarrido(!isBarrido)}
-                  containerStyle={styles.checkbox}
-                  textStyle={styles.checkboxText}
-                  checkedColor="#00B8BA"
+                  containerStyle={[styles.checkbox, isDarkMode && styles.checkboxDark]}
+                  textStyle={[styles.checkboxText, isDarkMode && styles.checkboxTextDark]}
+                  checkedColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
                 />
               </View>
               <View style={styles.checkRow}>
@@ -139,38 +146,41 @@ const PersonalForm = ({ onAdd }) => {
                   title="🧼 Trapeado"
                   checked={isTrapeado}
                   onPress={() => setIsTrapeado(!isTrapeado)}
-                  containerStyle={styles.checkbox}
-                  textStyle={styles.checkboxText}
-                  checkedColor="#00B8BA"
+                  containerStyle={[styles.checkbox, isDarkMode && styles.checkboxDark]}
+                  textStyle={[styles.checkboxText, isDarkMode && styles.checkboxTextDark]}
+                  checkedColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
                 />
                 <CheckBox
                   title="🧴 Desinfectado"
                   checked={isDesinfectado}
                   onPress={() => setIsDesinfectado(!isDesinfectado)}
-                  containerStyle={styles.checkbox}
-                  textStyle={styles.checkboxText}
-                  checkedColor="#00B8BA"
+                  containerStyle={[styles.checkbox, isDarkMode && styles.checkboxDark]}
+                  textStyle={[styles.checkboxText, isDarkMode && styles.checkboxTextDark]}
+                  checkedColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
                 />
               </View>
             </View>
 
             <View style={styles.inputContainer}>
               <View style={styles.sectionTitle}>
-                <Ionicons name="chatbubble-ellipses" size={24} color="#00B8BA" />
-                <Text style={styles.sectionText}>Observaciones</Text>
+                <Ionicons name="chatbubble-ellipses" size={24} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                <Text style={[styles.sectionText, isDarkMode && styles.sectionTextDark]}>Observaciones</Text>
               </View>
               <TextInput
-                style={styles.input}
+                style={[styles.input, isDarkMode && styles.inputDark]}
                 placeholder="✍️ Describe el estado del aula..."
                 value={observacion}
                 onChangeText={(text) => setObservacion(text.slice(0, 512))}
                 maxLength={512}
                 multiline={true}
-                placeholderTextColor="#999"
+                placeholderTextColor={isDarkMode ? '#A0A0A0' : '#999'}
               />
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <TouchableOpacity 
+              style={[styles.button, isDarkMode && styles.buttonDark]} 
+              onPress={handleSubmit}
+            >
               <Ionicons name="save" size={22} color="white" style={styles.buttonIcon} />
               <Text style={styles.buttonText}>¡Guardar registro!</Text>
             </TouchableOpacity>
@@ -178,6 +188,14 @@ const PersonalForm = ({ onAdd }) => {
         </View>
       </View>
     </KeyboardAvoidingView>
+  );
+};
+
+const PersonalForm = ({ onAdd }) => {
+  return (
+    <ThemeProvider>
+      <PersonalFormContent onAdd={onAdd} />
+    </ThemeProvider>
   );
 };
 
@@ -314,6 +332,48 @@ const styles = StyleSheet.create({
   mainContent: {
     flex: 1,
     zIndex: 2,
+  },
+  formContainerDark: {
+    backgroundColor: '#1A1625',
+    borderColor: '#A73DFF',
+  },
+
+  titleDark: {
+    color: '#E6E6FA',
+  },
+
+  subtitleDark: {
+    color: '#B8B8D1',
+  },
+
+  sectionTextDark: {
+    color: '#E6E6FA',
+  },
+
+  checksContainerDark: {
+    backgroundColor: '#2D2640',
+    borderColor: '#4A4460',
+  },
+
+  checkboxDark: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+  },
+
+  checkboxTextDark: {
+    color: '#E6E6FA',
+  },
+
+  inputDark: {
+    backgroundColor: '#2D2640',
+    borderColor: '#4A4460',
+    color: '#E6E6FA',
+  },
+
+  buttonDark: {
+    backgroundColor: '#9370DB',
+    borderColor: '#7B68EE',
+    shadowColor: '#A73DFF',
   },
 });
 

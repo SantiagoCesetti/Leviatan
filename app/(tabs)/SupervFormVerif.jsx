@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Dimensions, KeyboardAvoidingView, Platform, Alert } from "react-native";
 import { CheckBox } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
+
 import Header from "../../components/Header";
 import Background from '../../components/Background';
+import Background2 from '../../components/Background2';
+import Header2 from '../../components/Header2';
+import { ThemeProvider, ThemeContext } from '../../components/ThemeContext';
+import ColorMode from '../../components/ColorMode';
 
 const app = getApp();
 const db = getFirestore(app);
 
-const SupervFormVerif = () => {
+const SupervFormVerifContent = () => {
+  const { isDarkMode } = useContext(ThemeContext);
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
@@ -114,41 +120,44 @@ const SupervFormVerif = () => {
       style={styles.container}
     >
       <View style={styles.backgroundContainer}>
-        <Background />
+        {isDarkMode ? <Background2 /> : <Background />}
       </View>
       <View style={styles.mainContent}>
-        <Header />
+        {isDarkMode ? <Header2 /> : <Header />}
+        <ColorMode />
         <View style={styles.body}>
-          <View style={styles.formContainer}>
+          <View style={[styles.formContainer, isDarkMode && styles.formContainerDark]}>
             <View style={styles.titleContainer}>
-              <Ionicons name="shield-checkmark" size={35} color="#00B8BA" />
-              <Text style={styles.title}>Verificación del Aula</Text>
+              <Ionicons name="shield-checkmark" size={35} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+              <Text style={[styles.title, isDarkMode && styles.titleDark]}>Verificación del Aula</Text>
             </View>
-            <Text style={styles.subtitle}>✨ Aula número:</Text>
-            <Text style={styles.personInfo}>👤 Limpieza realizada por: {nombre} {apellido}</Text>
+            <Text style={[styles.subtitle, isDarkMode && styles.subtitleDark]}>✨ Aula número:</Text>
+            <Text style={[styles.personInfo, isDarkMode && styles.personInfoDark]}>
+              👤 Limpieza realizada por: {nombre} {apellido}
+            </Text>
 
             <View style={styles.sectionTitle}>
-              <Ionicons name="checkmark-circle" size={24} color="#00B8BA" />
-              <Text style={styles.sectionText}>Verificar tareas</Text>
+              <Ionicons name="checkmark-circle" size={24} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+              <Text style={[styles.sectionText, isDarkMode && styles.sectionTextDark]}>Verificar tareas</Text>
             </View>
 
-            <View style={styles.checksContainer}>
+            <View style={[styles.checksContainer, isDarkMode && styles.checksContainerDark]}>
               <View style={styles.checkRow}>
                 <CheckBox
                   title="🏠 Ordenado"
                   checked={isCheckedOrdenado}
                   onPress={() => setIsCheckedOrdenado(!isCheckedOrdenado)}
-                  containerStyle={styles.checkbox}
-                  textStyle={styles.checkboxText}
-                  checkedColor="#00B8BA"
+                  containerStyle={[styles.checkbox, isDarkMode && styles.checkboxDark]}
+                  textStyle={[styles.checkboxText, isDarkMode && styles.checkboxTextDark]}
+                  checkedColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
                 />
                 <CheckBox
                   title="🧹 Barrido"
                   checked={isCheckedBarrido}
                   onPress={() => setIsCheckedBarrido(!isCheckedBarrido)}
-                  containerStyle={styles.checkbox}
-                  textStyle={styles.checkboxText}
-                  checkedColor="#00B8BA"
+                  containerStyle={[styles.checkbox, isDarkMode && styles.checkboxDark]}
+                  textStyle={[styles.checkboxText, isDarkMode && styles.checkboxTextDark]}
+                  checkedColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
                 />
               </View>
               <View style={styles.checkRow}>
@@ -156,43 +165,49 @@ const SupervFormVerif = () => {
                   title="🧼 Trapeado"
                   checked={isCheckedTrapeado}
                   onPress={() => setIsCheckedTrapeado(!isCheckedTrapeado)}
-                  containerStyle={styles.checkbox}
-                  textStyle={styles.checkboxText}
-                  checkedColor="#00B8BA"
+                  containerStyle={[styles.checkbox, isDarkMode && styles.checkboxDark]}
+                  textStyle={[styles.checkboxText, isDarkMode && styles.checkboxTextDark]}
+                  checkedColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
                 />
                 <CheckBox
                   title="🧴 Desinfectado"
                   checked={isCheckedDesinfectado}
                   onPress={() => setIsCheckedDesinfectado(!isCheckedDesinfectado)}
-                  containerStyle={styles.checkbox}
-                  textStyle={styles.checkboxText}
-                  checkedColor="#00B8BA"
+                  containerStyle={[styles.checkbox, isDarkMode && styles.checkboxDark]}
+                  textStyle={[styles.checkboxText, isDarkMode && styles.checkboxTextDark]}
+                  checkedColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
                 />
               </View>
             </View>
 
             <View style={styles.inputContainer}>
               <View style={styles.sectionTitle}>
-                <Ionicons name="chatbubble-ellipses" size={24} color="#00B8BA" />
-                <Text style={styles.sectionText}>Observaciones</Text>
+                <Ionicons name="chatbubble-ellipses" size={24} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                <Text style={[styles.sectionText, isDarkMode && styles.sectionTextDark]}>Observaciones</Text>
               </View>
               <TextInput
-                style={styles.input}
+                style={[styles.input, isDarkMode && styles.inputDark]}
                 placeholder="✍️ Escribe tus observaciones aquí..."
                 value={observacion}
                 onChangeText={(text) => setObservacion(text.slice(0, 512))}
                 maxLength={512}
                 multiline={true}
-                placeholderTextColor="#999"
+                placeholderTextColor={isDarkMode ? '#A0A0A0' : '#999'}
               />
             </View>
 
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.acceptButton} onPress={handleSubmit}>
+              <TouchableOpacity 
+                style={[styles.acceptButton, isDarkMode && styles.acceptButtonDark]} 
+                onPress={handleSubmit}
+              >
                 <Ionicons name="checkmark-circle" size={22} color="white" />
                 <Text style={styles.buttonText}>Aprobar</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.rejectButton} onPress={handleDenegar}>
+              <TouchableOpacity 
+                style={[styles.rejectButton, isDarkMode && styles.rejectButtonDark]} 
+                onPress={handleDenegar}
+              >
                 <Ionicons name="close-circle" size={22} color="white" />
                 <Text style={styles.buttonText}>Denegar</Text>
               </TouchableOpacity>
@@ -201,6 +216,14 @@ const SupervFormVerif = () => {
         </View>
       </View>
     </KeyboardAvoidingView>
+  );
+};
+
+const SupervFormVerif = () => {
+  return (
+    <ThemeProvider>
+      <SupervFormVerifContent />
+    </ThemeProvider>
   );
 };
 
@@ -362,6 +385,58 @@ const styles = StyleSheet.create({
   mainContent: {
     flex: 1,
     zIndex: 2,
+  },
+  formContainerDark: {
+    backgroundColor: '#1A1625',
+    borderColor: '#A73DFF',
+  },
+
+  titleDark: {
+    color: '#E6E6FA',
+  },
+
+  subtitleDark: {
+    color: '#B8B8D1',
+  },
+
+  personInfoDark: {
+    color: '#B8B8D1',
+  },
+
+  sectionTextDark: {
+    color: '#E6E6FA',
+  },
+
+  checksContainerDark: {
+    backgroundColor: '#2D2640',
+    borderColor: '#4A4460',
+  },
+
+  checkboxDark: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+  },
+
+  checkboxTextDark: {
+    color: '#E6E6FA',
+  },
+
+  inputDark: {
+    backgroundColor: '#2D2640',
+    borderColor: '#4A4460',
+    color: '#E6E6FA',
+  },
+
+  acceptButtonDark: {
+    backgroundColor: '#9370DB',
+    borderColor: '#7B68EE',
+    shadowColor: '#A73DFF',
+  },
+
+  rejectButtonDark: {
+    backgroundColor: '#8A2BE2',
+    borderColor: '#9400D3',
+    shadowColor: '#A73DFF',
   },
 });
 
