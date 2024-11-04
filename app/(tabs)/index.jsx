@@ -33,7 +33,10 @@ const HomeScreenContent = () => {
         {isDarkMode ? <Header2 handleHomeNavigation={handleHomeNavigation} /> : <Header handleHomeNavigation={handleHomeNavigation} />}
         <ColorMode />
         <View style={styles.contentContainer}>
-          <View style={styles.imageContainer}>
+          <View style={[
+            styles.imageContainer, 
+            isDarkMode && styles.imageContainerDark
+          ]}>
             <Image
               source={{uri: 'https://i.imgur.com/rwln1yI.png'}}
               style={styles.image}
@@ -107,10 +110,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 125,
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: '#87CEFA', // Celeste (Light Sky Blue)
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 7,
+    shadowRadius: 16,
+  },
+  imageContainerDark: {
+    shadowColor: '#FF00FF', // Color magenta
+    shadowOpacity: 0.3,
+    shadowRadius: 14,
+    elevation: 8,
   },
   image: {
     width: '83%',

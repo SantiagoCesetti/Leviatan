@@ -218,11 +218,14 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 15,
     backgroundColor: '#fff',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
+    shadowColor: "#00B8BA",
+    shadowOffset: {
+        width: 0,
+        height: 0,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
   },
   title: {
     fontSize: 28,
@@ -341,6 +344,10 @@ const styles = StyleSheet.create({
   formContainerDark: {
     backgroundColor: '#1A1625',
     borderColor: '#A73DFF',
+    shadowColor: '#A73DFF',
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
+    elevation: 8,
   },
 
   titleDark: {

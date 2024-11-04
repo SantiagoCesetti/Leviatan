@@ -283,7 +283,7 @@ const Background = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1C1728',
+    backgroundColor: '#1A1625',
     overflow: 'hidden',
   },
   wave: {

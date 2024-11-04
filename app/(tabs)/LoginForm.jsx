@@ -193,11 +193,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 25,
         borderRadius: 12,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
+        shadowColor: '#00B8BA',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.4,
         shadowRadius: 12,
-        elevation: 5,
+        elevation: 8,
         alignSelf: 'center',
     },
     formTitle: {
@@ -326,6 +326,10 @@ const styles = StyleSheet.create({
     formContainerDark: {
         backgroundColor: '#1A1625',
         borderColor: '#A73DFF',
+        shadowColor: '#A73DFF',
+        shadowOpacity: 0.5,
+        shadowRadius: 12,
+        elevation: 8,
     },
     formTitleDark: {
         color: '#E6E6FA',
@@ -337,6 +341,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#2D2640',
         borderColor: '#4A4460',
         color: '#E6E6FA',
+        borderRadius: 10,
     },
     inputFocusedDark: {
         borderColor: '#A73DFF',
