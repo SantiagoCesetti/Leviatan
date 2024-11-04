@@ -1,5 +1,5 @@
 /*
-
+*/
 import { Tabs } from 'expo-router';
 import React from 'react';
 
@@ -20,6 +20,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
+          tabBarStyle: { display: 'none' },
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
           ),
@@ -38,5 +39,5 @@ export default function TabLayout() {
   );
 }
 
-  */
+
  
