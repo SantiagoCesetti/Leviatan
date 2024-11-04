@@ -335,9 +335,8 @@ const styles = StyleSheet.create({
     },
     inputDark: {
         backgroundColor: '#2D2640',
-        borderColor: '#A73DFF',
+        borderColor: '#4A4460',
         color: '#E6E6FA',
-        borderRadius: 8,
     },
     inputFocusedDark: {
         borderColor: '#A73DFF',

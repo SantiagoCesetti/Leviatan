@@ -354,13 +354,13 @@ const styles = StyleSheet.create({
   rejectButton: {
     flex: 1,
     height: 45,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: '#3290B5',
     borderRadius: 12,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 8,
-    shadowColor: "#FF6B6B",
+    shadowColor: "#3290B5",
     shadowOffset: {
       width: 0,
       height: 2,

@@ -1,46 +1,60 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, ScrollView, StyleSheet, TextInput } from 'react-native';
+import { ThemeProvider, ThemeContext } from '../../components/ThemeContext';
+import ColorMode from '../../components/ColorMode';
 import Header from '../../components/Header';
+import Header2 from '../../components/Header2';
 import Background from '../../components/Background';
+import Background2 from '../../components/Background2';
 
-const UserShowData = ({ route }) => {
+const UserShowDataContent = ({ route }) => {
+  const { isDarkMode } = useContext(ThemeContext);
   const formData = route?.params?.formData || {};
   const [searchQuery, setSearchQuery] = React.useState('');
 
   return (
     <View style={styles.container}>
       <View style={styles.backgroundContainer}>
-        <Background />
+        {isDarkMode ? <Background2 /> : <Background />}
       </View>
-      <Header />
+      {isDarkMode ? <Header2 /> : <Header />}
+      <ColorMode />
       <ScrollView style={styles.scrollView}>
         <View style={styles.formContainer}>
-          <Text style={styles.title}>✦ Detalles del Formulario ✦</Text>
+          <Text style={[styles.title, isDarkMode && styles.titleDark]}>
+            ✦ Detalles del Formulario ✦
+          </Text>
           {Object.keys(formData).length > 0 ? (
             Object.entries(formData).map(([key, value]) => (
-              <View key={key} style={styles.fieldContainer}>
+              <View key={key} style={[styles.fieldContainer, isDarkMode && styles.fieldContainerDark]}>
                 <View style={styles.labelContainer}>
-                  <Text style={styles.labelIcon}>✧</Text>
-                  <Text style={styles.label}>{key}</Text>
+                  <Text style={[styles.labelIcon, isDarkMode && styles.labelIconDark]}>✧</Text>
+                  <Text style={[styles.label, isDarkMode && styles.labelDark]}>{key}</Text>
                 </View>
-                <Text style={styles.value}>{value?.toString() || 'No disponible'}</Text>
+                <Text style={[styles.value, isDarkMode && styles.valueDark]}>
+                  {value?.toString() || 'No disponible'}
+                </Text>
               </View>
             ))
           ) : (
             <>
               <View style={styles.noDataWrapper}>
-                <Text style={styles.noDataText}>¡Disculpa! No hay datos disponibles</Text>
+                <Text style={[styles.noDataText, isDarkMode && styles.noDataTextDark]}>
+                  ¡Disculpa! No hay datos disponibles
+                </Text>
               </View>
-              <View style={styles.noDataCard}>
-                <Text style={styles.searchTitle}>¿Deseas buscar un aula en específico?</Text>
+              <View style={[styles.noDataCard, isDarkMode && styles.noDataCardDark]}>
+                <Text style={[styles.searchTitle, isDarkMode && styles.searchTitleDark]}>
+                  ¿Deseas buscar un aula en específico?
+                </Text>
                 <View style={styles.searchContainer}>
                   <Text style={styles.searchIcon}>🔍</Text>
                   <TextInput
-                    style={styles.searchInput}
+                    style={[styles.searchInput, isDarkMode && styles.searchInputDark]}
                     placeholder="Buscar aula..."
                     value={searchQuery}
                     onChangeText={(text) => setSearchQuery(text)}
-                    placeholderTextColor="#9CA3AF"
+                    placeholderTextColor={isDarkMode ? '#A0A0A0' : '#9CA3AF'}
                   />
                 </View>
               </View>
@@ -49,6 +63,14 @@ const UserShowData = ({ route }) => {
         </View>
       </ScrollView>
     </View>
+  );
+};
+
+const UserShowData = ({ route }) => {
+  return (
+    <ThemeProvider>
+      <UserShowDataContent route={route} />
+    </ThemeProvider>
   );
 };
 
@@ -195,6 +217,42 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 6,
     color: '#2D3748',
+  },
+  titleDark: {
+    color: '#E6E6FA',
+    textShadowColor: 'rgba(167, 61, 255, 0.15)',
+  },
+  fieldContainerDark: {
+    backgroundColor: '#2D2640',
+    borderColor: '#4A4460',
+    shadowColor: '#A73DFF',
+  },
+  labelIconDark: {
+    color: '#A73DFF',
+  },
+  labelDark: {
+    color: '#E6E6FA',
+  },
+  valueDark: {
+    color: '#B8B8D1',
+  },
+  noDataTextDark: {
+    color: '#E6E6FA',
+    textShadowColor: 'rgba(167, 61, 255, 0.1)',
+  },
+  noDataCardDark: {
+    backgroundColor: '#2D2640',
+    borderColor: '#4A4460',
+    shadowColor: '#A73DFF',
+  },
+  searchTitleDark: {
+    color: '#E6E6FA',
+  },
+  searchInputDark: {
+    backgroundColor: '#1A1625',
+    borderColor: '#4A4460',
+    color: '#E6E6FA',
+    shadowColor: '#A73DFF',
   },
 });
 

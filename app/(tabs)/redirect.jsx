@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
+import { ThemeProvider, ThemeContext } from '../../components/ThemeContext';
+import ColorMode from '../../components/ColorMode';
 import Background from '../../components/Background';
+import Background2 from '../../components/Background2';
 import Header from '../../components/Header';
+import Header2 from '../../components/Header2';
 
-const Redirect = () => {
+const RedirectContent = () => {
+  const { isDarkMode } = useContext(ThemeContext);
   const [contador, setContador] = React.useState(5);
 
   useFocusEffect(
     React.useCallback(() => {
       setContador(5);
-      
       const timer = setInterval(() => {
         setContador((prev) => {
           if (prev <= 1) {
@@ -31,22 +35,37 @@ const Redirect = () => {
   return (
     <View style={styles.container}>
       <View style={styles.backgroundContainer}>
-        <Background />
+        {isDarkMode ? <Background2 /> : <Background />}
       </View>
-      <Header />
+      {isDarkMode ? <Header2 /> : <Header />}
+      <ColorMode />
       <View style={styles.mainContent}>
-        <View style={styles.card}>
-          <Text style={styles.title}>¡Gracias por tu tiempo!</Text>
-          <Text style={styles.subtitle}>Tu formulario ha sido enviado con éxito</Text>
-          <View style={styles.counterContainer}>
-            <Text style={styles.counterText}>{contador}</Text>
-            <Text style={styles.redirectText}>
+        <View style={[styles.card, isDarkMode && styles.cardDark]}>
+          <Text style={[styles.title, isDarkMode && styles.titleDark]}>
+            ¡Gracias por tu tiempo!
+          </Text>
+          <Text style={[styles.subtitle, isDarkMode && styles.subtitleDark]}>
+            Tu formulario ha sido enviado con éxito
+          </Text>
+          <View style={[styles.counterContainer, isDarkMode && styles.counterContainerDark]}>
+            <Text style={[styles.counterText, isDarkMode && styles.counterTextDark]}>
+              {contador}
+            </Text>
+            <Text style={[styles.redirectText, isDarkMode && styles.redirectTextDark]}>
               Volviendo a la página principal...
             </Text>
           </View>
         </View>
       </View>
     </View>
+  );
+};
+
+const Redirect = () => {
+  return (
+    <ThemeProvider>
+      <RedirectContent />
+    </ThemeProvider>
   );
 };
 
@@ -129,6 +148,29 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#2980b9',
     fontWeight: '600',
+  },
+  cardDark: {
+    backgroundColor: '#1A1625',
+    borderColor: '#A73DFF',
+    shadowColor: '#A73DFF',
+  },
+  titleDark: {
+    color: '#E6E6FA',
+    textShadowColor: '#A73DFF',
+  },
+  subtitleDark: {
+    color: '#B8B8D1',
+  },
+  counterContainerDark: {
+    backgroundColor: '#2D2640',
+    borderColor: '#A73DFF',
+  },
+  counterTextDark: {
+    color: '#A73DFF',
+    textShadowColor: 'rgba(167, 61, 255, 0.3)',
+  },
+  redirectTextDark: {
+    color: '#B8B8D1',
   },
 });
 

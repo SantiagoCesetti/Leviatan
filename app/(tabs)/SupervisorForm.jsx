@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from "react";  
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";  
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
 import Header from "../../components/Header";
+import Header2 from '../../components/Header2';
 import Background from '../../components/Background';
+import Background2 from '../../components/Background2';
+import { ThemeProvider, ThemeContext } from '../../components/ThemeContext';
+import ColorMode from '../../components/ColorMode';
 
 const app = getApp();
 const db = getFirestore(app);
 
-const SupervisorForm = () => {  
-  const [nombre, setNombre] = useState("");  
-  const [aula, setAula] = useState("");  
+const SupervisorFormContent = () => {
+  const { isDarkMode } = useContext(ThemeContext);
+  const [nombre, setNombre] = useState("");
+  const [aula, setAula] = useState("");
   const [ordenes, setOrdenes] = useState([]);
   const navigation = useNavigation();
   const route = useRoute();
@@ -39,7 +44,7 @@ const SupervisorForm = () => {
     }
   };
 
-  const handleSubmit = async () => {  
+  const handleSubmit = async () => {
     try {
       const docRef = await addDoc(collection(db, "ordenes"), { nombre, aula });
       console.log("Orden añadida con ID: ", docRef.id);
@@ -48,7 +53,7 @@ const SupervisorForm = () => {
     } catch (error) {
       console.error("Error al añadir la orden:", error);
     }
-  };  
+  };
 
   const handleUpdate = async (id) => {
     try {
@@ -75,73 +80,76 @@ const SupervisorForm = () => {
     navigation.navigate('index');
   };
 
-  return (  
+  return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
       <View style={styles.backgroundContainer}>
-        <Background />
+        {isDarkMode ? <Background2 /> : <Background />}
       </View>
       <View style={styles.mainContent}>
-        <Header />
-        <View style={styles.body}>  
-          <View style={styles.formContainer}>  
+        {isDarkMode ? <Header2 /> : <Header />}
+        <ColorMode />
+        <View style={styles.body}>
+          <View style={[styles.formContainer, isDarkMode && styles.formContainerDark]}>
             <View style={styles.titleContainer}>
-              <Ionicons name="clipboard" size={35} color="#00B8BA" />
-              <Text style={styles.title}>Orden de Limpieza</Text>  
+              <Ionicons name="clipboard" size={35} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+              <Text style={[styles.title, isDarkMode && styles.titleDark]}>Orden de Limpieza</Text>
             </View>
-            <Text style={styles.subtitle}>¡Registra una nueva orden!</Text>  
+            <Text style={[styles.subtitle, isDarkMode && styles.subtitleDark]}>¡Registra una nueva orden!</Text>
 
-            <View style={styles.inputContainer}>  
-              <Text style={styles.textinput}>👤 Nombre Trabajador</Text>  
-              <TextInput  
-                style={styles.input}  
-                placeholder="¿Quién realizará la limpieza?"  
-                value={nombre}  
+            <View style={styles.inputContainer}>
+              <Text style={[styles.textinput, isDarkMode && styles.textinputDark]}>👤 Nombre Trabajador</Text>
+              <TextInput
+                style={[styles.input, isDarkMode && styles.inputDark]}
+                placeholder="¿Quién realizará la limpieza?"
+                value={nombre}
                 onChangeText={setNombre}
-                placeholderTextColor="#999"
-              />  
-            </View>  
+                placeholderTextColor={isDarkMode ? '#A0A0A0' : '#999'}
+              />
+            </View>
 
-            <View style={styles.inputContainer}>  
-              <Text style={styles.textinput}>🚪 Número del aula</Text>  
-              <TextInput  
-                style={styles.input}  
-                placeholder="¿Qué aula se limpiará?"  
-                value={aula}  
+            <View style={styles.inputContainer}>
+              <Text style={[styles.textinput, isDarkMode && styles.textinputDark]}>🚪 Número del aula</Text>
+              <TextInput
+                style={[styles.input, isDarkMode && styles.inputDark]}
+                placeholder="¿Qué aula se limpiará?"
+                value={aula}
                 onChangeText={setAula}
-                placeholderTextColor="#999"
-              />  
-            </View>  
+                placeholderTextColor={isDarkMode ? '#A0A0A0' : '#999'}
+              />
+            </View>
 
             <TouchableOpacity 
-              style={styles.button} 
+              style={[styles.button, isDarkMode && styles.buttonDark]} 
               onPress={handleSubmit}
               activeOpacity={0.8}
-            >  
+            >
               <Ionicons name="save" size={22} color="white" style={styles.buttonIcon} />
-              <Text style={styles.buttontext}>¡Guardar orden!</Text>  
-            </TouchableOpacity>  
+              <Text style={styles.buttontext}>¡Guardar orden!</Text>
+            </TouchableOpacity>
 
-            <Text style={styles.recentTitle}>Órdenes recientes ⭐</Text>
+            <Text style={[styles.recentTitle, isDarkMode && styles.recentTitleDark]}>Órdenes recientes ⭐</Text>
             {ordenes.slice(0, 3).map((orden) => (
-              <View key={orden.id} style={styles.ordenItem}>
+              <View key={orden.id} style={[styles.ordenItem, isDarkMode && styles.ordenItemDark]}>
                 <View style={styles.ordenInfo}>
-                  <View style={styles.ordenIconContainer}>
+                  <View style={[styles.ordenIconContainer, isDarkMode && styles.ordenIconContainerDark]}>
                     <Ionicons name="person" size={20} color="white" />
                   </View>
-                  <Text style={styles.ordenText}>{orden.nombre} - Aula: {orden.aula}</Text>
+                  <Text style={[styles.ordenText, isDarkMode && styles.ordenTextDark]}>
+                    {orden.nombre} - Aula: {orden.aula}
+                  </Text>
                 </View>
                 <View style={styles.ordenActions}>
                   <TouchableOpacity 
-                    style={[styles.actionButton, styles.editButton]} 
+                    style={[styles.actionButton, styles.editButton, isDarkMode && styles.editButtonDark]} 
                     onPress={() => handleUpdate(orden.id)}
                   >
                     <Ionicons name="create" size={20} color="white" />
                   </TouchableOpacity>
                   <TouchableOpacity 
-                    style={[styles.actionButton, styles.deleteButton]} 
+                    style={[styles.actionButton, styles.deleteButton, isDarkMode && styles.deleteButtonDark]} 
                     onPress={() => handleDelete(orden.id)}
                   >
                     <Ionicons name="trash" size={20} color="white" />
@@ -149,21 +157,29 @@ const SupervisorForm = () => {
                 </View>
               </View>
             ))}
-          </View>  
-        </View>  
+          </View>
+        </View>
       </View>
     </KeyboardAvoidingView>
-  );  
-};  
+  );
+};
 
-const styles = StyleSheet.create({  
-  container: {  
+const SupervisorForm = () => {
+  return (
+    <ThemeProvider>
+      <SupervisorFormContent />
+    </ThemeProvider>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
     flex: 1,
-    backgroundColor: '#F0F8FF',  
-  },  
-  header: {  
-    backgroundColor: "#00B8BA",  
-    height: 90,  
+    backgroundColor: '#F0F8FF',
+  },
+  header: {
+    backgroundColor: "#00B8BA",
+    height: 90,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -173,16 +189,16 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
-  },  
-  headertext: {  
-    fontSize: 28,  
-    color: '#fff',  
-    marginRight: 20,  
+  },
+  headertext: {
+    fontSize: 28,
+    color: '#fff',
+    marginRight: 20,
     fontWeight: 'bold',
     textShadowColor: 'rgba(0, 0, 0, 0.2)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
-  },  
+  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -196,7 +212,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingBottom: 100,
   },
-  formContainer: {  
+  formContainer: {
     width: '100%',
     maxWidth: 800,
     padding: 20,
@@ -207,35 +223,35 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
-  },  
-  title: {  
+  },
+  title: {
     fontSize: 28,
     color: '#333',
     fontWeight: 'bold',
-  },  
+  },
   subtitle: {
     fontSize: 16,
     color: '#666',
     marginBottom: 25,
     fontStyle: 'italic',
   },
-  input: {  
-    borderWidth: 2,  
-    borderColor: '#E0E0E0',  
-    padding: 10,  
-    fontSize: 14,  
+  input: {
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+    padding: 10,
+    fontSize: 14,
     color: '#333',
-    borderRadius: 10,  
+    borderRadius: 10,
     backgroundColor: '#F8F9FA',
     marginTop: 8,
-  },  
-  button: {  
-    height: 50,  
-    width: '99.8%',  
-    backgroundColor: '#00B8BA',  
-    borderRadius: 10,  
+  },
+  button: {
+    height: 50,
+    width: '99.8%',
+    backgroundColor: '#00B8BA',
+    borderRadius: 10,
     alignSelf: 'center',
-    justifyContent: 'center',  
+    justifyContent: 'center',
     marginTop: 20,
     marginBottom: 15,
     flexDirection: 'row',
@@ -245,9 +261,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-  },  
-  buttontext: {  
-    color: '#fff',  
+  },
+  buttontext: {
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 8,
@@ -322,6 +338,58 @@ const styles = StyleSheet.create({
     flex: 1,
     zIndex: 2,
   },
-});  
+  formContainerDark: {
+    backgroundColor: '#1A1625',
+    borderColor: '#A73DFF',
+  },
+
+  titleDark: {
+    color: '#E6E6FA',
+  },
+
+  subtitleDark: {
+    color: '#B8B8D1',
+  },
+
+  textinputDark: {
+    color: '#E6E6FA',
+  },
+
+  inputDark: {
+    backgroundColor: '#2D2640',
+    borderColor: '#4A4460',
+    color: '#E6E6FA',
+  },
+
+  buttonDark: {
+    backgroundColor: '#9370DB',
+    borderColor: '#7B68EE',
+  },
+
+  recentTitleDark: {
+    color: '#E6E6FA',
+  },
+
+  ordenItemDark: {
+    backgroundColor: '#2D2640',
+    borderColor: '#4A4460',
+  },
+
+  ordenIconContainerDark: {
+    backgroundColor: '#A73DFF',
+  },
+
+  ordenTextDark: {
+    color: '#E6E6FA',
+  },
+
+  editButtonDark: {
+    backgroundColor: '#9370DB',
+  },
+
+  deleteButtonDark: {
+    backgroundColor: '#8A2BE2',
+  },
+});
 
 export default SupervisorForm;
