@@ -19,6 +19,12 @@ const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigation = useNavigation();
+  const [nombreFocused, setNombreFocused] = useState(false);
+  const [apellidoFocused, setApellidoFocused] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
+  const [telefonoFocused, setTelefonoFocused] = useState(false);
+  const [direccionFocused, setDireccionFocused] = useState(false);
 
   const resetForm = () => {
     setNombre("");
@@ -97,12 +103,18 @@ const RegisterForm = () => {
                     <Text style={styles.inputLabel}>Nombre</Text>
                   </View>
                   <TextInput
-                    style={[styles.input, nombre ? styles.inputTextBlack : null]}
+                    style={[
+                      styles.input,
+                      nombre ? styles.inputTextBlack : null,
+                      nombreFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                    ]}
                     value={nombre}
                     onChangeText={(text) => setNombre(text.slice(0, 50))}
                     placeholder="Tu nombre"
                     maxLength={50}
                     placeholderTextColor="#999"
+                    onFocus={() => setNombreFocused(true)}
+                    onBlur={() => setNombreFocused(false)}
                   />
                 </View>
 
@@ -112,12 +124,18 @@ const RegisterForm = () => {
                     <Text style={styles.inputLabel}>Apellido</Text>
                   </View>
                   <TextInput
-                    style={[styles.input, apellido ? styles.inputTextBlack : null]}
+                    style={[
+                      styles.input,
+                      apellido ? styles.inputTextBlack : null,
+                      apellidoFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                    ]}
                     value={apellido}
                     onChangeText={(text) => setApellido(text.slice(0, 50))}
                     placeholder="Tu apellido"
                     maxLength={50}
                     placeholderTextColor="#999"
+                    onFocus={() => setApellidoFocused(true)}
+                    onBlur={() => setApellidoFocused(false)}
                   />
                 </View>
 
@@ -127,13 +145,19 @@ const RegisterForm = () => {
                     <Text style={styles.inputLabel}>Correo electrónico</Text>
                   </View>
                   <TextInput
-                    style={[styles.input, email ? styles.inputTextBlack : null]}
+                    style={[
+                      styles.input,
+                      email ? styles.inputTextBlack : null,
+                      emailFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                    ]}
                     value={email}
                     onChangeText={(text) => setEmail(text.slice(0, 50))}
                     placeholder="ejemplo@correo.com"
                     keyboardType="email-address"
                     maxLength={50}
                     placeholderTextColor="#999"
+                    onFocus={() => setEmailFocused(true)}
+                    onBlur={() => setEmailFocused(false)}
                   />
                 </View>
 
@@ -142,15 +166,23 @@ const RegisterForm = () => {
                     <Ionicons name="lock-closed" size={20} color="#00B8BA" />
                     <Text style={styles.inputLabel}>Contraseña</Text>
                   </View>
-                  <View style={styles.passwordContainer}>
+                  <View style={[
+                    styles.passwordContainer,
+                    passwordFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                  ]}>
                     <TextInput
-                      style={[styles.passwordInput, contraseña ? styles.inputTextBlack : null]}
+                      style={[
+                        styles.passwordInput,
+                        contraseña ? styles.inputTextBlack : null,
+                      ]}
                       value={contraseña}
                       onChangeText={(text) => setContraseña(text.slice(0, 20))}
                       placeholder="Tu contraseña"
                       secureTextEntry={!showPassword}
                       maxLength={20}
                       placeholderTextColor="#999"
+                      onFocus={() => setPasswordFocused(true)}
+                      onBlur={() => setPasswordFocused(false)}
                     />
                     <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
                       <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#666" />
@@ -163,16 +195,24 @@ const RegisterForm = () => {
                     <Ionicons name="call" size={20} color="#00B8BA" />
                     <Text style={styles.inputLabel}>Teléfono</Text>
                   </View>
-                  <View style={styles.phoneInputContainer}>
+                  <View style={[
+                    styles.phoneInputContainer,
+                    telefonoFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                  ]}>
                     <Text style={styles.phonePrefix}>+54</Text>
                     <TextInput
-                      style={[styles.phoneInput, telefono ? styles.inputTextBlack : null]}
+                      style={[
+                        styles.phoneInput,
+                        telefono ? styles.inputTextBlack : null,
+                      ]}
                       value={telefono}
                       onChangeText={handlePhoneChange}
                       placeholder="299 777 5555"
                       keyboardType="numeric"
                       maxLength={12}
                       placeholderTextColor="#999"
+                      onFocus={() => setTelefonoFocused(true)}
+                      onBlur={() => setTelefonoFocused(false)}
                     />
                   </View>
                 </View>
@@ -183,12 +223,18 @@ const RegisterForm = () => {
                     <Text style={styles.inputLabel}>Dirección</Text>
                   </View>
                   <TextInput
-                    style={[styles.input, direccion ? styles.inputTextBlack : null]}
+                    style={[
+                      styles.input,
+                      direccion ? styles.inputTextBlack : null,
+                      direccionFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                    ]}
                     value={direccion}
                     onChangeText={(text) => setDireccion(text.slice(0, 100))}
                     placeholder="Tu dirección"
                     maxLength={100}
                     placeholderTextColor="#999"
+                    onFocus={() => setDireccionFocused(true)}
+                    onBlur={() => setDireccionFocused(false)}
                   />
                 </View>
               </View>
@@ -285,12 +331,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 45,
     backgroundColor: '#F8F9FA',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#E0E0E0',
     borderRadius: 12,
     paddingHorizontal: 15,
     fontSize: 14,
     color: '#333',
+    outlineStyle: 'none',
   },
   inputTextBlack: {
     color: '#333',
@@ -300,29 +347,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 45,
     backgroundColor: '#F8F9FA',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#E0E0E0',
     borderRadius: 12,
+    overflow: 'hidden',
   },
   passwordInput: {
     flex: 1,
     height: '100%',
     paddingHorizontal: 15,
-    paddingRight: 40,
+    paddingRight: 45,
     fontSize: 14,
     color: '#333',
+    outlineStyle: 'none',
   },
   eyeIcon: {
     position: 'absolute',
-    right: 0,
-    padding: 5,
+    right: 10,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   phoneInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     height: 45,
     backgroundColor: '#F8F9FA',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#E0E0E0',
     borderRadius: 12,
   },
@@ -338,6 +389,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 14,
     color: '#333',
+    outlineStyle: 'none',
   },
   button: {
     height: 50,

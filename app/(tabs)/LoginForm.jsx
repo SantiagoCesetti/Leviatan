@@ -16,6 +16,8 @@ function LoginForm() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [emailFocused, setEmailFocused] = useState(false);
+    const [passwordFocused, setPasswordFocused] = useState(false);
     const navigation = useNavigation();
 
     const resetForm = () => {
@@ -93,11 +95,16 @@ function LoginForm() {
                                     <Text style={styles.inputLabel}>Correo electrónico</Text>
                                 </View>
                                 <TextInput
-                                    style={styles.input}
+                                    style={[
+                                        styles.input,
+                                        emailFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                                    ]}
                                     value={email}
                                     onChangeText={(text) => setEmail(text.slice(0, 50))}
                                     keyboardType="email-address"
                                     maxLength={50}
+                                    onFocus={() => setEmailFocused(true)}
+                                    onBlur={() => setEmailFocused(false)}
                                 />
                             </View>
                             <View style={styles.inputWrapper}>
@@ -105,13 +112,18 @@ function LoginForm() {
                                     <Ionicons name="lock-closed" size={20} color="#00B8BA" style={styles.icon} />
                                     <Text style={styles.inputLabel}>Contraseña</Text>
                                 </View>
-                                <View style={styles.passwordContainer}>
+                                <View style={[
+                                    styles.passwordContainer,
+                                    passwordFocused && { borderColor: '#00B8BA', borderWidth: 2 }
+                                ]}>
                                     <TextInput
                                         style={styles.passwordInput}
                                         value={password}
                                         onChangeText={(text) => setPassword(text.slice(0, 20))}
                                         secureTextEntry={!showPassword}
                                         maxLength={20}
+                                        onFocus={() => setPasswordFocused(true)}
+                                        onBlur={() => setPasswordFocused(false)}
                                     />
                                     <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
                                         <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color="#666" />
@@ -192,6 +204,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 12,
         fontSize: 16,
+        outlineStyle: 'none',
     },
     passwordContainer: {
         flexDirection: 'row',
@@ -200,6 +213,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#e1e1e1',
         borderRadius: 8,
+        outlineStyle: 'none',
     },
     passwordInput: {
         flex: 1,
@@ -207,6 +221,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         fontSize: 16,
         backgroundColor: 'transparent',
+        outlineStyle: 'none',
     },
     eyeIcon: {
         padding: 6,

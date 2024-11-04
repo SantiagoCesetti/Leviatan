@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Animated } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { router, usePathname } from 'expo-router';
 
 const Header = ({ navigation }) => {
@@ -8,6 +8,10 @@ const Header = ({ navigation }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
   const slideAnim = useState(new Animated.Value(-Dimensions.get('window').width * 0.35))[0];
   const currentPath = usePathname();
+
+  useEffect(() => {
+    setHoveredItem(null);
+  }, [currentPath]);
 
   const isCurrentRoute = (route) => {
     return currentPath === route;
@@ -24,6 +28,7 @@ const Header = ({ navigation }) => {
   };
 
   const handleNavigation = (route) => {
+    setHoveredItem(null);
     router.push(route);
     toggleMenu(false);
   };
