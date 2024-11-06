@@ -1,9 +1,10 @@
 import React, { useState, useContext } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Picker } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '@/app/credenciales';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
 
 import Header from "../../components/Header";
 import Background from '../../components/Background';
