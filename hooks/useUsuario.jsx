@@ -1,48 +1,44 @@
 import { useState } from 'react';
-import { collection, getDocs, getFirestore, doc, setDoc } from 'firebase/firestore';
-import appFirebase from '@/app/credenciales';
-
-const db = getFirestore(appFirebase);
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '@/app/credenciales';
 
 export const useUsuario = () => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const crearUsuario = async (userData) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      console.log('Iniciando creación de usuario en Firestore:', userData);
-
-      // Crear referencia al documento
-      const userRef = doc(collection(db, 'usuario'));
+      // Crear la colección si no existe
+      const usuariosRef = collection(db, 'usuarios');
       
-      // Datos a guardar
       const userDataToSave = {
-        apellido: userData.apellido,
-        direccion: userData.direccion,
-        dni: userData.dni,
-        email: userData.email,
+        uid: userData.id,
         nombre: userData.nombre,
-        telefono: userData.telefono,
-        rol: userData.rol
+        apellido: userData.apellido,
+        email: userData.email,
+        telefono: userData.telefono || '',
+        direccion: userData.direccion || '',
+        dni: userData.dni,
+        rol: userData.rol || 'usuario',
+        fechaRegistro: new Date().toISOString()
       };
 
-      // Guardar en Firestore
-      await setDoc(userRef, userDataToSave);
+      console.log('Intentando guardar usuario:', userDataToSave);
       
-      console.log('Usuario guardado en Firestore exitosamente');
-      return userRef.id;
-    } catch (err) {
-      console.error('Error en crearUsuario:', err);
-      throw err;
-    } finally {
+      const docRef = await addDoc(usuariosRef, userDataToSave);
+      console.log('Usuario guardado con ID:', docRef.id);
+      
       setLoading(false);
+      return docRef.id;
+    } catch (error) {
+      console.error('Error al crear usuario:', error);
+      setLoading(false);
+      throw error;
     }
   };
 
   return {
-    loading,
-    error,
-    crearUsuario
+    crearUsuario,
+    loading
   };
 };

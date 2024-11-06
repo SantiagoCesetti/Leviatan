@@ -1,15 +1,8 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /formularios/{formularioId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && (
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'supervisor'
-      );
-    }
-    
-    match /users/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
+    match /usuarios/{userId} {
+      allow read, write: if true;
     }
   }
 } 

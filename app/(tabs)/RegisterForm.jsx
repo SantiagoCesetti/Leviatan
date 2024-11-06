@@ -68,44 +68,39 @@ const RegisterFormContent = () => {
       console.log('Iniciando proceso de registro');
 
       // 1. Crear usuario en Authentication
-      console.log('Creando usuario en Authentication');
       const userCredential = await createUserWithEmailAndPassword(auth, email, contraseña);
       console.log('Usuario creado en Authentication:', userCredential.user.uid);
 
-      // 2. Preparar datos para Firestore
+      // 2. Preparar datos
       const userData = {
-        nombre,
-        apellido,
-        email,
-        telefono,
-        direccion,
-        dni,
-        rol
+        id: userCredential.user.uid,
+        nombre: nombre.trim(),
+        apellido: apellido.trim(),
+        email: email.trim(),
+        telefono: telefono.trim(),
+        direccion: direccion.trim(),
+        dni: dni.trim(),
+        rol: rol,
+        fechaRegistro: new Date().toISOString()
       };
 
-      console.log('Datos preparados para Firestore:', userData);
+      console.log('Datos a guardar:', userData);
 
       // 3. Guardar en Firestore
-      console.log('Intentando guardar en Firestore');
       await crearUsuario(userData);
       
       console.log('Proceso completado exitosamente');
       
-      // 4. Limpiar formulario y mostrar éxito
+      // 4. Éxito
       setError('');
       resetForm();
       alert('Usuario registrado exitosamente');
       
     } catch (error) {
-      console.error('Error en el proceso de registro:', error);
+      console.error('Error completo:', error);
       
-      // Mensaje de error más específico
-      if (error.code === 'auth/email-already-in-use') {
-        setError('Este correo electrónico ya está registrado');
-      } else if (error.code === 'auth/invalid-email') {
-        setError('El correo electrónico no es válido');
-      } else if (error.code === 'auth/weak-password') {
-        setError('La contraseña debe tener al menos 6 caracteres');
+      if (error.code === 'permission-denied') {
+        setError('Error de permisos al crear el usuario. Por favor, contacta al administrador.');
       } else {
         setError('Error al registrar: ' + error.message);
       }
