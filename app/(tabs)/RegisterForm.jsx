@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Picker } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import appFirebase from '../credenciales';
+import appFirebase from '@/app/credenciales';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
@@ -11,6 +11,7 @@ import Background2 from '../../components/Background2';
 import Header2 from '../../components/Header2';
 import { ThemeProvider, ThemeContext } from '../../components/ThemeContext';
 import ColorMode from '../../components/ColorMode';
+import { useUsuario } from '../../hooks/useUsuario';
 
 const auth = getAuth(appFirebase);
 
@@ -35,6 +36,7 @@ const RegisterFormContent = () => {
   const [rol, setRol] = useState("");
   const [dniFocused, setDniFocused] = useState(false);
   const [rolFocused, setRolFocused] = useState(false);
+  const { crearUsuario } = useUsuario();
 
   const resetForm = () => {
     setNombre("");
@@ -56,19 +58,56 @@ const RegisterFormContent = () => {
   );
 
   const handleRegister = async () => {
-    // Validación básica
-    if (!email || !contraseña) {
-        setError('Por favor, completa todos los campos.');
-        return;
+    if (!email || !contraseña || !nombre || !apellido || !dni || !rol) {
+      setError('Por favor, completa todos los campos obligatorios.');
+      return;
     }
 
     try {
-        await createUserWithEmailAndPassword(auth, email, contraseña);
-        // Registro exitoso
-        setError(''); 
-        resetForm(); 
+      console.log('Iniciando proceso de registro');
+
+      // 1. Crear usuario en Authentication
+      console.log('Creando usuario en Authentication');
+      const userCredential = await createUserWithEmailAndPassword(auth, email, contraseña);
+      console.log('Usuario creado en Authentication:', userCredential.user.uid);
+
+      // 2. Preparar datos para Firestore
+      const userData = {
+        nombre,
+        apellido,
+        email,
+        telefono,
+        direccion,
+        dni,
+        rol
+      };
+
+      console.log('Datos preparados para Firestore:', userData);
+
+      // 3. Guardar en Firestore
+      console.log('Intentando guardar en Firestore');
+      await crearUsuario(userData);
+      
+      console.log('Proceso completado exitosamente');
+      
+      // 4. Limpiar formulario y mostrar éxito
+      setError('');
+      resetForm();
+      alert('Usuario registrado exitosamente');
+      
     } catch (error) {
+      console.error('Error en el proceso de registro:', error);
+      
+      // Mensaje de error más específico
+      if (error.code === 'auth/email-already-in-use') {
+        setError('Este correo electrónico ya está registrado');
+      } else if (error.code === 'auth/invalid-email') {
+        setError('El correo electrónico no es válido');
+      } else if (error.code === 'auth/weak-password') {
+        setError('La contraseña debe tener al menos 6 caracteres');
+      } else {
         setError('Error al registrar: ' + error.message);
+      }
     }
   };
 
@@ -77,10 +116,8 @@ const RegisterFormContent = () => {
   };
 
   const handlePhoneChange = (text) => {
-    // Eliminar cualquier carácter que no sea número
     const numericValue = text.replace(/[^0-9]/g, '');
     
-    // Formatear el número con espacios
     let formattedValue = '';
     for (let i = 0; i < numericValue.length && i < 10; i++) {
       if (i === 3 || i === 6) {
