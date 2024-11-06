@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, ScrollView, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
@@ -66,8 +66,12 @@ const LoginFormContent = () => {
             const result = await signInWithPopup(auth, googleProvider);
             setIsLoggedIn(true);
             setUserData({
+                nombre: result.user.displayName || 'No especificado',
                 email: result.user.email,
-                tipo: "google"
+                foto: result.user.photoURL,
+                verificado: result.user.emailVerified,
+                tipo: "google",
+                ultimoAcceso: result.user.metadata.lastSignInTime
             });
             setError('');
             resetForm();
@@ -239,9 +243,65 @@ const LoginFormContent = () => {
                                         </View>
                                     </View>
                                 ) : (
-                                    <Text style={[styles.userInfoText, isDarkMode && sbtyles.userInfoTextDark]}>
-                                        Registrado por {userData.tipo}
-                                    </Text>
+                                    <View style={styles.userInfoContainer}>
+                                        <View style={[styles.userInfoItem, isDarkMode && styles.userInfoItemDark]}>
+                                            <Ionicons name="person" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                                            <View style={styles.userInfoContent}>
+                                                <Text style={[styles.userInfoLabel, isDarkMode && styles.userInfoLabelDark]}>Nombre</Text>
+                                                <Text style={[styles.userInfoValue, isDarkMode && styles.userInfoValueDark]}>{userData.nombre}</Text>
+                                            </View>
+                                        </View>
+                                        
+                                        <View style={[styles.userInfoItem, isDarkMode && styles.userInfoItemDark]}>
+                                            <Ionicons name="mail" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                                            <View style={styles.userInfoContent}>
+                                                <Text style={[styles.userInfoLabel, isDarkMode && styles.userInfoLabelDark]}>Email</Text>
+                                                <Text style={[styles.userInfoValue, isDarkMode && styles.userInfoValueDark]}>
+                                                    {userData.email} {userData.verificado ? '(Verificado)' : '(No verificado)'}
+                                                </Text>
+                                            </View>
+                                        </View>
+
+                                        {userData.foto && (
+                                            <View style={[styles.userInfoItem, isDarkMode && styles.userInfoItemDark]}>
+                                                <View style={[styles.iconContainer, styles.photoIconContainer]}>
+                                                    <Ionicons name="image" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                                                </View>
+                                                <View style={styles.userInfoContent}>
+                                                    <Text style={[styles.userInfoLabel, isDarkMode && styles.userInfoLabelDark, styles.photoLabel]}>
+                                                        Foto de perfil
+                                                    </Text>
+                                                    <View style={[
+                                                        styles.photoContainer,
+                                                        isDarkMode ? styles.photoContainerDark : styles.photoContainerLight
+                                                    ]}>
+                                                        <Image 
+                                                            source={{ uri: userData.foto }} 
+                                                            style={styles.profilePhoto}
+                                                            resizeMode="cover"
+                                                        />
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        )}
+
+                                        <View style={[styles.userInfoItem, isDarkMode && styles.userInfoItemDark]}>
+                                            <Ionicons name="time" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                                            <View style={styles.userInfoContent}>
+                                                <Text style={[styles.userInfoLabel, isDarkMode && styles.userInfoLabelDark]}>Último acceso</Text>
+                                                <Text style={[styles.userInfoValue, isDarkMode && styles.userInfoValueDark]}>
+                                                    {new Date(userData.ultimoAcceso).toLocaleString('es-ES', {
+                                                        weekday: 'long',
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit'
+                                                    })}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </View>
                                 )}
                                 <TouchableOpacity 
                                     style={[styles.logoutButton, isDarkMode && styles.logoutButtonDark]} 
@@ -487,22 +547,19 @@ const styles = StyleSheet.create({
         gap: 12,
     },
     userInfoItem: {
-        flex: 1,
         flexDirection: 'row',
-        alignItems: 'center',
-        padding: 16,
-        backgroundColor: '#f8f9fa',
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#e1e1e1',
-        minHeight: 70,
+        alignItems: 'flex-start',
+        padding: 12,
+        backgroundColor: '#F5F5F5',
+        borderRadius: 8,
+        marginBottom: 8,
+        gap: 8,
     },
     userInfoItemDark: {
         backgroundColor: '#2D2640',
         borderColor: '#4A4460',
     },
     userInfoContent: {
-        marginLeft: 16,
         flex: 1,
     },
     userInfoLabel: {
@@ -528,6 +585,36 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 16,
         marginBottom: 16,
+    },
+    profilePhoto: {
+        width: '100%',
+        height: '100%',
+    },
+    photoContainer: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        overflow: 'hidden',
+        marginTop: 8,
+        alignSelf: 'flex-start',
+        borderWidth: 2,
+    },
+    photoContainerLight: {
+        borderColor: '#00B8BA',
+    },
+    photoContainerDark: {
+        borderColor: '#A73DFF',
+    },
+    iconContainer: {
+        width: 24,
+        alignItems: 'center',
+        marginRight: 12,
+    },
+    photoIconContainer: {
+        marginRight: 2,
+    },
+    photoLabel: {
+        marginLeft: -4,
     },
 });
 

@@ -347,7 +347,6 @@ const RegisterFormContent = () => {
                         }
                       ]}
                       itemStyle={{ textAlign: 'left' }}
-                      dropdownIconColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
                     >
                       <Picker.Item 
                         label="Seleccione su rol" 
@@ -420,12 +419,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'center',
-    paddingBottom: 100,
+    paddingBottom: 20,
   },
   formContainer: {
     width: '90%',
     maxWidth: 480,
-    height: '90%',
     backgroundColor: '#fff',
     borderRadius: 20,
     padding: 25,
@@ -438,6 +436,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 12,
     elevation: 8,
+    paddingBottom: 30,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -545,7 +544,6 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '99%',
-    height: '90%',
     height: 45,
     backgroundColor: '#00B8BA',
     borderRadius: 12,
