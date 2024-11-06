@@ -1,285 +1,192 @@
-import React from 'react';
+import React, { useCallback, useRef, useEffect } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 
 const Background = () => {
-  // Usar useRef para mantener las referencias de las animaciones
-  const bubbleAnim1 = React.useRef(new Animated.Value(0)).current;
-  const bubbleAnim2 = React.useRef(new Animated.Value(0)).current;
-  const dropAnim1 = React.useRef(new Animated.Value(0)).current;
-  const dropAnim2 = React.useRef(new Animated.Value(0)).current;
-  const waveAnim1 = React.useRef(new Animated.Value(0)).current;
-  const waveAnim2 = React.useRef(new Animated.Value(0)).current;
-  const waveAnim3 = React.useRef(new Animated.Value(0)).current;
+  // Agrupar las animaciones por tipo usando useRef para mantener los valores entre renders
+  const animations = useRef({
+    bubbles: {
+      bubble1: new Animated.Value(0),
+      bubble2: new Animated.Value(0),
+    },
+    drops: {
+      drop1: new Animated.Value(0),
+      drop2: new Animated.Value(0),
+    },
+    waves: {
+      wave1: new Animated.Value(0),
+      wave2: new Animated.Value(0),
+      wave3: new Animated.Value(0),
+    }
+  }).current;
 
-  React.useEffect(() => {
-    const animate = () => {
-      Animated.parallel([
-        // Animación de burbujas subiendo
-        Animated.loop(
-          Animated.sequence([
-            Animated.timing(bubbleAnim1, {
-              toValue: 1,
-              duration: 4000,
-              easing: Easing.linear,
-              useNativeDriver: true
-            }),
-            Animated.timing(bubbleAnim1, {
-              toValue: 0,
-              duration: 0,
-              useNativeDriver: true
-            })
-          ])
-        ),
-        Animated.loop(
-          Animated.sequence([
-            Animated.timing(bubbleAnim2, {
-              toValue: 1, 
-              duration: 5000,
-              easing: Easing.linear,
-              useNativeDriver: true
-            }),
-            Animated.timing(bubbleAnim2, {
-              toValue: 0,
-              duration: 0,
-              useNativeDriver: true
-            })
-          ])
-        ),
-        // Animación de gotas cayendo
-        Animated.loop(
-          Animated.sequence([
-            Animated.timing(dropAnim1, {
-              toValue: 1,
-              duration: 2000, 
-              easing: Easing.linear,
-              useNativeDriver: true
-            }),
-            Animated.timing(dropAnim1, {
-              toValue: 0,
-              duration: 0,
-              useNativeDriver: true
-            })
-          ])
-        ),
-        Animated.loop(
-          Animated.sequence([
-            Animated.timing(dropAnim2, {
-              toValue: 1,
-              duration: 3000,
-              easing: Easing.linear, 
-              useNativeDriver: true
-            }),
-            Animated.timing(dropAnim2, {
-              toValue: 0,
-              duration: 0,
-              useNativeDriver: true
-            })
-          ])
-        ),
-        // Nuevas animaciones para las olas con duraciones más largas
-        Animated.loop(
-          Animated.sequence([
-            Animated.timing(waveAnim1, {
-              toValue: 1,
-              duration: 6000,
-              easing: Easing.linear,
-              useNativeDriver: true
-            }),
-            Animated.timing(waveAnim1, {
-              toValue: 0,
-              duration: 6000,
-              easing: Easing.linear,
-              useNativeDriver: true
-            })
-          ])
-        ),
-        Animated.loop(
-          Animated.sequence([
-            Animated.timing(waveAnim2, {
-              toValue: 1,
-              duration: 8000,
-              easing: Easing.linear,
-              useNativeDriver: true
-            }),
-            Animated.timing(waveAnim2, {
-              toValue: 0,
-              duration: 8000,
-              easing: Easing.linear,
-              useNativeDriver: true
-            })
-          ])
-        ),
-        Animated.loop(
-          Animated.sequence([
-            Animated.timing(waveAnim3, {
-              toValue: 1,
-              duration: 10000,
-              easing: Easing.linear,
-              useNativeDriver: true
-            }),
-            Animated.timing(waveAnim3, {
-              toValue: 0,
-              duration: 10000,
-              easing: Easing.linear,
-              useNativeDriver: true
-            })
-          ])
-        )
-      ]).start();
-    };
-
-    animate();
+  // Crear animación infinita para burbujas y gotas
+  const createInfiniteAnimation = useCallback((animation, duration) => {
+    return Animated.loop(
+      Animated.sequence([
+        Animated.timing(animation, {
+          toValue: 1,
+          duration,
+          easing: Easing.ease,
+          useNativeDriver: true,
+          isInteraction: false
+        }),
+        Animated.timing(animation, {
+          toValue: 0,
+          duration: 0,
+          useNativeDriver: true,
+          isInteraction: false
+        })
+      ])
+    );
   }, []);
+
+  // Crear animación suave para olas
+  const createWaveAnimation = useCallback((animation, duration) => {
+    return Animated.loop(
+      Animated.sequence([
+        Animated.timing(animation, {
+          toValue: 1,
+          duration: duration / 2,
+          easing: Easing.ease,
+          useNativeDriver: true,
+          isInteraction: false
+        }),
+        Animated.timing(animation, {
+          toValue: 0,
+          duration: duration / 2,
+          easing: Easing.ease,
+          useNativeDriver: true,
+          isInteraction: false
+        })
+      ])
+    );
+  }, []);
+
+  useEffect(() => {
+    // Configurar y comenzar todas las animaciones
+    const animationGroup = [
+      // Burbujas con diferentes velocidades y delays
+      createInfiniteAnimation(animations.bubbles.bubble1, 4000),
+      Animated.sequence([
+        Animated.delay(2000),
+        createInfiniteAnimation(animations.bubbles.bubble2, 5000)
+      ]),
+      
+      // Gotas con diferentes velocidades y delays
+      createInfiniteAnimation(animations.drops.drop1, 2000),
+      Animated.sequence([
+        Animated.delay(1000),
+        createInfiniteAnimation(animations.drops.drop2, 3000)
+      ]),
+      
+      // Olas con movimiento suave - Ajustadas las duraciones para coincidir con Background2
+      createWaveAnimation(animations.waves.wave1, 12000),
+      createWaveAnimation(animations.waves.wave2, 16000),
+      createWaveAnimation(animations.waves.wave3, 20000)
+    ];
+
+    // Iniciar todas las animaciones
+    Animated.parallel(animationGroup).start();
+
+    // Limpieza de animaciones
+    return () => {
+      animationGroup.forEach(anim => anim.stop());
+    };
+  }, []);
+
+  // Optimizar las transformaciones de las olas
+  const createWaveTransform = useCallback((animation, xRange, yRange) => ({
+    transform: [
+      { scaleX: 1.5 },
+      {
+        translateX: animation.interpolate({
+          inputRange: [0, 0.5, 1],
+          outputRange: xRange,
+          extrapolate: 'clamp'
+        })
+      },
+      {
+        translateY: animation.interpolate({
+          inputRange: [0, 0.25, 0.5, 0.75, 1],
+          outputRange: yRange,
+          extrapolate: 'clamp'
+        })
+      }
+    ]
+  }), []);
+
+  const waves = [
+    { anim: animations.waves.wave1, style: styles.wave, xRange: [-40, 0, 40], yRange: [0, -10, 0, -8, 0] },
+    { anim: animations.waves.wave2, style: [styles.wave, styles.wave2], xRange: [35, 0, -35], yRange: [0, -12, 0, -10, 0] },
+    { anim: animations.waves.wave3, style: [styles.wave, styles.wave3], xRange: [-30, 0, 30], yRange: [0, -8, 0, -6, 0] }
+  ];
 
   return (
     <View style={styles.container}>
-      {/* Reemplazar las olas estáticas por animadas */}
-      <Animated.View
-        style={[
-          styles.wave,
-          {
-            transform: [
-              { scaleX: 1.5 },
-              {
-                translateX: waveAnim1.interpolate({
-                  inputRange: [0, 0.5, 1],
-                  outputRange: [-40, 0, 40]
-                })
-              },
-              {
-                translateY: waveAnim1.interpolate({
-                  inputRange: [0, 0.25, 0.5, 0.75, 1],
-                  outputRange: [0, -10, 0, -8, 0]
-                })
-              }
-            ]
-          }
-        ]}
-      />
-      <Animated.View
-        style={[
-          styles.wave,
-          styles.wave2,
-          {
-            transform: [
-              { scaleX: 1.5 },
-              {
-                translateX: waveAnim2.interpolate({
-                  inputRange: [0, 0.5, 1],
-                  outputRange: [35, 0, -35]
-                })
-              },
-              {
-                translateY: waveAnim2.interpolate({
-                  inputRange: [0, 0.25, 0.5, 0.75, 1],
-                  outputRange: [0, -12, 0, -10, 0]
-                })
-              }
-            ]
-          }
-        ]}
-      />
-      <Animated.View
-        style={[
-          styles.wave,
-          styles.wave3,
-          {
-            transform: [
-              { scaleX: 1.5 },
-              {
-                translateX: waveAnim3.interpolate({
-                  inputRange: [0, 0.5, 1],
-                  outputRange: [-30, 0, 30]
-                })
-              },
-              {
-                translateY: waveAnim3.interpolate({
-                  inputRange: [0, 0.25, 0.5, 0.75, 1],
-                  outputRange: [0, -8, 0, -6, 0]
-                })
-              }
-            ]
-          }
-        ]}
-      />
+      {/* Olas */}
+      {waves.map((wave, index) => (
+        <Animated.View
+          key={`wave-${index}`}
+          style={[
+            wave.style,
+            createWaveTransform(wave.anim, wave.xRange, wave.yRange)
+          ]}
+        />
+      ))}
 
-      {/* Burbujas de jabón */}
-      <Animated.View
-        style={[
-          styles.bubble,
-          {
-            transform: [
-              {
-                translateY: bubbleAnim1.interpolate({
+      {/* Burbujas con opacidad suave */}
+      {[
+        { anim: animations.bubbles.bubble1, style: styles.bubble },
+        { anim: animations.bubbles.bubble2, style: [styles.bubble, styles.bubble2] }
+      ].map((bubble, index) => (
+        <Animated.View
+          key={`bubble-${index}`}
+          style={[
+            bubble.style,
+            {
+              transform: [{
+                translateY: bubble.anim.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [600, -100]
+                  outputRange: [600, -100],
+                  extrapolate: 'clamp'
                 })
-              }
-            ],
-            opacity: bubbleAnim1.interpolate({
-              inputRange: [0, 0.5, 1],
-              outputRange: [0.8, 0.4, 0]
-            })
-          }
-        ]}
-      />
-      <Animated.View
-        style={[
-          styles.bubble,
-          styles.bubble2,
-          {
-            transform: [
-              {
-                translateY: bubbleAnim2.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [600, -100]
-                })
-              }
-            ],
-            opacity: bubbleAnim2.interpolate({
-              inputRange: [0, 0.5, 1],
-              outputRange: [0.8, 0.4, 0]
-            })
-          }
-        ]}
-      />
+              }],
+              opacity: bubble.anim.interpolate({
+                inputRange: [0, 0.2, 0.8, 1],
+                outputRange: [0, 0.8, 0.4, 0],
+                extrapolate: 'clamp'
+              })
+            }
+          ]}
+        />
+      ))}
 
-      {/* Gotas de agua */}
-      <Animated.View
-        style={[
-          styles.drop,
-          {
-            transform: [
-              {
-                translateY: dropAnim1.interpolate({
+      {/* Gotas */}
+      {[
+        { anim: animations.drops.drop1, style: styles.drop },
+        { anim: animations.drops.drop2, style: [styles.drop, styles.drop2] }
+      ].map((drop, index) => (
+        <Animated.View
+          key={`drop-${index}`}
+          style={[
+            drop.style,
+            {
+              transform: [{
+                translateY: drop.anim.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [-50, 800]
+                  outputRange: [-50, 800],
+                  extrapolate: 'clamp'
                 })
-              }
-            ]
-          }
-        ]}
-      />
-      <Animated.View
-        style={[
-          styles.drop,
-          styles.drop2,
-          {
-            transform: [
-              {
-                translateY: dropAnim2.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [-50, 800]
-                })
-              }
-            ]
-          }
-        ]}
-      />
+              }]
+            }
+          ]}
+        />
+      ))}
     </View>
   );
 };
 
+// Los estilos se mantienen igual
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -338,4 +245,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Background;
+export default React.memo(Background);

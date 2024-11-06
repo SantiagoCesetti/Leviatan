@@ -5,21 +5,19 @@ import { router, usePathname } from 'expo-router';
 import ColorMode from './ColorMode';
 
 const Header = ({ navigation }) => {
-  const [showMenu, setShowMenu] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState(null);
+  const [menuState, setMenuState] = useState({
+    isOpen: false,
+    hoveredItem: null
+  });
   const slideAnim = useState(new Animated.Value(-Dimensions.get('window').width * 0.35))[0];
   const currentPath = usePathname();
 
   useEffect(() => {
-    setHoveredItem(null);
+    setMenuState(prev => ({ ...prev, hoveredItem: null }));
   }, [currentPath]);
 
-  const isCurrentRoute = (route) => {
-    return currentPath === route;
-  };
-
   const toggleMenu = (show) => {
-    setShowMenu(show);
+    setMenuState(prev => ({ ...prev, isOpen: show }));
     Animated.spring(slideAnim, {
       toValue: show ? 0 : -Dimensions.get('window').width * 0.35,
       useNativeDriver: true,
@@ -29,47 +27,52 @@ const Header = ({ navigation }) => {
   };
 
   const handleNavigation = (route) => {
-    setHoveredItem(null);
+    setMenuState(prev => ({ ...prev, hoveredItem: null }));
     router.push(route);
     toggleMenu(false);
   };
 
-  const handleMouseEnter = (itemName) => {
-    setHoveredItem(itemName);
-  };
+  const getMenuItemStyles = (itemId, route) => ({
+    style: [
+      styles.menuItem,
+      menuState.hoveredItem === itemId && styles.menuItemHover,
+      currentPath === route && styles.activeMenuItem
+    ],
+    textStyle: [
+      styles.menuText,
+      menuState.hoveredItem === itemId && styles.menuTextHover,
+      currentPath === route && styles.activeMenuText
+    ]
+  });
 
-  const handleMouseLeave = () => {
-    setHoveredItem(null);
-  };
-
-  const handleOverlayClick = (event) => {
-    if (event.target === event.currentTarget) {
-      toggleMenu(false);
-    }
-  };
+  const menuItems = [
+    { id: 'inicio', route: '/', label: 'Inicio' },
+    { id: 'login', route: '/LoginForm', label: 'Login' },
+    { id: 'registro', route: '/RegisterForm', label: 'Registro' },
+    { id: 'personal', route: '/PersonalForm', label: 'Personal' },
+    { id: 'verificacion', route: '/SupervFormVerif', label: 'Verificación Aula' },
+    { id: 'supervisor', route: '/SupervisorForm', label: 'Supervisor' },
+    { id: 'datos', route: '/UserShowData', label: 'Datos Usuario' },
+    { id: 'redirect', route: '/redirect', label: 'Redirect' }
+  ];
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => toggleMenu(!showMenu)} style={styles.menuIcon}>
+        <TouchableOpacity onPress={() => toggleMenu(!menuState.isOpen)} style={styles.menuIcon}>
           <Ionicons name="menu" size={34} color="white" />
         </TouchableOpacity>
         <Text style={styles.headertext}>🫧  Clean Class  🫧</Text>
         <ColorMode />
       </View>
       
-      {showMenu && (
+      {menuState.isOpen && (
         <TouchableOpacity 
           style={styles.overlay}
           activeOpacity={1}
-          onPress={handleOverlayClick}
+          onPress={(e) => e.target === e.currentTarget && toggleMenu(false)}
         >
-          <Animated.View style={[
-            styles.menuContainer,
-            {
-              transform: [{ translateX: slideAnim }]
-            }
-          ]}>
+          <Animated.View style={[styles.menuContainer, { transform: [{ translateX: slideAnim }] }]}>
             <TouchableOpacity 
               style={styles.closeButton} 
               onPress={() => toggleMenu(false)}
@@ -77,140 +80,19 @@ const Header = ({ navigation }) => {
               <Ionicons name="close" size={20} color="#333" />
             </TouchableOpacity>
             
-            <TouchableOpacity 
-              style={[
-                styles.menuItem,
-                hoveredItem === 'inicio' && styles.menuItemHover,
-                isCurrentRoute('/') && styles.activeMenuItem
-              ]} 
-              onPress={() => handleNavigation('')}
-              onMouseEnter={() => handleMouseEnter('inicio')}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Text style={[
-                styles.menuText,
-                hoveredItem === 'inicio' && styles.menuTextHover,
-                isCurrentRoute('/') && styles.activeMenuText
-              ]}>Inicio</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={[
-                styles.menuItem,
-                hoveredItem === 'login' && styles.menuItemHover,
-                isCurrentRoute('/LoginForm') && styles.activeMenuItem
-              ]} 
-              onPress={() => handleNavigation('/LoginForm')}
-              onMouseEnter={() => handleMouseEnter('login')}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Text style={[
-                styles.menuText,
-                hoveredItem === 'login' && styles.menuTextHover,
-                isCurrentRoute('/LoginForm') && styles.activeMenuText
-              ]}>Login</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={[
-                styles.menuItem,
-                hoveredItem === 'registro' && styles.menuItemHover,
-                isCurrentRoute('/RegisterForm') && styles.activeMenuItem
-              ]} 
-              onPress={() => handleNavigation('/RegisterForm')}
-              onMouseEnter={() => handleMouseEnter('registro')}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Text style={[
-                styles.menuText,
-                hoveredItem === 'registro' && styles.menuTextHover,
-                isCurrentRoute('/RegisterForm') && styles.activeMenuText
-              ]}>Registro</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={[
-                styles.menuItem,
-                hoveredItem === 'personal' && styles.menuItemHover,
-                isCurrentRoute('/PersonalForm') && styles.activeMenuItem
-              ]} 
-              onPress={() => handleNavigation('/PersonalForm')}
-              onMouseEnter={() => handleMouseEnter('personal')}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Text style={[
-                styles.menuText,
-                hoveredItem === 'personal' && styles.menuTextHover,
-                isCurrentRoute('/PersonalForm') && styles.activeMenuText
-              ]}>Personal</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={[
-                styles.menuItem,
-                hoveredItem === 'verificacion' && styles.menuItemHover,
-                isCurrentRoute('/SupervFormVerif') && styles.activeMenuItem
-              ]} 
-              onPress={() => handleNavigation('/SupervFormVerif')}
-              onMouseEnter={() => handleMouseEnter('verificacion')}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Text style={[
-                styles.menuText,
-                hoveredItem === 'verificacion' && styles.menuTextHover,
-                isCurrentRoute('/SupervFormVerif') && styles.activeMenuText
-              ]}>Verificación Aula</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={[
-                styles.menuItem,
-                hoveredItem === 'supervisor' && styles.menuItemHover,
-                isCurrentRoute('/SupervisorForm') && styles.activeMenuItem
-              ]} 
-              onPress={() => handleNavigation('/SupervisorForm')}
-              onMouseEnter={() => handleMouseEnter('supervisor')}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Text style={[
-                styles.menuText,
-                hoveredItem === 'supervisor' && styles.menuTextHover,
-                isCurrentRoute('/SupervisorForm') && styles.activeMenuText
-              ]}>Supervisor</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={[
-                styles.menuItem,
-                hoveredItem === 'datos' && styles.menuItemHover,
-                isCurrentRoute('/UserShowData') && styles.activeMenuItem
-              ]} 
-              onPress={() => handleNavigation('/UserShowData')}
-              onMouseEnter={() => handleMouseEnter('datos')}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Text style={[
-                styles.menuText,
-                hoveredItem === 'datos' && styles.menuTextHover,
-                isCurrentRoute('/UserShowData') && styles.activeMenuText
-              ]}>Datos Usuario</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={[
-                styles.menuItem,
-                hoveredItem === 'redirect' && styles.menuItemHover
-              ]} 
-              onPress={() => handleNavigation('/redirect')}
-              onMouseEnter={() => handleMouseEnter('redirect')}
-              onMouseLeave={handleMouseLeave}
-            >
-              <Text style={[
-                styles.menuText,
-                hoveredItem === 'redirect' && styles.menuTextHover
-              ]}>Redirect</Text>
-            </TouchableOpacity>
-
+            {menuItems.map((item) => (
+              <TouchableOpacity 
+                key={item.id}
+                style={getMenuItemStyles(item.id, item.route).style}
+                onPress={() => handleNavigation(item.route)}
+                onMouseEnter={() => setMenuState(prev => ({ ...prev, hoveredItem: item.id }))}
+                onMouseLeave={() => setMenuState(prev => ({ ...prev, hoveredItem: null }))}
+              >
+                <Text style={getMenuItemStyles(item.id, item.route).textStyle}>
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </Animated.View>
         </TouchableOpacity>
       )}
