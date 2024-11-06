@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Linking, ScrollView, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
@@ -41,21 +41,27 @@ const LoginFormContent = () => {
         }, [])
     );
 
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+                setIsLoggedIn(true);
+                setUserData({
+                    nombre: user.displayName || "Usuario",
+                    email: user.email,
+                    tipo: "normal"
+                });
+            } else {
+                setIsLoggedIn(false);
+                setUserData(null);
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
+
     const handleLogin = async () => {
         try {
-            const result = await signInWithEmailAndPassword(auth, email, password);
-            setIsLoggedIn(true);
-            setUserData({
-                nombre: "Usuario", // Aquí deberías obtener estos datos de tu base de datos
-                apellido: "Apellido",
-                email: result.user.email,
-                telefono: "No especificado",
-                direccion: "No especificada",
-                rol: "Usuario",
-                tipo: "normal"
-            });
-            setError('');
-            resetForm();
+            await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
             setError('Error al iniciar sesión: ' + error.message);
         }
@@ -63,18 +69,7 @@ const LoginFormContent = () => {
 
     const handleGoogleLogin = async () => {
         try {
-            const result = await signInWithPopup(auth, googleProvider);
-            setIsLoggedIn(true);
-            setUserData({
-                nombre: result.user.displayName || 'No especificado',
-                email: result.user.email,
-                foto: result.user.photoURL,
-                verificado: result.user.emailVerified,
-                tipo: "google",
-                ultimoAcceso: result.user.metadata.lastSignInTime
-            });
-            setError('');
-            resetForm();
+            await signInWithPopup(auth, googleProvider);
         } catch (error) {
             setError('Error al iniciar sesión con Google: ' + error.message);
         }
@@ -82,14 +77,7 @@ const LoginFormContent = () => {
 
     const handleFacebookLogin = async () => {
         try {
-            const result = await signInWithPopup(auth, facebookProvider);
-            setIsLoggedIn(true);
-            setUserData({
-                email: result.user.email,
-                tipo: "facebook"
-            });
-            setError('');
-            resetForm();
+            await signInWithPopup(auth, facebookProvider);
         } catch (error) {
             setError('Error al iniciar sesión con Facebook: ' + error.message);
         }

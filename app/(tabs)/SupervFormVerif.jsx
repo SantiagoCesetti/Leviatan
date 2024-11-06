@@ -37,21 +37,29 @@ const SupervFormVerifContent = () => {
         const formularioId = "ID_POR_DEFECTO";
         const docRef = doc(db, "formularios", formularioId);
         const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setNombre(data.nombre);
-          setApellido(data.apellido);
-          setEmail(data.email);
-          setTelefono(data.telefono);
-          setIsCheckedOrdenado(data.isOrdenado);
-          setIsCheckedBarrido(data.isBarrido);
-          setIsCheckedTrapeado(data.isTrapeado);
-          setIsCheckedDesinfectado(data.isDesinfectado);
-          setObservacion(data.observacion);
+        
+        if (!docSnap.exists()) {
+          Alert.alert("Error", "El formulario no existe");
+          return;
         }
+        
+        const data = docSnap.data();
+        setNombre(data.nombre || '');
+        setApellido(data.apellido || '');
+        setEmail(data.email || '');
+        setTelefono(data.telefono || '');
+        setIsCheckedOrdenado(data.isOrdenado || false);
+        setIsCheckedBarrido(data.isBarrido || false);
+        setIsCheckedTrapeado(data.isTrapeado || false);
+        setIsCheckedDesinfectado(data.isDesinfectado || false);
+        setObservacion(data.observacion || '');
+        
       } catch (error) {
         console.error("Error al obtener el formulario:", error);
-        Alert.alert("Error", "No tienes permisos para acceder a este formulario");
+        Alert.alert(
+          "Error de Acceso",
+          "No tienes permisos para acceder a este formulario. Por favor, verifica tus credenciales."
+        );
       }
     };
     fetchFormulario();
