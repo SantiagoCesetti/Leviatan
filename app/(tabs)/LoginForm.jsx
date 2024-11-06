@@ -25,6 +25,8 @@ const LoginFormContent = () => {
     const [emailFocused, setEmailFocused] = useState(false);
     const [passwordFocused, setPasswordFocused] = useState(false);
     const navigation = useNavigation();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userData, setUserData] = useState(null);
 
     const resetForm = () => {
         setEmail('');
@@ -41,8 +43,17 @@ const LoginFormContent = () => {
 
     const handleLogin = async () => {
         try {
-            await signInWithEmailAndPassword(auth, email, password);
-            // Inicio de sesión exitoso
+            const result = await signInWithEmailAndPassword(auth, email, password);
+            setIsLoggedIn(true);
+            setUserData({
+                nombre: "Usuario", // Aquí deberías obtener estos datos de tu base de datos
+                apellido: "Apellido",
+                email: result.user.email,
+                telefono: "No especificado",
+                direccion: "No especificada",
+                rol: "Usuario",
+                tipo: "normal"
+            });
             setError('');
             resetForm();
         } catch (error) {
@@ -52,8 +63,12 @@ const LoginFormContent = () => {
 
     const handleGoogleLogin = async () => {
         try {
-            await signInWithPopup(auth, googleProvider);
-            // Inicio de sesión con Google exitoso
+            const result = await signInWithPopup(auth, googleProvider);
+            setIsLoggedIn(true);
+            setUserData({
+                email: result.user.email,
+                tipo: "google"
+            });
             setError('');
             resetForm();
         } catch (error) {
@@ -63,8 +78,12 @@ const LoginFormContent = () => {
 
     const handleFacebookLogin = async () => {
         try {
-            await signInWithPopup(auth, facebookProvider);
-            // Inicio de sesión con Facebook exitoso
+            const result = await signInWithPopup(auth, facebookProvider);
+            setIsLoggedIn(true);
+            setUserData({
+                email: result.user.email,
+                tipo: "facebook"
+            });
             setError('');
             resetForm();
         } catch (error) {
@@ -84,6 +103,12 @@ const LoginFormContent = () => {
         console.log('Menu pressed');
     };
 
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+        setUserData(null);
+        auth.signOut(); // Cerrar sesión en Firebase
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.backgroundContainer}>
@@ -94,69 +119,109 @@ const LoginFormContent = () => {
                 <ColorMode />
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.body}>
-                        <View style={[styles.formContainer, isDarkMode && styles.formContainerDark]}>
-                            <Text style={[styles.formTitle, isDarkMode && styles.formTitleDark]}>Inicio de sesión</Text>
-                            <View style={styles.inputWrapper}>
-                                <View style={styles.labelContainer}>
-                                    <Ionicons name="mail" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} style={styles.icon} />
-                                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Correo electrónico</Text>
-                                </View>
-                                <TextInput
-                                    style={[
-                                        styles.input,
-                                        emailFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
-                                        isDarkMode && styles.inputDark
-                                    ]}
-                                    value={email}
-                                    onChangeText={(text) => setEmail(text.slice(0, 50))}
-                                    keyboardType="email-address"
-                                    maxLength={50}
-                                    onFocus={() => setEmailFocused(true)}
-                                    onBlur={() => setEmailFocused(false)}
-                                />
-                            </View>
-                            <View style={styles.inputWrapper}>
-                                <View style={styles.labelContainer}>
-                                    <Ionicons name="lock-closed" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} style={styles.icon} />
-                                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Contraseña</Text>
-                                </View>
-                                <View style={[
-                                    styles.passwordContainer,
-                                    passwordFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
-                                    isDarkMode && styles.inputDark
-                                ]}>
+                        {!isLoggedIn ? (
+                            <View style={[styles.formContainer, isDarkMode && styles.formContainerDark]}>
+                                <Text style={[styles.formTitle, isDarkMode && styles.formTitleDark]}>Inicio de sesión</Text>
+                                <View style={styles.inputWrapper}>
+                                    <View style={styles.labelContainer}>
+                                        <Ionicons name="mail" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} style={styles.icon} />
+                                        <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Correo electrónico</Text>
+                                    </View>
                                     <TextInput
-                                        style={[styles.passwordInput, isDarkMode && styles.inputDark]}
-                                        value={password}
-                                        onChangeText={(text) => setPassword(text.slice(0, 20))}
-                                        secureTextEntry={!showPassword}
-                                        maxLength={20}
-                                        onFocus={() => setPasswordFocused(true)}
-                                        onBlur={() => setPasswordFocused(false)}
+                                        style={[
+                                            styles.input,
+                                            emailFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
+                                            isDarkMode && styles.inputDark
+                                        ]}
+                                        value={email}
+                                        onChangeText={(text) => setEmail(text.slice(0, 50))}
+                                        keyboardType="email-address"
+                                        maxLength={50}
+                                        onFocus={() => setEmailFocused(true)}
+                                        onBlur={() => setEmailFocused(false)}
                                     />
-                                    <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
-                                        <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color={isDarkMode ? '#A73DFF' : '#666'} />
-                                    </TouchableOpacity>
                                 </View>
+                                <View style={styles.inputWrapper}>
+                                    <View style={styles.labelContainer}>
+                                        <Ionicons name="lock-closed" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} style={styles.icon} />
+                                        <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Contraseña</Text>
+                                    </View>
+                                    <View style={[
+                                        styles.passwordContainer,
+                                        passwordFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
+                                        isDarkMode && styles.inputDark
+                                    ]}>
+                                        <TextInput
+                                            style={[styles.passwordInput, isDarkMode && styles.inputDark]}
+                                            value={password}
+                                            onChangeText={(text) => setPassword(text.slice(0, 20))}
+                                            secureTextEntry={!showPassword}
+                                            maxLength={20}
+                                            onFocus={() => setPasswordFocused(true)}
+                                            onBlur={() => setPasswordFocused(false)}
+                                        />
+                                        <TouchableOpacity onPress={toggleShowPassword} style={styles.eyeIcon}>
+                                            <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={24} color={isDarkMode ? '#A73DFF' : '#666'} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordContainer}>
+                                    <Text style={[styles.forgotPassword, isDarkMode && styles.forgotPasswordDark]}>
+                                        Olvidé contraseña...
+                                    </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.button, isDarkMode && styles.buttonDark]} onPress={handleLogin}>
+                                    <Text style={styles.buttonText}>Iniciar Sesión</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.googleButton, isDarkMode && styles.googleButtonDark]} onPress={handleGoogleLogin}>
+                                    <Ionicons name="logo-google" size={24} color="white" style={styles.socialIcon} />
+                                    <Text style={styles.buttonText}>Iniciar Sesión con Google</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.facebookButton, isDarkMode && styles.facebookButtonDark]} onPress={handleFacebookLogin}>
+                                    <Ionicons name="logo-facebook" size={24} color="white" style={styles.socialIcon} />
+                                    <Text style={styles.buttonText}>Iniciar Sesión con Facebook</Text>
+                                </TouchableOpacity>
+                                {error ? <Text style={styles.errorText}>{error}</Text> : null}
                             </View>
-                            <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordContainer}>
-                                <Text style={[styles.forgotPassword, isDarkMode && styles.forgotPasswordDark]}>
-                                    Olvidé contraseña...
+                        ) : (
+                            <View style={[styles.formContainer, isDarkMode && styles.formContainerDark]}>
+                                <Text style={[styles.formTitle, isDarkMode && styles.formTitleDark]}>
+                                    Información de la cuenta
                                 </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.button, isDarkMode && styles.buttonDark]} onPress={handleLogin}>
-                                <Text style={styles.buttonText}>Iniciar Sesión</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.googleButton, isDarkMode && styles.googleButtonDark]} onPress={handleGoogleLogin}>
-                                <Ionicons name="logo-google" size={24} color="white" style={styles.socialIcon} />
-                                <Text style={styles.buttonText}>Iniciar Sesión con Google</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.facebookButton, isDarkMode && styles.facebookButtonDark]} onPress={handleFacebookLogin}>
-                                <Ionicons name="logo-facebook" size={24} color="white" style={styles.socialIcon} />
-                                <Text style={styles.buttonText}>Iniciar Sesión con Facebook</Text>
-                            </TouchableOpacity>
-                            {error ? <Text style={styles.errorText}>{error}</Text> : null}
-                        </View>
+                                {userData.tipo === "normal" ? (
+                                    <>
+                                        <Text style={[styles.userInfoText, isDarkMode && styles.userInfoTextDark]}>
+                                            Nombre: {userData.nombre}
+                                        </Text>
+                                        <Text style={[styles.userInfoText, isDarkMode && styles.userInfoTextDark]}>
+                                            Apellido: {userData.apellido}
+                                        </Text>
+                                        <Text style={[styles.userInfoText, isDarkMode && styles.userInfoTextDark]}>
+                                            Email: {userData.email}
+                                        </Text>
+                                        <Text style={[styles.userInfoText, isDarkMode && styles.userInfoTextDark]}>
+                                            Teléfono: {userData.telefono}
+                                        </Text>
+                                        <Text style={[styles.userInfoText, isDarkMode && styles.userInfoTextDark]}>
+                                            Dirección: {userData.direccion}
+                                        </Text>
+                                        <Text style={[styles.userInfoText, isDarkMode && styles.userInfoTextDark]}>
+                                            Rol: {userData.rol}
+                                        </Text>
+                                    </>
+                                ) : (
+                                    <Text style={[styles.userInfoText, isDarkMode && styles.userInfoTextDark]}>
+                                        Registrado por {userData.tipo}
+                                    </Text>
+                                )}
+                                <TouchableOpacity 
+                                    style={[styles.logoutButton, isDarkMode && styles.logoutButtonDark]} 
+                                    onPress={handleLogout}
+                                >
+                                    <Text style={styles.buttonText}>Cerrar Sesión</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
                     </View>
                 </ScrollView>
             </View>
@@ -361,6 +426,32 @@ const styles = StyleSheet.create({
     facebookButtonDark: {
         backgroundColor: '#7B68EE',
         borderColor: '#6A5ACD',
+    },
+    userInfoText: {
+        fontSize: 16,
+        color: '#333',
+        marginBottom: 10,
+        padding: 8,
+        backgroundColor: '#f8f9fa',
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#e1e1e1',
+    },
+    userInfoTextDark: {
+        color: '#E6E6FA',
+        backgroundColor: '#2D2640',
+        borderColor: '#4A4460',
+    },
+    logoutButton: {
+        backgroundColor: '#FF4444',
+        height: 48,
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    logoutButtonDark: {
+        backgroundColor: '#FF4444',
+        borderColor: '#FF4444',
     },
 });
 

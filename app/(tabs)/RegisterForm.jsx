@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Picker } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import appFirebase from '../credenciales';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
@@ -31,6 +31,10 @@ const RegisterFormContent = () => {
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [telefonoFocused, setTelefonoFocused] = useState(false);
   const [direccionFocused, setDireccionFocused] = useState(false);
+  const [dni, setDni] = useState("");
+  const [rol, setRol] = useState("");
+  const [dniFocused, setDniFocused] = useState(false);
+  const [rolFocused, setRolFocused] = useState(false);
 
   const resetForm = () => {
     setNombre("");
@@ -41,6 +45,8 @@ const RegisterFormContent = () => {
     setDireccion("");
     setShowPassword(false);
     setError('');
+    setDni("");
+    setRol("");
   };
 
   useFocusEffect(
@@ -255,6 +261,83 @@ const RegisterFormContent = () => {
                     onBlur={() => setDireccionFocused(false)}
                   />
                 </View>
+
+                <View style={styles.inputContainer}>
+                  <View style={styles.labelContainer}>
+                    <Ionicons name="card" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>DNI</Text>
+                  </View>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      dni ? styles.inputTextBlack : null,
+                      dniFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
+                      isDarkMode && styles.inputDark
+                    ]}
+                    value={dni}
+                    onChangeText={(text) => setDni(text.replace(/[^0-9]/g, '').slice(0, 8))}
+                    placeholder="Tu DNI"
+                    keyboardType="numeric"
+                    maxLength={8}
+                    placeholderTextColor={isDarkMode ? '#A0A0A0' : '#999'}
+                    onFocus={() => setDniFocused(true)}
+                    onBlur={() => setDniFocused(false)}
+                  />
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <View style={styles.labelContainer}>
+                    <Ionicons name="people-circle" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+                    <Text style={[styles.inputLabel, isDarkMode && styles.inputLabelDark]}>Rol</Text>
+                  </View>
+                  <View style={[
+                    styles.input,
+                    rolFocused && (isDarkMode ? styles.inputFocusedDark : styles.inputFocused),
+                    isDarkMode && styles.inputDark,
+                    styles.pickerContainer,
+                    { width: '115%', marginLeft: -20 }
+                  ]}>
+                    <Picker
+                      selectedValue={rol}
+                      onValueChange={(itemValue) => setRol(itemValue)}
+                      style={[
+                        styles.picker,
+                        isDarkMode && styles.pickerDark,
+                        { 
+                          outlineStyle: 'none',
+                          textAlign: 'left',
+                          paddingHorizontal: 15
+                        }
+                      ]}
+                      itemStyle={{ textAlign: 'left' }}
+                      dropdownIconColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
+                    >
+                      <Picker.Item 
+                        label="Seleccione su rol" 
+                        value="" 
+                        style={{ 
+                          textAlign: 'left',
+                          color: isDarkMode ? '#A0A0A0' : '#999'
+                        }}
+                      />
+                      <Picker.Item 
+                        label="Usuario" 
+                        value="usuario" 
+                        style={{ textAlign: 'left' }}
+                      />
+                      <Picker.Item 
+                        label="Supervisor" 
+                        value="supervisor" 
+                        style={{ textAlign: 'left' }}
+                      />
+                      <Picker.Item 
+                        label="Personal" 
+                        value="personal" 
+                        style={{ textAlign: 'left' }}
+                      />
+                    </Picker>
+                  </View>
+                </View>
               </View>
 
               <TouchableOpacity 
@@ -303,8 +386,9 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   formContainer: {
-    width: '100%',
-    maxWidth: 500,
+    width: '90%',
+    maxWidth: 480,
+    height: '90%',
     backgroundColor: '#fff',
     borderRadius: 20,
     padding: 25,
@@ -423,13 +507,15 @@ const styles = StyleSheet.create({
     outlineStyle: 'none',
   },
   button: {
-    height: 50,
+    width: '99%',
+    height: '90%',
+    height: 45,
     backgroundColor: '#00B8BA',
     borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10,
+    marginTop: 0,
     gap: 8,
     shadowColor: "#00B8BA",
     shadowOffset: {
@@ -513,6 +599,31 @@ const styles = StyleSheet.create({
   },
   inputTextDark: {
     color: '#E6E6FA',
+  },
+  pickerContainer: {
+    padding: 0,
+    justifyContent: 'center',
+    borderColor: 'transparent',
+    backgroundColor: 'transparent',
+    borderRadius: 12,
+    overflow: 'hidden',
+    width: '100%',
+  },
+  picker: {
+    height: '105%',
+    maxHeight: 500,
+    color: '#333333',
+    width: '100%',
+    borderRadius: 11,
+    borderColor: '#E0E0E0',
+    borderWidth: 1,
+    backgroundColor: '#F8F9FA',
+    textAlign: 'center',
+  },
+  pickerDark: {
+    color: '#E6E6FA',
+    borderColor: '#4A4460',
+    backgroundColor: '#2D2640',
   },
 });
 
