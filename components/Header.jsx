@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Animated } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { router, usePathname } from 'expo-router';
 
 const Header = ({ navigation }) => {
@@ -17,29 +17,31 @@ const Header = ({ navigation }) => {
     return currentPath === route;
   };
 
-  const toggleMenu = (show) => {
+  const toggleMenu = useCallback((show) => {
     setShowMenu(show);
     Animated.spring(slideAnim, {
       toValue: show ? 0 : -Dimensions.get('window').width * 0.35,
       useNativeDriver: true,
       friction: 8,
-      tension: 40
+      tension: 40,
+      restSpeedThreshold: 100,
+      restDisplacementThreshold: 40
     }).start();
-  };
+  }, [slideAnim]);
 
-  const handleNavigation = (route) => {
+  const handleNavigation = useCallback((route) => {
     setHoveredItem(null);
     router.push(route);
     toggleMenu(false);
-  };
+  }, [toggleMenu]);
 
-  const handleMouseEnter = (itemName) => {
+  const handleMouseEnter = useCallback((itemName) => {
     setHoveredItem(itemName);
-  };
+  }, []);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setHoveredItem(null);
-  };
+  }, []);
 
   const handleOverlayClick = (event) => {
     if (event.target === event.currentTarget) {
@@ -58,16 +60,20 @@ const Header = ({ navigation }) => {
       
       {showMenu && (
         <TouchableOpacity 
-          style={styles.overlay}
+          style={[styles.overlay, { height: Dimensions.get('window').height }]}
           activeOpacity={1}
           onPress={handleOverlayClick}
         >
-          <Animated.View style={[
-            styles.menuContainer,
-            {
-              transform: [{ translateX: slideAnim }]
-            }
-          ]}>
+          <Animated.View 
+            style={[
+              styles.menuContainer,
+              {
+                transform: [{ translateX: slideAnim }],
+                width: Dimensions.get('window').width * 0.29,
+                maxHeight: Dimensions.get('window').height - 90,
+              }
+            ]}
+          >
             <TouchableOpacity 
               style={styles.closeButton} 
               onPress={() => toggleMenu(false)}
@@ -260,15 +266,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.08)',
         backdropFilter: 'blur(1.6px)',
         zIndex: 99,
-        height: Dimensions.get('window').height,
     },
     menuContainer: {
         position: 'absolute',
         top: 90,
         left: 0,
         backgroundColor: 'rgba(255, 255, 255, 0.98)',
-        width: Dimensions.get('window').width * 0.29,
-        maxHeight: Dimensions.get('window').height - 90,
         paddingTop: 20,
         paddingBottom: 20,
         elevation: 15,
