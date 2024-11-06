@@ -1,14 +1,17 @@
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Animated } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Animated, useWindowDimensions } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import { router, usePathname } from 'expo-router';
+import { Platform } from 'react-native';
 
 const Header = ({ navigation }) => {
   const [menuState, setMenuState] = useState({
     isOpen: false,
     hoveredItem: null
   });
-  const slideAnim = useState(new Animated.Value(-Dimensions.get('window').width * 0.35))[0];
+  const { width: windowWidth } = useWindowDimensions();
+  const menuWidth = windowWidth < 768 ? '75%' : '35%';
+  const slideAnim = useState(new Animated.Value(-windowWidth))[0];
   const currentPath = usePathname();
 
   useEffect(() => {
@@ -31,7 +34,7 @@ const Header = ({ navigation }) => {
   const toggleMenu = (show) => {
     setMenuState(prev => ({ ...prev, isOpen: show }));
     Animated.spring(slideAnim, {
-      toValue: show ? 0 : -Dimensions.get('window').width * 0.35,
+      toValue: show ? 0 : -windowWidth,
       useNativeDriver: true,
       friction: 8,
       tension: 40
@@ -55,13 +58,26 @@ const Header = ({ navigation }) => {
     { name: 'redirect', label: 'Redirect' }
   ];
 
+  // Función para calcular el tamaño de fuente dinámicamente
+  const calculateFontSize = () => {
+    if (Platform.OS === 'web') {
+      return 28;
+    }
+    if (windowWidth < 320) return 10;
+    if (windowWidth < 375) return 11;
+    if (windowWidth < 414) return 12;
+    return 14;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => toggleMenu(!menuState.isOpen)} style={styles.menuIcon}>
           <Ionicons name="menu" size={34} color="white" />
         </TouchableOpacity>
-        <Text style={styles.headertext}>🫧  Clean Class  🫧</Text>
+        <Text style={[styles.headertext, { fontSize: calculateFontSize() }]}>
+          🫧  Clean Class  🫧
+        </Text>
       </View>
       
       {menuState.isOpen && (
@@ -105,54 +121,62 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: "#00B8BA",
-        height: 90,
+        height: Platform.OS === 'web' ? 90 : 55,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingTop: 20,
+        paddingTop: Platform.OS === 'web' ? 20 : 30,
+        paddingHorizontal: Platform.OS === 'web' ? 20 : 8,
         elevation: 8,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 5,
-        paddingHorizontal: 20,
         zIndex: 100,
         position: 'relative',
     },
     menuIcon: {
-        padding: 10,
-        marginTop: -8,
+        padding: Platform.OS === 'web' ? 10 : 6,
+        marginTop: Platform.OS === 'web' ? -8 : -4,
+        marginLeft: Platform.OS === 'web' ? 0 : 2,
     },
     headertext: {
-        fontSize: 28,
         color: '#fff',
-        marginRight: 20,
-        marginBottom: 12,
+        marginRight: Platform.OS === 'web' ? 20 : 0,
+        marginLeft: Platform.OS === 'web' ? 0 : 5,
+        marginBottom: Platform.OS === 'web' ? 12 : 6,
         fontWeight: 'bold',
         textShadowColor: 'rgba(0, 0, 0, 0.2)',
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 3,
+        flexShrink: 1,
+        flexWrap: 'wrap',
+        maxWidth: Platform.OS === 'web' ? 'auto' : '55%',
     },
     overlay: {
-        position: 'absolute',
+        position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.08)',
-        backdropFilter: 'blur(1.6px)',
+        backdropFilter: Platform.OS === 'web' ? 'blur(1.6px)' : undefined,
         zIndex: 99,
-        height: Dimensions.get('window').height,
+        height: '100vh',
+        width: '100vw',
     },
     menuContainer: {
-        position: 'absolute',
-        top: 90,
+        position: 'fixed',
+        top: Platform.OS === 'web' ? 90 : 70,
         left: 0,
         backgroundColor: 'rgba(255, 255, 255, 0.98)',
-        width: Dimensions.get('window').width * 0.29,
-        maxHeight: Dimensions.get('window').height - 90,
-        paddingTop: 20,
-        paddingBottom: 20,
+        width: Platform.OS === 'web' ? '29%' : '75%',
+        minWidth: 250,
+        maxWidth: 400,
+        maxHeight: 'calc(100vh - 90px)',
+        overflowY: 'auto',
+        paddingTop: Platform.OS === 'web' ? 20 : 15,
+        paddingBottom: Platform.OS === 'web' ? 20 : 15,
         elevation: 15,
         shadowColor: '#00B8BA',
         shadowOffset: { width: 12, height: 12 },
@@ -166,9 +190,9 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(0, 184, 186, 0.3)',
     },
     menuItem: {
-        padding: 15,
-        marginHorizontal: 25,
-        marginVertical: 5,
+        padding: Platform.OS === 'web' ? 15 : 12,
+        marginHorizontal: Platform.OS === 'web' ? 25 : 15,
+        marginVertical: Platform.OS === 'web' ? 5 : 3,
         borderRadius: 25,
         backgroundColor: 'rgba(255, 255, 255, 0.9)',
         elevation: 8,
@@ -182,7 +206,7 @@ const styles = StyleSheet.create({
         transition: 'all 0.3s ease-in-out',
     },
     menuText: {
-        fontSize: 17,
+        fontSize: Platform.OS === 'web' ? 17 : 15,
         letterSpacing: 0.75,
         color: '#2c3e50',
         fontWeight: '500',
@@ -191,9 +215,9 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         position: 'absolute',
-        right: 20,
-        top: 25.5,
-        padding: 12,
+        right: Platform.OS === 'web' ? 20 : 10,
+        top: Platform.OS === 'web' ? 25.5 : 15,
+        padding: Platform.OS === 'web' ? 12 : 8,
         backgroundColor: 'rgba(0, 184, 186, 0.9)',
         backdropFilter: 'blur(5px)',
         borderRadius: 35,
