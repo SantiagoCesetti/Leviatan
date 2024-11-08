@@ -205,8 +205,8 @@ const styles = StyleSheet.create({
     zIndex: 3,
   },
   invisibleArea: {
-    width: 50,
-    height: 50,
+    width: 80,
+    height: 80,
   },
 });
 
