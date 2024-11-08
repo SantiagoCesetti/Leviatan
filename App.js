@@ -6,6 +6,7 @@ import ProfileScreen from './screens/ProfileScreen'; // Ajusta la ruta según tu
 import { ThemeProvider } from './components/ThemeContext';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import Credits from './app/(tabs)/Credits';
 
 const Drawer = createDrawerNavigator();
 
@@ -28,6 +29,13 @@ const App = () => {
           <Drawer.Screen 
             name="Profile" 
             component={ProfileScreen}
+            options={{
+              headerShown: false
+            }}
+          />
+          <Drawer.Screen 
+            name="Credits" 
+            component={Credits}
             options={{
               headerShown: false
             }}

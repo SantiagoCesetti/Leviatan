@@ -24,6 +24,11 @@ const HomeScreenContent = () => {
     navigation.navigate('Home');
   };
 
+  const handleCredits = () => {
+    console.log('Navegando a Credits...');
+    navigation.navigate('credits');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.backgroundContainer}>
@@ -38,7 +43,7 @@ const HomeScreenContent = () => {
             isDarkMode && styles.imageContainerDark
           ]}>
             <Image
-              source={{uri: 'https://i.imgur.com/rwln1yI.png'}}
+              source={require('../../assets/images/leviatan.webp')}
               style={styles.image}
               resizeMode="contain"
             />
@@ -65,6 +70,12 @@ const HomeScreenContent = () => {
             </TouchableOpacity>
           </View>
         </View>
+        <TouchableOpacity 
+          style={styles.creditsButton}
+          onPress={handleCredits}
+        >
+          <View style={styles.invisibleArea} />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -186,6 +197,16 @@ const styles = StyleSheet.create({
   },
   buttonTextDark: {
     color: '#FFFFFF',
+  },
+  creditsButton: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    zIndex: 3,
+  },
+  invisibleArea: {
+    width: 50,
+    height: 50,
   },
 });
 
