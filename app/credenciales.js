@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDKUOx8Cux49KdARXHvhZ4-udxTFHFVO24",
@@ -10,15 +11,17 @@ const firebaseConfig = {
   measurementId: "G-BXPLNQNY2X"
 };
 
-const appFirebase = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-export default appFirebase;
+export { db };
+export default app;
 
 // Exportamos una función para inicializar Analytics solo en el cliente
 export function initializeAnalytics() {
   if (typeof window !== 'undefined') {
     const { getAnalytics } = require("firebase/analytics");
-    return getAnalytics(appFirebase);
+    return getAnalytics(app);
   }
   return null;
 }

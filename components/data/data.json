@@ -1,0 +1,15 @@
+{
+  "usuarios": [
+    {
+      "id": "",
+      "nombre": "Hola",
+      "apellido": "Manola",
+      "email": "hola@gmail.com",
+      "telefono": "2995861828",
+      "direccion": "Lanin 2200",
+      "dni": "47118242",
+      "rol": "",
+      "fechaRegistro": ""
+    }
+  ]
+}
