@@ -26,7 +26,7 @@ const CreditsContent = () => {
       <View style={styles.backgroundOverlay} />
       <View style={styles.content}>
         <Text style={[styles.title, isDarkMode && styles.textDark]}>
-           Resumen de como se laburó 
+           Resumen de como se trabajo
         </Text>
         <View style={styles.imageContainer}>
           <Image 

@@ -1,11 +1,10 @@
-import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
-import { CheckBox } from 'react-native-elements'
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Dimensions, KeyboardAvoidingView, Platform, Alert } from "react-native";
+import { CheckBox } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { getFirestore, collection, addDoc, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 import Header from "../../components/Header";
 import Background from '../../components/Background';
@@ -16,33 +15,66 @@ import ColorMode from '../../components/ColorMode';
 
 const app = getApp();
 const db = getFirestore(app);
-const storage = getStorage(app);
 
-const PersonalFormContent = ({ onAdd }) => {
+const SupervFormVerifContent = () => {
   const { isDarkMode } = useContext(ThemeContext);
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [email, setEmail] = useState("");
   const [telefono, setTelefono] = useState("");
-  const [isOrdenado, setIsOrdenado] = useState(false);
-  const [isBarrido, setIsBarrido] = useState(false);
-  const [isTrapeado, setIsTrapeado] = useState(false);
-  const [isDesinfectado, setIsDesinfectado] = useState(false);
+  
+  const [isCheckedOrdenado, setIsCheckedOrdenado] = useState(false);
+  const [isCheckedBarrido, setIsCheckedBarrido] = useState(false);
+  const [isCheckedTrapeado, setIsCheckedTrapeado] = useState(false);
+  const [isCheckedDesinfectado, setIsCheckedDesinfectado] = useState(false);
   const [observacion, setObservacion] = useState("");
-  const [imagen, setImagen] = useState(null);
+
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchFormulario = async () => {
+      try {
+        const formularioId = "ID_POR_DEFECTO";
+        const docRef = doc(db, "formularios", formularioId);
+        const docSnap = await getDoc(docRef);
+        
+        if (!docSnap.exists()) {
+          Alert.alert("Error", "El formulario no existe");
+          return;
+        }
+        
+        const data = docSnap.data();
+        setNombre(data.nombre || '');
+        setApellido(data.apellido || '');
+        setEmail(data.email || '');
+        setTelefono(data.telefono || '');
+        setIsCheckedOrdenado(data.isOrdenado || false);
+        setIsCheckedBarrido(data.isBarrido || false);
+        setIsCheckedTrapeado(data.isTrapeado || false);
+        setIsCheckedDesinfectado(data.isDesinfectado || false);
+        setObservacion(data.observacion || '');
+        
+      } catch (error) {
+        console.error("Error al obtener el formulario:", error);
+        Alert.alert(
+          "Error de Acceso",
+          "No tienes permisos para acceder a este formulario. Por favor, verifica tus credenciales."
+        );
+      }
+    };
+    fetchFormulario();
+  }, []);
 
   const resetForm = () => {
     setNombre("");
     setApellido("");
     setEmail("");
     setTelefono("");
-    setIsOrdenado(false);
-    setIsBarrido(false);
-    setIsTrapeado(false);
-    setIsDesinfectado(false);
+    setIsCheckedOrdenado(false);
+    setIsCheckedBarrido(false);
+    setIsCheckedTrapeado(false);
+    setIsCheckedDesinfectado(false);
     setObservacion("");
-    setImagen(null);
   };
 
   useFocusEffect(
@@ -51,71 +83,66 @@ const PersonalFormContent = ({ onAdd }) => {
     }, [])
   );
 
-  const handleImageUpload = async (uri) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const storageRef = ref(storage, `imagenes/${Date.now()}`);
-    
+  const handleSubmit = async () => {
     try {
-      await uploadBytes(storageRef, blob);
-      const downloadURL = await getDownloadURL(storageRef);
-      return downloadURL;
-    } catch (error) {
-      console.error("Error al subir la imagen: ", error);
-      return null;
+      const formularioId = "ID_POR_DEFECTO";
+      const docRef = doc(db, "formularios", formularioId);
+      await updateDoc(docRef, {
+        isCheckedOrdenado,
+        isCheckedBarrido,
+        isCheckedTrapeado,
+        isCheckedDesinfectado,
+        observacion,
+        verificado: true
+      });
+      console.log("Documento actualizado con éxito");
+      resetForm();
+      setTimeout(() => {
+        navigation.navigate('redirect');
+      }, 500);
+    } catch (e) {
+      console.error("Error al actualizar documento: ", e);
     }
   };
 
-  const handleSubmit = async () => {
-    let imageUrl = null;
-    if (imagen) {
-      imageUrl = await handleImageUpload(imagen);
-    }
-
-    const nuevoFormulario = { 
-      nombre, 
-      apellido, 
-      email, 
-      telefono,
-      isOrdenado,
-      isBarrido,
-      isTrapeado,
-      isDesinfectado,
-      observacion,
-      imagen: imageUrl,
-      fechaCreacion: new Date()
-    };
-    
+  const handleDenegar = async () => {
     try {
-      const formularioId = "fYA738nPz7Ubrz7whabd";
+      const formularioId = "ID_POR_DEFECTO"; 
       const docRef = doc(db, "formularios", formularioId);
-      await setDoc(docRef, nuevoFormulario);
-      console.log("Formulario añadido con ID: ", formularioId);
-      onAdd(nuevoFormulario);
-      resetForm();
-      navigation.navigate('redirect');
+      await updateDoc(docRef, {
+        verificado: false,
+        observacion
+      });
+      console.log("Documento denegado con éxito");
+      setTimeout(() => {
+        navigation.navigate('redirect');
+      }, 500);
     } catch (e) {
-      console.error("Error al añadir formulario: ", e);
+      console.error("Error al denegar documento: ", e);
     }
   };
 
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}>
+      style={styles.container}
+    >
       <View style={styles.backgroundContainer}>
         {isDarkMode ? <Background2 /> : <Background />}
       </View>
       <View style={styles.mainContent}>
-        {isDarkMode ? <Header2 handleHomeNavigation={null} /> : <Header handleHomeNavigation={null} />}
+        {isDarkMode ? <Header2 /> : <Header />}
         <ColorMode />
         <View style={styles.body}>
           <View style={[styles.formContainer, isDarkMode && styles.formContainerDark]}>
             <View style={styles.titleContainer}>
-              <Ionicons name="school" size={35} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
+              <Ionicons name="shield-checkmark" size={35} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
               <Text style={[styles.title, isDarkMode && styles.titleDark]}>Aula</Text>
             </View>
             <Text style={[styles.subtitle, isDarkMode && styles.subtitleDark]}>✨ Registro de limpieza</Text>
+            <Text style={[styles.personInfo, isDarkMode && styles.personInfoDark]}>
+              👤 Limpieza realizada por: {nombre} {apellido}
+            </Text>
 
             <View style={styles.sectionTitle}>
               <Ionicons name="checkmark-circle" size={24} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
@@ -126,16 +153,16 @@ const PersonalFormContent = ({ onAdd }) => {
               <View style={styles.checkRow}>
                 <CheckBox
                   title="🏠 Ordenado"
-                  checked={isOrdenado}
-                  onPress={() => setIsOrdenado(!isOrdenado)}
+                  checked={isCheckedOrdenado}
+                  onPress={() => setIsCheckedOrdenado(!isCheckedOrdenado)}
                   containerStyle={[styles.checkbox, isDarkMode && styles.checkboxDark]}
                   textStyle={[styles.checkboxText, isDarkMode && styles.checkboxTextDark]}
                   checkedColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
                 />
                 <CheckBox
                   title="🧹 Barrido"
-                  checked={isBarrido}
-                  onPress={() => setIsBarrido(!isBarrido)}
+                  checked={isCheckedBarrido}
+                  onPress={() => setIsCheckedBarrido(!isCheckedBarrido)}
                   containerStyle={[styles.checkbox, isDarkMode && styles.checkboxDark]}
                   textStyle={[styles.checkboxText, isDarkMode && styles.checkboxTextDark]}
                   checkedColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
@@ -144,16 +171,16 @@ const PersonalFormContent = ({ onAdd }) => {
               <View style={styles.checkRow}>
                 <CheckBox
                   title="🧼 Trapeado"
-                  checked={isTrapeado}
-                  onPress={() => setIsTrapeado(!isTrapeado)}
+                  checked={isCheckedTrapeado}
+                  onPress={() => setIsCheckedTrapeado(!isCheckedTrapeado)}
                   containerStyle={[styles.checkbox, isDarkMode && styles.checkboxDark]}
                   textStyle={[styles.checkboxText, isDarkMode && styles.checkboxTextDark]}
                   checkedColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
                 />
                 <CheckBox
                   title="🧴 Desinfectado"
-                  checked={isDesinfectado}
-                  onPress={() => setIsDesinfectado(!isDesinfectado)}
+                  checked={isCheckedDesinfectado}
+                  onPress={() => setIsCheckedDesinfectado(!isCheckedDesinfectado)}
                   containerStyle={[styles.checkbox, isDarkMode && styles.checkboxDark]}
                   textStyle={[styles.checkboxText, isDarkMode && styles.checkboxTextDark]}
                   checkedColor={isDarkMode ? '#A73DFF' : '#00B8BA'}
@@ -168,7 +195,7 @@ const PersonalFormContent = ({ onAdd }) => {
               </View>
               <TextInput
                 style={[styles.input, isDarkMode && styles.inputDark]}
-                placeholder="✍️ Describe el estado del aula..."
+                placeholder="✍️ Escribe tus observaciones aquí..."
                 value={observacion}
                 onChangeText={(text) => setObservacion(text.slice(0, 512))}
                 maxLength={512}
@@ -177,13 +204,22 @@ const PersonalFormContent = ({ onAdd }) => {
               />
             </View>
 
-            <TouchableOpacity 
-              style={[styles.button, isDarkMode && styles.buttonDark]} 
-              onPress={handleSubmit}
-            >
-              <Ionicons name="save" size={22} color="white" style={styles.buttonIcon} />
-              <Text style={styles.buttonText}>¡Guardar registro!</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity 
+                style={[styles.acceptButton, isDarkMode && styles.acceptButtonDark]} 
+                onPress={handleSubmit}
+              >
+                <Ionicons name="checkmark-circle" size={22} color="white" />
+                <Text style={styles.buttonText}>Aprobar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.rejectButton, isDarkMode && styles.rejectButtonDark]} 
+                onPress={handleDenegar}
+              >
+                <Ionicons name="close-circle" size={22} color="white" />
+                <Text style={styles.buttonText}>Denegar</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>
@@ -191,13 +227,15 @@ const PersonalFormContent = ({ onAdd }) => {
   );
 };
 
-const PersonalForm = ({ onAdd }) => {
+const SupervFormVerif = () => {
   return (
     <ThemeProvider>
-      <PersonalFormContent onAdd={onAdd} />
+      <SupervFormVerifContent />
     </ThemeProvider>
   );
 };
+
+const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
@@ -238,10 +276,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   subtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 8,
+    fontWeight: '500',
+  },
+  personInfo: {
     fontSize: 14,
     color: '#666',
     marginBottom: 20,
-    fontStyle: 'italic',
   },
   sectionTitle: {
     flexDirection: 'row',
@@ -282,12 +325,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginBottom: 20,
   },
-  observacionText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 10,
-  },
   input: {
     borderWidth: 2,
     borderColor: '#E0E0E0',
@@ -299,14 +336,39 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     backgroundColor: '#F8F9FA',
   },
-  button: {
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+  acceptButton: {
+    flex: 1,
     height: 45,
     backgroundColor: '#00B8BA',
     borderRadius: 12,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row',
+    gap: 8,
     shadowColor: "#00B8BA",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  rejectButton: {
+    flex: 1,
+    height: 45,
+    backgroundColor: '#3290B5',
+    borderRadius: 12,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+    shadowColor: "#3290B5",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -319,7 +381,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 15,
     fontWeight: '600',
-    marginLeft: 8,
   },
   backgroundContainer: {
     position: 'absolute',
@@ -350,6 +411,10 @@ const styles = StyleSheet.create({
     color: '#B8B8D1',
   },
 
+  personInfoDark: {
+    color: '#B8B8D1',
+  },
+
   sectionTextDark: {
     color: '#E6E6FA',
   },
@@ -374,11 +439,17 @@ const styles = StyleSheet.create({
     color: '#E6E6FA',
   },
 
-  buttonDark: {
+  acceptButtonDark: {
     backgroundColor: '#9370DB',
     borderColor: '#7B68EE',
     shadowColor: '#A73DFF',
   },
+
+  rejectButtonDark: {
+    backgroundColor: '#8A2BE2',
+    borderColor: '#9400D3',
+    shadowColor: '#A73DFF',
+  },
 });
 
-export default PersonalForm;
+export default SupervFormVerif;

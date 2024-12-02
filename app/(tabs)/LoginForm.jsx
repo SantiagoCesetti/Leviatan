@@ -96,7 +96,7 @@ const LoginFormContent = () => {
     };
 
     const handleForgotPassword = () => {
-        Linking.openURL('https://only-fans.uk/pantup');
+        // Linking.openURL('https://only-fans.uk/pantup');
     };
 
     const handleMenuPress = () => {

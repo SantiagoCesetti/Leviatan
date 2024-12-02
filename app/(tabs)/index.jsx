@@ -198,16 +198,7 @@ const styles = StyleSheet.create({
   buttonTextDark: {
     color: '#FFFFFF',
   },
-  creditsButton: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
-    zIndex: 3,
-  },
-  invisibleArea: {
-    width: 80,
-    height: 80,
-  },
+  
 });
 
 export default HomeScreen;
