@@ -1,180 +1,214 @@
-import React, { useContext, useEffect, useState } from 'react';  
-import { View, Text, ScrollView, StyleSheet, Button, Picker } from 'react-native';  
-import { useRouter } from 'expo-router';  
+import React, { useState, useEffect, useContext } from 'react';  
+import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';  
+import { useLocalSearchParams } from 'expo-router';  
+import { getFirestore, doc, getDoc } from 'firebase/firestore';  
 import { ThemeProvider, ThemeContext } from '../../components/ThemeContext';  
-import ColorMode from '../../components/ColorMode';  
-import Header from '../../components/Header';  
-import Header2 from '../../components/Header2';  
-import Background from '../../components/Background';  
-import Background2 from '../../components/Background2';  
-import { db } from '../credenciales';  
-import { collection, getDocs } from 'firebase/firestore';  
+import Header from "../../components/Header"; // Asegúrate de que la ruta sea correcta  
+import Header2 from '../../components/Header2'; // El segundo componente de encabezado, si corresponde  
 
-const UserShowDataContent = ({ route }) => {  
+const PersonalForm = () => {  
+  const { ordenId } = useLocalSearchParams(); // Recibe el ordenId desde la navegación.  
   const { isDarkMode } = useContext(ThemeContext);  
-  const [selectedOrderId, setSelectedOrderId] = useState(undefined);  
-  const [selectedOrderDetails, setSelectedOrderDetails] = useState({});  
-  const [orders, setOrders] = useState([]);  
-  const [error, setError] = useState(null);  
-  const router = useRouter();  
+  const [orderDetails, setOrderDetails] = useState(null); // Estado para almacenar los detalles de la orden.  
+  const [loading, setLoading] = useState(true); // Estado para manejar la carga.  
+  const [error, setError] = useState(null); // Estado para manejar errores.  
 
   useEffect(() => {  
-    const fetchOrders = async () => {  
+    const fetchOrderDetails = async () => {  
       try {  
-        const ordersCollection = collection(db, 'Verificacion');  
-        const querySnapshot = await getDocs(ordersCollection);  
-        const ordersData = querySnapshot.docs.map(doc => ({  
-          label: `${doc.data().nombre} - Aula: ${doc.data().aula}`,  
-          value: doc.id,  
-          details: doc.data() 
-        }));  
-        setOrders(ordersData);  
+        const db = getFirestore();  
+        const docRef = doc(db, 'Verificacion', ordenId); // Consultamos el documento en Firestore usando ordenId.  
+        const docSnap = await getDoc(docRef);  
+
+        if (docSnap.exists()) {  
+          setOrderDetails(docSnap.data()); // Guardamos los datos en el estado.  
+        } else {  
+          setError('No se encontró información para la orden seleccionada.');  
+        }  
       } catch (err) {  
-        setError('Error al obtener órdenes: ' + err.message);  
-        console.error(err);  
+        setError('Error al cargar los datos: ' + err.message);  
+      } finally {  
+        setLoading(false);  
       }  
     };  
 
-    fetchOrders();  
-  }, []);  
+    if (ordenId) fetchOrderDetails();  
+  }, [ordenId]);  
 
-  const handleOrderSelection = (value) => {  
-    const order = orders.find(order => order.value === value);  
-    setSelectedOrderId(value);  
-    setSelectedOrderDetails(order.details); 
-  };  
+  // Muestra un indicador de carga mientras se obtienen los datos.  
+  if (loading) {  
+    return <Text style={styles.loadingText}>Cargando información...</Text>;  
+  }  
 
-  const goToRatingScreen = () => {  
-    router.push({  
-      pathname: 'PersonalForm',  
-      params: {  
-        ordenId: selectedOrderId,  
-        nombre: selectedOrderDetails.nombre, 
-        aula: selectedOrderDetails.aula, 
-      }  
-    });  
-  };
+  // Muestra un mensaje de error si la consulta falla.  
+  if (error) {  
+    return <Text style={styles.errorText}>{error}</Text>;  
+  }  
 
+  // Renderiza los datos una vez que están disponibles.  
   return (  
     <View style={styles.container}>  
-      <View style={styles.backgroundContainer}>  
-        {isDarkMode ? <Background2 /> : <Background />}  
+      <View style={styles.headerContainer}>  
+        {isDarkMode ? <Header2 /> : <Header />} {/* Encabezado según el modo oscuro */}  
       </View>  
-      <View style={styles.mainContent}>  
-        {isDarkMode ? <Header2 /> : <Header />}  
-        <ColorMode />  
-        <ScrollView style={styles.scrollView}>  
-          <View style={styles.formContainer}>  
-            <Text style={[styles.title, isDarkMode && styles.titleDark]}>  
-              ✦ Detalles de las Órdenes ✦  
-            </Text>  
+      <ScrollView contentContainerStyle={[styles.scrollContent, isDarkMode && styles.containerDark]}>  
+        <Text style={[styles.title, isDarkMode && styles.titleDark]}>  
+          Información Completa de la Orden  
+        </Text>  
 
-            {error && <Text style={styles.errorText}>{error}</Text>}  
+        <View style={[styles.detailsContainer, isDarkMode && styles.detailsContainerDark]}>  
+          <Text style={[styles.label, isDarkMode && styles.labelDark]}>ID de Orden:</Text>  
+          <Text style={[styles.value, isDarkMode && styles.valueDark]}>{ordenId}</Text>  
 
-            <Text style={[styles.subtitle, isDarkMode && styles.subtitleDark]}>  
-              Selecciona una orden de limpieza:  
-            </Text>  
+          <Text style={[styles.label, isDarkMode && styles.labelDark]}>Nombre:</Text>  
+          <Text style={[styles.value, isDarkMode && styles.valueDark]}>  
+            {orderDetails?.nombre || 'No disponible'}  
+          </Text>  
 
-            <Picker  
-              selectedValue={selectedOrderId}  
-              onValueChange={(itemValue) => handleOrderSelection(itemValue)}  
-              style={isDarkMode ? styles.pickerDark : styles.picker}  
-            >  
-              {orders.map(order => (  
-                <Picker.Item key={order.value} label={order.label} value={order.value} />  
-              ))}  
-            </Picker>  
+          <Text style={[styles.label, isDarkMode && styles.labelDark]}>Aula:</Text>  
+          <Text style={[styles.value, isDarkMode && styles.valueDark]}>  
+            {orderDetails?.aula || 'No disponible'}  
+          </Text>  
 
-            {selectedOrderId && (  
-              <>  
-                <View style={[styles.selectedOrderContainer, isDarkMode && styles.selectedOrderContainerDark]}>  
-                  <Text style={[styles.selectedOrderText, isDarkMode && styles.selectedOrderTextDark]}>  
-                    Orden seleccionada: {selectedOrderId}  
-                  </Text>  
-                </View>  
-                <Button title="Ir a Valoración" onPress={goToRatingScreen} />  
-              </>  
-            )}  
-          </View>  
-        </ScrollView>  
-      </View>  
+          <Text style={[styles.label, isDarkMode && styles.labelDark]}>Valoración:</Text>  
+          <Text style={[styles.value, isDarkMode && styles.valueDark]}>  
+            {orderDetails?.rating || 'No disponible'} / 5  
+          </Text>  
+
+          <Text style={[styles.label, isDarkMode && styles.labelDark]}>Tareas realizadas:</Text>  
+          {orderDetails?.tareas ? (  
+            <View>  
+              <Text  
+                style={[  
+                  styles.task,  
+                  orderDetails.tareas.ordenado ? styles.taskCompleted : styles.taskPending,  
+                ]}  
+              >  
+                🏠 Ordenado: {orderDetails.tareas.ordenado ? '✔ Realizado' : '❌ Pendiente'}  
+              </Text>  
+              <Text  
+                style={[  
+                  styles.task,  
+                  orderDetails.tareas.barrido ? styles.taskCompleted : styles.taskPending,  
+                ]}  
+              >  
+                🧹 Barrido: {orderDetails.tareas.barrido ? '✔ Realizado' : '❌ Pendiente'}  
+              </Text>  
+              <Text  
+                style={[  
+                  styles.task,  
+                  orderDetails.tareas.trapeado ? styles.taskCompleted : styles.taskPending,  
+                ]}  
+              >  
+                🧼 Trapeado: {orderDetails.tareas.trapeado ? '✔ Realizado' : '❌ Pendiente'}  
+              </Text>  
+              <Text  
+                style={[  
+                  styles.task,  
+                  orderDetails.tareas.desinfectado ? styles.taskCompleted : styles.taskPending,  
+                ]}  
+              >  
+                🧴 Desinfectado: {orderDetails.tareas.desinfectado ? '✔ Realizado' : '❌ Pendiente'}  
+              </Text>  
+            </View>  
+          ) : (  
+            <Text style={[styles.value, isDarkMode && styles.valueDark]}>No disponible</Text>  
+          )}  
+        </View>  
+      </ScrollView>  
     </View>  
   );  
 };  
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F0F8FF',
-  },
-  backgroundContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 1,
-  },
-  mainContent: {
-    flex: 1,
-    zIndex: 2,
-  },
-  scrollView: {
-    flex: 1,
-    zIndex: 2,
-  },
-  formContainer: {
-    padding: 20,
-    borderRadius: 15,
-    backgroundColor: '#fff',
-    shadowColor: "#00B8BA",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
-  },
-  title: {
-    fontSize: 28,
-    color: '#333',
-    fontWeight: 'bold',
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#666',
-    marginVertical: 10,
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 16,
-    textAlign: 'center',
-    marginVertical: 10,
-  },
-  selectedOrderContainer: {
-    marginTop: 20,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#00B8BA',
-    borderRadius: 8,
-  },
-  selectedOrderText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  selectedOrderContainerDark: {
-    borderColor: '#A73DFF',
-  },
-  selectedOrderTextDark: {
-    color: '#E6E6FA',
-  },
-});
+const PersonalFormScreen = () => {  
+  return (  
+    <ThemeProvider>  
+      <PersonalForm />  
+    </ThemeProvider>  
+  );  
+};  
 
-const UserShowData = ({ route }) => {
-  return (
-    <ThemeProvider>
-      <UserShowDataContent route={route} />
-    </ThemeProvider>
-  );
-};
+const styles = StyleSheet.create({  
+  container: {  
+    flex: 1,  
+    backgroundColor: '#F0F8FF',  
+  },  
+  headerContainer: {  
+    position: 'absolute', // Fija el encabezado en la parte superior  
+    top: 0,  
+    left: 0,  
+    right: 0,  
+    zIndex: 100, // Para asegurarse de que el encabezado esté sobre otros elementos  
+  },  
+  scrollContent: {  
+    padding: 20,  
+    marginTop: 80, // Ajusta este margen para que no cubra el encabezado  
+  },  
+  containerDark: {  
+    backgroundColor: '#1A1625',  
+  },  
+  title: {  
+    fontSize: 24,  
+    fontWeight: 'bold',  
+    marginBottom: 20,  
+    color: '#333',  
+  },  
+  titleDark: {  
+    color: '#E6E6FA',  
+  },  
+  detailsContainer: {  
+    width: '100%',  
+    backgroundColor: '#fff',  
+    borderRadius: 10,  
+    padding: 20,  
+    shadowColor: '#00B8BA',  
+   shadowOffset: { width: 0, height: 2 },  
+    shadowOpacity: 0.1,  
+    shadowRadius: 8,  
+    elevation: 5,  
+  },  
+  detailsContainerDark: {  
+    backgroundColor: '#2D2640',  
+  },  
+  label: {  
+    fontSize: 16,  
+    fontWeight: 'bold',  
+    color: '#666',  
+    marginTop: 10,  
+  },  
+  labelDark: {  
+    color: '#B8B8D1',  
+  },  
+  value: {  
+    fontSize: 18,  
+    color: '#333',  
+    marginBottom: 10,  
+  },  
+  valueDark: {  
+    color: '#E6E6FA',  
+  },  
+  task: {  
+    fontSize: 16,  
+    marginVertical: 4,  
+  },  
+  taskCompleted: {  
+    color: 'green',  
+  },  
+  taskPending: {  
+    color: 'red',  
+  },  
+  loadingText: {  
+    fontSize: 18,  
+    color: '#666',  
+    textAlign: 'center',  
+    marginTop: 20,  
+  },  
+  errorText: {  
+    fontSize: 18,  
+    color: 'red',  
+    textAlign: 'center',  
+    marginTop: 20,  
+  },  
+});  
 
-export default UserShowData;
-
+export default PersonalFormScreen;
