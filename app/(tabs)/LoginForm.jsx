@@ -5,10 +5,6 @@ import appFirebase from '../credenciales';
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
-import Header from '../../components/Header';
-import Background from '../../components/Background';
-import Background2 from '../../components/Background2';
-import Header2 from '../../components/Header2';
 import { ThemeProvider, ThemeContext } from '../../components/ThemeContext';
 import ColorMode from '../../components/ColorMode';
 
@@ -63,6 +59,7 @@ const LoginFormContent = () => {
     const handleLogin = async () => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
+            navigation.navigate('SupervisorForm');
         } catch (error) {
             setError('Error al iniciar sesión: ' + error.message);
         }
@@ -78,6 +75,7 @@ const LoginFormContent = () => {
                 foto: user.photoURL,
                 verificado: user.emailVerified
             });
+            navigation.navigate('SupervisorForm');
         } catch (error) {
             setError('Error al iniciar sesión con Google: ' + error.message);
         }
@@ -86,6 +84,7 @@ const LoginFormContent = () => {
     const handleFacebookLogin = async () => {
         try {
             await signInWithPopup(auth, facebookProvider);
+            navigation.navigate('SupervisorForm');
         } catch (error) {
             setError('Error al iniciar sesión con Facebook: ' + error.message);
         }
@@ -106,16 +105,12 @@ const LoginFormContent = () => {
     const handleLogout = () => {
         setIsLoggedIn(false);
         setUserData(null);
-        auth.signOut(); // Cerrar sesión en Firebase
+        auth.signOut();
     };
 
     return (
         <View style={styles.container}>
-            <View style={styles.backgroundContainer}>
-                {isDarkMode ? <Background2 /> : <Background />}
-            </View>
             <View style={styles.mainContent}>
-                {isDarkMode ? <Header2 handleHomeNavigation={handleMenuPress} /> : <Header handleHomeNavigation={handleMenuPress} />}
                 <ColorMode />
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.body}>
@@ -166,9 +161,7 @@ const LoginFormContent = () => {
                                     </View>
                                 </View>
                                 <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotPasswordContainer}>
-                                    <Text style={[styles.forgotPassword, isDarkMode && styles.forgotPasswordDark]}>
-                                        Olvidé contraseña...
-                                    </Text>
+                                    <Text style={[styles.forgotPassword, isDarkMode && styles.forgotPasswordDark]}>Olvidé contraseña...</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={[styles.button, isDarkMode && styles.buttonDark]} onPress={handleLogin}>
                                     <Text style={styles.buttonText}>Iniciar Sesión</Text>
@@ -185,33 +178,20 @@ const LoginFormContent = () => {
                             </View>
                         ) : (
                             <View style={[styles.formContainer, isDarkMode && styles.formContainerDark]}>
-                                <Text style={[styles.formTitle, isDarkMode && styles.formTitleDark]}>
-                                    Información de la cuenta
-                                </Text>
+                                <Text style={[styles.formTitle, isDarkMode && styles.formTitleDark]}>Información de la cuenta</Text>
                                 <View style={styles.userInfoContainer}>
-                                    {/* Nombre */}
                                     <View style={[styles.infoRow, isDarkMode && styles.infoRowDark]}>
                                         <View style={styles.iconWrapper}>
-                                            <Ionicons 
-                                                name="person-outline" 
-                                                size={20} 
-                                                color={isDarkMode ? '#A73DFF' : '#00B8BA'} 
-                                            />
+                                            <Ionicons name="person-outline" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
                                         </View>
                                         <View style={styles.infoContent}>
                                             <Text style={[styles.infoLabel, isDarkMode && styles.infoLabelDark]}>Nombre</Text>
                                             <Text style={[styles.infoValue, isDarkMode && styles.infoValueDark]}>{userData.nombre}</Text>
                                         </View>
                                     </View>
-
-                                    {/* Email */}
                                     <View style={[styles.infoRow, isDarkMode && styles.infoRowDark]}>
                                         <View style={styles.iconWrapper}>
-                                            <Ionicons 
-                                                name="mail-outline" 
-                                                size={20} 
-                                                color={isDarkMode ? '#A73DFF' : '#00B8BA'} 
-                                            />
+                                            <Ionicons name="mail-outline" size={20} color={isDarkMode ? '#A73DFF' : '#00B8BA'} />
                                         </View>
                                         <View style={styles.infoContent}>
                                             <Text style={[styles.infoLabel, isDarkMode && styles.infoLabelDark]}>Email</Text>
@@ -220,56 +200,8 @@ const LoginFormContent = () => {
                                             </Text>
                                         </View>
                                     </View>
-
-                                    {/* Foto de perfil */}
-                                    <View style={[styles.infoRow, isDarkMode && styles.infoRowDark]}>
-                                        <View style={styles.iconWrapper}>
-                                            <Ionicons 
-                                                name="image-outline" 
-                                                size={20} 
-                                                color={isDarkMode ? '#A73DFF' : '#00B8BA'} 
-                                            />
-                                        </View>
-                                        <View style={styles.infoContent}>
-                                            <Text style={[styles.infoLabel, isDarkMode && styles.infoLabelDark]}>Foto de perfil</Text>
-                                            {userData?.foto && (
-                                                <Image 
-                                                    source={{ uri: userData.foto }} 
-                                                    style={[styles.profilePhoto, isDarkMode && styles.profilePhotoDark]}
-                                                />
-                                            )}
-                                        </View>
-                                    </View>
-
-                                    {/* Último acceso */}
-                                    <View style={[styles.infoRow, isDarkMode && styles.infoRowDark]}>
-                                        <View style={styles.iconWrapper}>
-                                            <Ionicons 
-                                                name="time-outline" 
-                                                size={20} 
-                                                color={isDarkMode ? '#A73DFF' : '#00B8BA'} 
-                                            />
-                                        </View>
-                                        <View style={styles.infoContent}>
-                                            <Text style={[styles.infoLabel, isDarkMode && styles.infoLabelDark]}>Último acceso</Text>
-                                            <Text style={[styles.infoValue, isDarkMode && styles.infoValueDark]}>
-                                                {new Date().toLocaleString('es-ES', {
-                                                    weekday: 'long',
-                                                    day: 'numeric',
-                                                    month: 'long',
-                                                    year: 'numeric',
-                                                    hour: '2-digit',
-                                                    minute: '2-digit'
-                                                })}
-                                            </Text>
-                                        </View>
-                                    </View>
                                 </View>
-
-                                <TouchableOpacity 
-                                    style={[styles.logoutButton, isDarkMode && styles.logoutButtonDark]} 
-                                    onPress={handleLogout}
-                                >
+                                <TouchableOpacity style={[styles.logoutButton, isDarkMode && styles.logoutButtonDark]} onPress={handleLogout}>
                                     <Text style={styles.buttonText}>Cerrar Sesión</Text>
                                 </TouchableOpacity>
                             </View>
@@ -289,6 +221,8 @@ const LoginForm = () => {
     );
 };
 
+
+    
 const styles = StyleSheet.create({
     scrollViewContent: {
         flexGrow: 1,
@@ -570,5 +504,6 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
 });
+
 
 export default LoginForm;
