@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { getApp } from 'firebase/app';
+import { useRouter } from 'expo-router'; // Importa useRouter
 import Header from "../../components/Header";
 import Header2 from '../../components/Header2';
 import Background from '../../components/Background';
@@ -15,28 +15,30 @@ const app = getApp();
 const db = getFirestore(app);
 
 const SupervisorFormContent = () => {
+  const router = useRouter(); // Usa useRouter en lugar de navigation prop
   const { isDarkMode } = useContext(ThemeContext);
   const [nombre, setNombre] = useState("");
   const [aula, setAula] = useState("");
   const [ordenes, setOrdenes] = useState([]);
-  const navigation = useNavigation();
-  const route = useRoute();
+
+  // Agregar los estados de los checkboxes  
+  const [isCheckedOrdenado, setIsCheckedOrdenado] = useState(true);
+  const [isCheckedBarrido, setIsCheckedBarrido] = useState(false);
+  const [isCheckedTrapeado, setIsCheckedTrapeado] = useState(true);
+  const [isCheckedDesinfectado, setIsCheckedDesinfectado] = useState(true);
 
   const resetForm = () => {
     setNombre("");
     setAula("");
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      resetForm();
-      fetchOrdenes();
-    }, [])
-  );
+  useEffect(() => {
+    fetchOrdenes();
+  }, []);
 
   const fetchOrdenes = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, "ordenes"));
+      const querySnapshot = await getDocs(collection(db, "Limpiezas"));
       const ordenesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setOrdenes(ordenesData);
     } catch (error) {
@@ -46,8 +48,14 @@ const SupervisorFormContent = () => {
 
   const handleSubmit = async () => {
     try {
-      const docRef = await addDoc(collection(db, "ordenes"), { nombre, aula });
-      console.log("Orden añadida con ID: ", docRef.id);
+      await addDoc(collection(db, "Limpiezas"), {
+        nombre,
+        aula,
+        isCheckedOrdenado,
+        isCheckedBarrido,
+        isCheckedTrapeado,
+        isCheckedDesinfectado,
+      });
       resetForm();
       fetchOrdenes();
     } catch (error) {
@@ -57,8 +65,7 @@ const SupervisorFormContent = () => {
 
   const handleUpdate = async (id) => {
     try {
-      await updateDoc(doc(db, "ordenes", id), { nombre, aula });
-      console.log("Orden actualizada con ID: ", id);
+      await updateDoc(doc(db, "Limpiezas", id), { nombre, aula });
       resetForm();
       fetchOrdenes();
     } catch (error) {
@@ -68,20 +75,27 @@ const SupervisorFormContent = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteDoc(doc(db, "ordenes", id));
-      console.log("Orden eliminada con ID: ", id);
+      await deleteDoc(doc(db, "Limpiezas", id));
       fetchOrdenes();
     } catch (error) {
       console.error("Error al eliminar la orden:", error);
     }
   };
 
-  const handleHomeNavigation = () => {
-    navigation.navigate('index');
+  const handleEdit = (orden) => {
+    // Navega a la pantalla de verificación usando Expo Router
+    router.push({
+      pathname: 'SupervFormVerif',
+      params: {
+        ordenId: orden.id,
+        nombre: orden.nombre,
+        aula: orden.aula
+      }
+    });
   };
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
@@ -121,8 +135,8 @@ const SupervisorFormContent = () => {
               />
             </View>
 
-            <TouchableOpacity 
-              style={[styles.button, isDarkMode && styles.buttonDark]} 
+            <TouchableOpacity
+              style={[styles.button, isDarkMode && styles.buttonDark]}
               onPress={handleSubmit}
               activeOpacity={0.8}
             >
@@ -142,14 +156,15 @@ const SupervisorFormContent = () => {
                   </Text>
                 </View>
                 <View style={styles.ordenActions}>
-                  <TouchableOpacity 
-                    style={[styles.actionButton, styles.editButton, isDarkMode && styles.editButtonDark]} 
-                    onPress={() => handleUpdate(orden.id)}
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.editButton, isDarkMode && styles.editButtonDark]}
+                    onPress={() => handleEdit(orden)}
                   >
                     <Ionicons name="create" size={20} color="white" />
                   </TouchableOpacity>
-                  <TouchableOpacity 
-                    style={[styles.actionButton, styles.deleteButton, isDarkMode && styles.deleteButtonDark]} 
+
+                  <TouchableOpacity
+                    style={[styles.actionButton, styles.deleteButton, isDarkMode && styles.deleteButtonDark]}
                     onPress={() => handleDelete(orden.id)}
                   >
                     <Ionicons name="trash" size={20} color="white" />
@@ -190,15 +205,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
   },
-  headertext: {
-    fontSize: 28,
-    color: '#fff',
-    marginRight: 20,
-    fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.2)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
-  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -220,8 +226,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     shadowColor: "#00B8BA",
     shadowOffset: {
-        width: 0,
-        height: 0,
+      width: 0,
+      height: 0,
     },
     shadowOpacity: 0.4,
     shadowRadius: 12,
@@ -349,51 +355,40 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 8,
   },
-
   titleDark: {
     color: '#E6E6FA',
   },
-
   subtitleDark: {
     color: '#B8B8D1',
   },
-
   textinputDark: {
     color: '#E6E6FA',
   },
-
   inputDark: {
     backgroundColor: '#2D2640',
     borderColor: '#4A4460',
     color: '#E6E6FA',
   },
-
   buttonDark: {
     backgroundColor: '#9370DB',
     borderColor: '#7B68EE',
   },
-
   recentTitleDark: {
     color: '#E6E6FA',
   },
-
   ordenItemDark: {
     backgroundColor: '#2D2640',
     borderColor: '#4A4460',
   },
-
   ordenIconContainerDark: {
     backgroundColor: '#A73DFF',
   },
-
   ordenTextDark: {
     color: '#E6E6FA',
   },
-
   editButtonDark: {
     backgroundColor: '#9370DB',
   },
-
   deleteButtonDark: {
     backgroundColor: '#8A2BE2',
   },
