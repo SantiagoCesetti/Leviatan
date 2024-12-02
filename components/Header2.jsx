@@ -49,13 +49,11 @@ const Header = ({ navigation }) => {
   });
 
   const menuItems = [
-    { id: 'inicio', route: '/', label: 'Inicio' },
-    { id: 'login', route: '/LoginForm', label: 'Login' },
-    { id: 'registro', route: '/RegisterForm', label: 'Registro' },
+   
     { id: 'personal', route: '/PersonalForm', label: 'Personal' },
     { id: 'verificacion', route: '/SupervFormVerif', label: 'Verificación Aula' },
     { id: 'supervisor', route: '/SupervisorForm', label: 'Supervisor' },
-    { id: 'datos', route: '/UserShowData', label: 'Datos Usuario' },
+    { id: 'datos', route: '/UserShowData', label: 'Detalle de Aulas' },
     { id: 'redirect', route: '/redirect', label: 'Redirect' }
   ];
 
